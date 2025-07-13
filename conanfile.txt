@@ -5,5 +5,8 @@ glfw/3.4
 CMakeDeps
 CMakeToolchain
 
+[layout]
+cmake_layout
+
 [options]
 # Optional

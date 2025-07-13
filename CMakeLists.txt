@@ -9,11 +9,6 @@ project(${PROJECT_NAME} VERSION 0.1.0 LANGUAGES C)
 
 
 
-#Conan toolchain
-set(CMAKE_TOOLCHAIN_FILE "${CMAKE_BINARY_DIR}/conan_toolchain.cmake" CACHE STRING "")
-
-
-
 include(CTest)
 enable_testing()
 
@@ -37,6 +32,10 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 23)
 
 
 #Libraries
+
+#Find dependencies provided by Conan
+find_package(glfw3 REQUIRED)
+
 # Include directories
 target_include_directories(
         ${PROJECT_NAME}
@@ -45,9 +44,6 @@ target_include_directories(
             include
             #Add include folder of manually added dependencies in the external folder
 )
-
-#Find dependencies provided by Conan
-find_package(glfw3 REQUIRED)
 
 #Link libraries
 #First argument is the target, this project, the rest are libraries or dependencies the target links against.
