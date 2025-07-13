@@ -17,13 +17,17 @@ int main()
     //Main window render loop
     while (!glfwWindowShouldClose(window))
     {
+        //Input processing
         processInput(window);
 
+        //Rendering pipeline
+        //When glClear is called, fill the color buffer with a green colour
         glClearColor(0.4f, 0.5f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glfwSwapBuffers(window);
+        //Poll events and swat front buffer with back buffers
         glfwPollEvents();
+        glfwSwapBuffers(window);
     }
 
     /*
