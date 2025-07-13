@@ -2,7 +2,6 @@ CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles
 CMakeScripts
-Testing
 Makefile
 cmake_install.cmake
 install_manifest.txt
@@ -15,7 +14,7 @@ CMakeUserPresets.json
 # Partially rom: https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
-.idea/*
+/.idea/*
 
 # CMake
 cmake-build-*/

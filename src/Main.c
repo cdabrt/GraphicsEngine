@@ -30,7 +30,14 @@ int main() {
         processWindowInput(window);
 
         //Rendering pipeline
-        renderer->render(window);
+        //TODO: REMOVE, FOR TESTING ONLY
+        float vertices[] = {
+            -0.5f, -0.5f, 0.0f,
+             0.5f, -0.5f, 0.0f,
+             0.0f,  0.5f, 0.0f
+        };
+
+        renderer->render(window, vertices);
 
         renderer->swapBuffers(renderer->context);
     }

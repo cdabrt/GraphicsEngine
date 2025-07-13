@@ -6,7 +6,7 @@
 #define RENDERINGSTRATEGY_H
 
 typedef void (*InitializeFunction) (int xPos, int yPos, int width, int height);
-typedef void (*RenderFunction) (void *context);
+typedef void (*RenderFunction) (void *context, float vertices[]);
 typedef void (*SwapBuffersFunction) (void *context);
 
 

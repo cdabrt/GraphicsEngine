@@ -33,6 +33,7 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 23)
 
 
 #Libraries
+#NECESSARY FOR WINDOWS
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/build/Release/generators")
 #Find dependencies provided by Conan
 find_package(glfw3 REQUIRED)

@@ -7,7 +7,9 @@
 #include <GLFW/glfw3.h>
 
 
+
 void resizeAdjustViewportCallback(GLFWwindow* window, int width, int height);
+
 
 
 void glfwWindowSetup() {
@@ -36,7 +38,7 @@ GLFWwindow* createWindow(const int width, const int height) {
 
     GLFWwindow* window = glfwCreateWindow(width, height, programTitle, nullptr, nullptr);
     if (!window) {
-        printf("Failed to create GLFW window \n");
+        perror("Failed to create GLFW window");
         glfwTerminate();
         exit(EXIT_FAILURE);
     }

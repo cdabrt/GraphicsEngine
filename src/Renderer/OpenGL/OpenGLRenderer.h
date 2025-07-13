@@ -11,7 +11,7 @@ struct OpenGLContext {
 };
 
 void openGLInitialize(int xPos, int yPos, int width, int height);
-void openGLRender (void *context);
+void openGLRender (void *context, float vertices[]);
 void openGLSwapBuffers (void *context);
 
 #endif //OPENGLRENDERER_H
