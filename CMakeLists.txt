@@ -23,6 +23,8 @@ add_executable(${PROJECT_NAME}
         #src includes glad.c
         ${SRC_FILES}
         ${HEADER_FILES}
+        src/inputController.h
+        #If using CLion: below executables can also be added automatically when creating a new file (the IDE gives you a window to do this).
 )
 set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 23)
 #If wanting to set the C standard for ALL targets, use:
@@ -42,6 +44,9 @@ target_include_directories(
         PRIVATE
             #Own include folder
             include
+            PRIVATE
+                #Headers inside src
+                ${CMAKE_SOURCE_DIR}/src
             #Add include folder of manually added dependencies in the external folder
 )
 
