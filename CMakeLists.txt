@@ -33,7 +33,7 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 23)
 
 
 #Libraries
-
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/build/Release/generators")
 #Find dependencies provided by Conan
 find_package(glfw3 REQUIRED)
 
@@ -43,9 +43,8 @@ target_include_directories(
         PRIVATE
             #Own include folder
             include
-            PRIVATE
-                #Headers inside src
-                ${CMAKE_SOURCE_DIR}/src
+            #Headers inside src
+            ${CMAKE_SOURCE_DIR}/src
             #Add include folder of manually added dependencies in the external folder
 )
 

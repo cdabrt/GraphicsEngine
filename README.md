@@ -9,7 +9,7 @@ Feel free to fork this repository for personal study and exploration.
 However, any copying, modification, distribution, or commercial use of this code is prohibited without explicit written permission from me.
 
 ## Build
-Run the following commands below.  
+Run the following commands below. Make sure to install a C compiler and add it to your PATH if you are on Windows.
 
 -**Conan commands**
 * conan profile detect --force  
@@ -20,15 +20,18 @@ Run the following commands below.
 -**CMake commands**
 * cd build  
  Cd into build folder.
-* cmake .. -DCMAKE_TOOLCHAIN_FILE=build/Release/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release  
+* cmake .. -DCMAKE_TOOLCHAIN_FILE=build/Release/generators/conan_toolchain.cmake -DCMAKE_PREFIX_PATH=build/Release/generators -DCMAKE_BUILD_TYPE=Release  
  Set conan toolchain and build type. For release, change type to "Release".
 * cmake --build .  
  Build project using cmake.
 ***
 **Using CLion:**  
-
+Right click on the makefile and click load CMake Project. It will show an error at first, no issue. Proceed with the steps below.  
 In CLion under Settings -> Build, Execution, Deployment -> CMake
-Add the command: -DCMAKE_TOOLCHAIN_FILE=\${PROJECT_DIR}/build/build/Release/generators/conan_toolchain.cmake -DCMAKE_PREFIX_PATH=\${PROJECT_DIR}/build/build/Release/generators -DCMAKE_BUILD_TYPE=Release
+Add the command:  
+
+-DCMAKE_TOOLCHAIN_FILE=\${PROJECT_DIR}/build/build/Release/generators/conan_toolchain.cmake -DCMAKE_PREFIX_PATH=\${PROJECT_DIR}/build/build/Release/generators -DCMAKE_BUILD_TYPE=Release  
+
 Replace \${PROJECT_DIR} with your absolute path to the project.  
 With this, you can now add your own run configuration. Select CMake Application, choose the run target (name of the project in the CMake file) and you should be able to run the program.  
-Note: Always run the conan commands before running the cmake configuration.
+Note: Always run the Conan commands before running the CMake configuration.
