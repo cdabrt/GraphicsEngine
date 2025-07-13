@@ -95,3 +95,9 @@ http-client.private.env.json
 # Apifox Helper cache
 .idea/.cache/.Apifox_Helper
 .idea/ApifoxUploaderProjectSetting.xml
+
+# Build folder
+/build/*
+
+# Ignore executable
+main

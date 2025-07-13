@@ -7,3 +7,16 @@ For now, this is an educational project which also exists to showcase my work on
 This repository and its code are made publicly available solely for my own educational, portfolio and personal purposes.  
 Feel free to fork this repository for personal study and exploration.  
 However, any copying, modification, distribution, or commercial use of this code is prohibited without explicit written permission from me.
+
+## Build
+Run:
+* conan profile detect --force  
+ This automatically creates a conan profile based on system scans.
+* conan install . --output-folder=build --build=missing  
+ Installs dependencies set in the conanfile.txt. --build=missing is here in case no pre-compiled binary exists of a dependency. 
+* cd build  
+ Cd into build folder.
+* cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo  
+ Set conan toolchain and build type. For release, change type to "Release".
+* cmake --build .  
+ Build project using cmake.
