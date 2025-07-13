@@ -6,6 +6,6 @@
 #define INPUTCONTROLLER_H
 #include "Window.h"
 
-void processInput(GLFWwindow *window);
+void processWindowInput(GLFWwindow *window);
 
 #endif //INPUTCONTROLLER_H

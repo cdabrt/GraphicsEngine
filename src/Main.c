@@ -6,28 +6,33 @@
 #include <stdlib.h>
 #include <Window.h>
 #include <GLFW/glfw3.h>
-#include <InputController.h>
+#include <WindowInputController.h>
+#include <Renderer/RendererFactory.h>
+#include "Renderer/Renderer.h"
 
-int main()
-{
-    glfwSetup();
+int main() {
+    constexpr int width = 800;
+    constexpr int height = 600;
+    constexpr int xPos = 0;
+    constexpr int yPos = 0;
 
-    GLFWwindow* window = createWindow();
+    glfwWindowSetup();
+    GLFWwindow* window = createWindow(width, height);
+
+    struct Renderer *renderer = createRenderer(window, OPENGL);
+    renderer->initialize(xPos, yPos, width, height);
 
     //Main window render loop
-    while (!glfwWindowShouldClose(window))
-    {
+    while (!glfwWindowShouldClose(window)) {
         //Input processing
-        processInput(window);
+        //TODO: Perhaps we can attach a callback to here, which can register callbacks for certain inputs
+        //  Each renderer can do it for it's own thing or whatever. Have to think about that one carefully
+        processWindowInput(window);
 
         //Rendering pipeline
-        //When glClear is called, fill the color buffer with a green colour
-        glClearColor(0.4f, 0.5f, 0.2f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        renderer->render(window);
 
-        //Poll events and swat front buffer with back buffers
-        glfwPollEvents();
-        glfwSwapBuffers(window);
+        renderer->swapBuffers(renderer->context);
     }
 
     /*
@@ -36,6 +41,9 @@ int main()
         Probably do not terminate the while loop on macOS.
     */
     cleanupWindow(window);
+
+    free(renderer->context);
+    free(renderer);
 
     return EXIT_SUCCESS;
 }

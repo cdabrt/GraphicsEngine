@@ -7,9 +7,9 @@
 
 #include <GLFW/glfw3.h>
 
-void glfwSetup();
+void glfwWindowSetup();
 
-GLFWwindow* createWindow();
+GLFWwindow* createWindow(int width, int height);
 
 void cleanupWindow(GLFWwindow* window);
 

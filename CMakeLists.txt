@@ -23,7 +23,6 @@ add_executable(${PROJECT_NAME}
         #src includes glad.c
         ${SRC_FILES}
         ${HEADER_FILES}
-        src/inputController.h
         #If using CLion: below executables can also be added automatically when creating a new file (the IDE gives you a window to do this).
 )
 set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 23)
