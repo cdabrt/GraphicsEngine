@@ -5,6 +5,8 @@
 #include "Renderer.h"
 #include <stdlib.h>
 
+#include "glad/Glad.h"
+
 /*
  **current is the actual renderer.
  *current is the pointer to the memory address of that renderer.

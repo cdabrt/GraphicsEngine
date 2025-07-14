@@ -8,6 +8,8 @@
 #include <Renderer/Renderer.h>
 #include <Renderer/OpenGL/OpenGLRenderer.h>
 #include <GLFW/glfw3.h>
+#include <string.h>
+#include "OpenGL/OpenGLContext.h"
 
 struct OpenGLContext;
 
@@ -16,11 +18,13 @@ struct Renderer *renderer = malloc(sizeof(struct Renderer));
     switch (rendererType) {
         case OPENGL: {
             struct OpenGLContext* openGLContext = malloc(sizeof(*openGLContext));
+            memset(openGLContext, 0, sizeof(struct OpenGLContext));
             openGLContext->window = window;
 
             renderer->initialize = openGLInitialize;
             renderer->render = openGLRender;
-            renderer->swapBuffers = openGLSwapBuffers,
+            renderer->swapBuffers = openGLSwapBuffers;
+            renderer->kill = openGLKill;
             renderer->context = openGLContext;
             break;
         }

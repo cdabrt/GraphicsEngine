@@ -20,7 +20,7 @@ int main() {
     GLFWwindow* window = createWindow(width, height);
 
     struct Renderer *renderer = createRenderer(window, OPENGL);
-    renderer->initialize(xPos, yPos, width, height);
+    renderer->initialize(renderer->context, xPos, yPos, width, height);
 
     //Main window render loop
     while (!glfwWindowShouldClose(window)) {
@@ -49,7 +49,7 @@ int main() {
     */
     cleanupWindow(window);
 
-    free(renderer->context);
+    renderer->kill(renderer->context);
     free(renderer);
 
     return EXIT_SUCCESS;
