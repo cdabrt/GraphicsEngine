@@ -66,8 +66,15 @@ unsigned int openGLPrepareRender (const float *vertices, const float *indices,
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesDataSize, indices, GL_STATIC_DRAW); ;
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+    //Vertex position
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+        6 * sizeof(float), nullptr);
     glEnableVertexAttribArray(0);
+
+    //Colour position
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,
+        6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     return VAO;
 }
@@ -80,7 +87,15 @@ void openGLRender (void *context, const unsigned int VAO) {
     glClearColor(0.4f, 0.5f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(openGLContext->activeShaderProgram);
+    GLuint activeShaderProgram = openGLContext->activeShaderProgram;
+
+    glUseProgram(activeShaderProgram);
+
+    // //Rainbow colour
+    // const float timeValue = glfwGetTime();
+    // const int time = glGetUniformLocation(activeShaderProgram, "time");
+    // glUniform1f(time, timeValue);
+
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);

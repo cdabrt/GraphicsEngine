@@ -26,11 +26,13 @@ int main() {
     renderer->initialize(context, xPos, yPos, width, height);
 
     //TODO: REMOVE, FOR TESTING ONLY
+    //Vertices are constructed as follows:
+    //x, y, z; r, g, b
     const float vertices[] = {
-        0.5f,  0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-       -0.5f, -0.5f, 0.0f,
-       -0.5f,  0.5f, 0.0f
+        0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+       -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+       -0.5f,  0.5f, 0.0f, 0.5f, 0.5f, 0.5f
    };
     const unsigned int indices[] = {
         0, 1, 3,
