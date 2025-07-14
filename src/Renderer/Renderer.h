@@ -6,7 +6,8 @@
 #define RENDERINGSTRATEGY_H
 
 typedef void (*InitializeFunction) (void *context, int xPos, int yPos, int width, int height);
-typedef unsigned int (*PrepareRendererFunction) (const float *vertices, long vertexDataSize);
+typedef unsigned int (*PrepareRendererFunction) (const float *vertices, const float *indices,
+    long vertexDataSize, long indicesDataSize, bool drawWireframe);
 typedef void (*RenderFunction) (void *context, unsigned int VAO);
 typedef void (*SwapBuffersFunction) (void *context);
 typedef void (*KillFunction) (void *context);

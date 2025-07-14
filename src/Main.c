@@ -16,6 +16,8 @@ int main() {
     constexpr int xPos = 0;
     constexpr int yPos = 0;
 
+    constexpr bool drawWireframe = false;
+
     glfwWindowSetup();
     GLFWwindow* window = createWindow(width, height);
 
@@ -24,12 +26,20 @@ int main() {
     renderer->initialize(context, xPos, yPos, width, height);
 
     //TODO: REMOVE, FOR TESTING ONLY
-    float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f
+    const float vertices[] = {
+        0.5f,  0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f,
+       -0.5f, -0.5f, 0.0f,
+       -0.5f,  0.5f, 0.0f
+   };
+    const unsigned int indices[] = {
+        0, 1, 3,
+        1, 2, 3
     };
-    const unsigned int VAO = renderer->prepareRenderer(vertices, sizeof(vertices));
+
+    const unsigned int VAO = renderer->prepareRenderer(
+        vertices, indices, sizeof(vertices), sizeof(indices), drawWireframe
+        );
 
     //Main window render loop
     while (!glfwWindowShouldClose(window)) {
