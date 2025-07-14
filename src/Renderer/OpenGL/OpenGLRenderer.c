@@ -79,9 +79,7 @@ unsigned int openGLPrepareRender (const float *vertices, const float *indices,
     return VAO;
 }
 
-
-
-void openGLRender (void *context, const unsigned int VAO) {
+void openGLRender (void *context, const unsigned int VAO, const long indicesCount) {
     struct OpenGLContext *openGLContext = (struct OpenGLContext *)context;
     //TODO: Temporary background colour
     glClearColor(0.4f, 0.5f, 0.2f, 1.0f);
@@ -91,15 +89,11 @@ void openGLRender (void *context, const unsigned int VAO) {
 
     glUseProgram(activeShaderProgram);
 
-    // //Rainbow colour
-    // const float timeValue = glfwGetTime();
-    // const int time = glGetUniformLocation(activeShaderProgram, "time");
-    // glUniform1f(time, timeValue);
-
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
 }
+
 
 
 //Poll events and swap front buffer with back buffers

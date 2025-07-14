@@ -29,14 +29,26 @@ int main() {
     //Vertices are constructed as follows:
     //x, y, z; r, g, b
     const float vertices[] = {
-        0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-       -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
-       -0.5f,  0.5f, 0.0f, 0.5f, 0.5f, 0.5f
+        0.0f,  0.6f, 0.0f,  1.0f, 0.0f, 0.0f,  //0: Top of roof
+        0.5f,  0.2f, 0.0f,  0.8f, 0.5f, 0.2f,  //1: Right roof corner
+       -0.5f,  0.2f, 0.0f,  0.8f, 0.5f, 0.2f,  //2: Left roof corner
+        0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  //3: Bottom right wall
+       -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  //4: Bottom left wall
+        0.3f,  0.3f, 0.0f,  1.0f, 0.0f, 0.0f,  //5: Right bottom chimney
+        0.2f,  0.3f, 0.0f,  0.0f, 1.0f, 0.0f,  //6: Left bottom chimney
+        0.3f,  0.6f, 0.0f,  0.0f, 0.0f, 1.0f,  //7: Right top chimney
+        0.2f,  0.6f, 0.0f,  0.5f, 0.5f, 0.5f,  //8: Left top chimney
    };
+
     const unsigned int indices[] = {
-        0, 1, 3,
-        1, 2, 3
+        //Roof
+        0, 1, 2,
+        //Walls
+        3, 4, 1,
+        4, 2, 1,
+        //Chimney
+        5, 6, 7,
+        6, 8, 7,
     };
 
     const unsigned int VAO = renderer->prepareRenderer(
@@ -51,7 +63,7 @@ int main() {
         processWindowInput(window);
 
         //Rendering pipeline
-        renderer->render(context, VAO);
+        renderer->render(context, VAO, sizeof(indices));
 
         renderer->swapBuffers(renderer->context);
     }
