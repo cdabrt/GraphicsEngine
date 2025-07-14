@@ -20,7 +20,16 @@ int main() {
     GLFWwindow* window = createWindow(width, height);
 
     struct Renderer *renderer = createRenderer(window, OPENGL);
-    renderer->initialize(renderer->context, xPos, yPos, width, height);
+    void *context = renderer->context;
+    renderer->initialize(context, xPos, yPos, width, height);
+
+    //TODO: REMOVE, FOR TESTING ONLY
+    float vertices[] = {
+        -0.5f, -0.5f, 0.0f,
+         0.5f, -0.5f, 0.0f,
+         0.0f,  0.5f, 0.0f
+    };
+    const unsigned int VAO = renderer->prepareRenderer(vertices, sizeof(vertices));
 
     //Main window render loop
     while (!glfwWindowShouldClose(window)) {
@@ -30,14 +39,7 @@ int main() {
         processWindowInput(window);
 
         //Rendering pipeline
-        //TODO: REMOVE, FOR TESTING ONLY
-        float vertices[] = {
-            -0.5f, -0.5f, 0.0f,
-             0.5f, -0.5f, 0.0f,
-             0.0f,  0.5f, 0.0f
-        };
-
-        renderer->render(window, vertices);
+        renderer->render(context, VAO);
 
         renderer->swapBuffers(renderer->context);
     }

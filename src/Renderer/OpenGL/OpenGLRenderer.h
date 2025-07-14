@@ -9,7 +9,8 @@ GLuint createShaderProgram(char *vertexFilePath, char *fragmentFilePath);
 void setActiveShaderProgram(void *context, GLuint programId);
 
 void openGLInitialize(void *context, int xPos, int yPos, int width, int height);
-void openGLRender (void *context, float vertices[]);
+unsigned int openGLPrepareRender (const float *vertices, long vertexDataSize);
+void openGLRender (void *context, unsigned int VAO);
 void openGLSwapBuffers (void *context);
 void openGLKill (void *context);
 

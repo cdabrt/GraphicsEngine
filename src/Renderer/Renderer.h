@@ -6,7 +6,8 @@
 #define RENDERINGSTRATEGY_H
 
 typedef void (*InitializeFunction) (void *context, int xPos, int yPos, int width, int height);
-typedef void (*RenderFunction) (void *context, float vertices[]);
+typedef unsigned int (*PrepareRendererFunction) (const float *vertices, long vertexDataSize);
+typedef void (*RenderFunction) (void *context, unsigned int VAO);
 typedef void (*SwapBuffersFunction) (void *context);
 typedef void (*KillFunction) (void *context);
 
@@ -15,6 +16,7 @@ struct Renderer {
     //pointer to instance-specific data or "context"
     void *context;
     InitializeFunction initialize;
+    PrepareRendererFunction prepareRenderer;
     RenderFunction render;
     SwapBuffersFunction swapBuffers;
     KillFunction kill;

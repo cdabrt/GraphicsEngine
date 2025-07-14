@@ -12,24 +12,6 @@
 
 
 
-void openGLRender (void *context, float vertices[]) {
-    struct OpenGLContext *openGLContext = (struct OpenGLContext *)context;
-
-    unsigned int VBO;
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glUseProgram(openGLContext->activeShaderProgram);
-
-
-    //TODO: Temporary background colour
-    glClearColor(0.4f, 0.5f, 0.2f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-}
-
-
-
 void initializeBaseShaders(struct OpenGLContext *openGLContext) {
     constexpr char filePathBase[] = "../src/Renderer/OpenGL/Shaders/";
     char vertexFullPath[512];
@@ -65,6 +47,36 @@ void openGLInitialize(void *context, const int xPos, const int yPos, const int w
     initializeBaseShaders(openGLContext);
 }
 
+
+
+unsigned int openGLPrepareRender (const float *vertices, const long vertexDataSize) {
+    unsigned int VAO;
+    glGenVertexArrays(1, &VAO);
+    unsigned int VBO;
+    glGenBuffers(1, &VBO);
+
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, vertexDataSize, vertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+    glEnableVertexAttribArray(0);
+
+    return VAO;
+}
+
+
+
+void openGLRender (void *context, const unsigned int VAO) {
+    struct OpenGLContext *openGLContext = (struct OpenGLContext *)context;
+    //TODO: Temporary background colour
+    glClearColor(0.4f, 0.5f, 0.2f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glUseProgram(openGLContext->activeShaderProgram);
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+}
 
 
 //Poll events and swap front buffer with back buffers

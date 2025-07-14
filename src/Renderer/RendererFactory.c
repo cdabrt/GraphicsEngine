@@ -22,6 +22,7 @@ struct Renderer *renderer = malloc(sizeof(struct Renderer));
             openGLContext->window = window;
 
             renderer->initialize = openGLInitialize;
+            renderer->prepareRenderer = openGLPrepareRender;
             renderer->render = openGLRender;
             renderer->swapBuffers = openGLSwapBuffers;
             renderer->kill = openGLKill;
