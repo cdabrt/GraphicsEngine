@@ -17,7 +17,6 @@ void glfwWindowSetup() {
     const int minorVersionMac = 1;
     const int minorVersionRest = 6;
 
-    //Initialise GLFW
     glfwInit();
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 

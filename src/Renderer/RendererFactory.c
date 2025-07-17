@@ -12,8 +12,6 @@
 #include "OpenGL/OpenGLContext.h"
 #include "OpenGL/ShaderCompiler/OpenGLInjector.h"
 
-struct OpenGLContext;
-
 struct Renderer *createRenderer(GLFWwindow* window, const RendererType rendererType) {
 struct Renderer *renderer = malloc(sizeof(struct Renderer));
     switch (rendererType) {
