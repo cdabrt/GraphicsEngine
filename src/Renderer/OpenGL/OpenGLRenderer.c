@@ -94,9 +94,10 @@ void openGLKill (void *context) {
         glDeleteProgram(shaderProgram.id);
     }
 
+    const int numberOfVAOs = 1;
     for (size_t i =0; i < openGLContext->vaoCount; i++) {
         const struct VAO vao = openGLContext->vaos[i];
-        glDeleteVertexArrays(1, &vao.id);
+        glDeleteVertexArrays(numberOfVAOs, &vao.id);
     }
 
     openGLContext->shaderCount = 0;

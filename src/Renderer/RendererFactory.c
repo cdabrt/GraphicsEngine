@@ -16,8 +16,10 @@ struct Renderer *createRenderer(GLFWwindow* window, const RendererType rendererT
 struct Renderer *renderer = malloc(sizeof(struct Renderer));
     switch (rendererType) {
         case OPENGL: {
+            const int defaultInitValue = 0;
+
             struct OpenGLContext* openGLContext = malloc(sizeof(*openGLContext));
-            memset(openGLContext, 0, sizeof(struct OpenGLContext));
+            memset(openGLContext, defaultInitValue, sizeof(struct OpenGLContext));
             openGLContext->window = window;
 
             renderer->initialize = openGLInitialize;

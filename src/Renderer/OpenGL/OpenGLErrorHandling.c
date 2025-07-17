@@ -7,25 +7,27 @@
 #include "glad/Glad.h"
 
 void checkCompilationSuccess(const unsigned int shader) {
+    const int infoLogLength = 512;
+    char infoLog[infoLogLength];
     int success;
-    char infoLog[512];
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 
     if(!success)
     {
-        glGetShaderInfoLog(shader, 512, nullptr, infoLog);
+        glGetShaderInfoLog(shader, infoLogLength, nullptr, infoLog);
         perror(infoLog);
     }
 }
 
 void checkLinkingSuccess(const unsigned int program) {
+    const int infoLogLength = 512;
+    char infoLog[infoLogLength];
     int  success;
-    char infoLog[512];
     glGetProgramiv(program, GL_LINK_STATUS, &success);
 
     if(!success)
     {
-        glGetProgramInfoLog(program, 512, nullptr, infoLog);
+        glGetProgramInfoLog(program, infoLogLength, nullptr, infoLog);
         snprintf("Program linking failed.\n", sizeof(infoLog), infoLog);
         perror(infoLog);
     }

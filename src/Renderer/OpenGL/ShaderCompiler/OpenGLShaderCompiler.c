@@ -12,10 +12,11 @@
 
 unsigned int compileShader (char filePath[], const unsigned int shaderType) {
     const unsigned int shader = glCreateShader(shaderType);
+    const int numberOfShaders = 1;
     char *shaderSource = readFile(filePath);
 
     //Attach shader source to the shader object and compile
-    glShaderSource(shader, 1, (const GLchar * const*) &shaderSource, nullptr);
+    glShaderSource(shader, numberOfShaders, (const GLchar * const*) &shaderSource, nullptr);
     free(shaderSource);
     glCompileShader(shader);
 
@@ -73,6 +74,10 @@ void openGLSetActiveShaderProgram(void *context, const unsigned long programId) 
 void openGLRegisterMesh(void *context, const float *vertices, const int *indices,
     const long vertexDataSize, const long indicesDataSize) {
     OPENGL_CTX;
+    const int vertexAttribIndex = 0;
+    const int vertexColourAttribIndex = 1;
+    const int vertexBlockSize = 3;
+    const int stride = 6;
 
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
@@ -88,14 +93,14 @@ void openGLRegisterMesh(void *context, const float *vertices, const int *indices
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesDataSize, indices, GL_STATIC_DRAW); ;
 
     //Vertex position
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
-        6 * sizeof(float), nullptr);
-    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(vertexAttribIndex, vertexBlockSize, GL_FLOAT, GL_FALSE,
+        stride * sizeof(float), nullptr);
+    glEnableVertexAttribArray(vertexAttribIndex);
 
     //Colour position
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,
-        6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(vertexColourAttribIndex, vertexBlockSize, GL_FLOAT, GL_FALSE,
+        stride * sizeof(float), (void*)(vertexBlockSize * sizeof(float)));
+    glEnableVertexAttribArray(vertexColourAttribIndex);
 
     addVAO(openGLContext, VAO, indicesDataSize);
 }
