@@ -6,12 +6,10 @@
 #define RENDERINGSTRATEGY_H
 
 typedef void (*InitializeFunction) (void *context, int xPos, int yPos, int width, int height);
-typedef unsigned int (*PrepareRendererFunction) (const float *vertices, const float *indices,
-    long vertexDataSize, long indicesDataSize, bool drawWireframe);
-typedef void (*RenderFunction) (void *context, unsigned int VAO, long indicesCount);
+typedef void (*PrepareRendererFunction) (bool drawWireframe);
+typedef void (*RenderFunction) (void *context);
 typedef void (*SwapBuffersFunction) (void *context);
 typedef void (*KillFunction) (void *context);
-
 
 struct Renderer {
     //pointer to instance-specific data or "context"
@@ -21,6 +19,19 @@ struct Renderer {
     RenderFunction render;
     SwapBuffersFunction swapBuffers;
     KillFunction kill;
+};
+
+
+
+typedef unsigned int (*CreateShaderProgramFunction) (char *vertexFilePath, char *fragmentFilePath);
+typedef void (*SetActiveShaderProgramFunction) (void *context, unsigned long programId);
+typedef unsigned int (*RegisterMeshFunction) (void *context, const float *vertices, const int *indices,
+    long vertexDataSize, long indicesDataSize);
+
+struct RendererInjector {
+    CreateShaderProgramFunction createShaderProgram;
+    SetActiveShaderProgramFunction setActiveShaderProgram;
+    RegisterMeshFunction registerMesh;
 };
 
 //usage: swapRenderer(&currentRenderer, &newRenderer);

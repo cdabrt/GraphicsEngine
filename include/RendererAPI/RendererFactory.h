@@ -12,5 +12,6 @@ typedef enum {
 } RendererType;
 
 struct Renderer *createRenderer(GLFWwindow* window,RendererType rendererType);
+struct RendererInjector *createRendererInjector(RendererType rendererType);
 
 #endif //RENDERERFACTORY_H

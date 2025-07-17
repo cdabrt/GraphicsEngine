@@ -3,10 +3,10 @@
 //
 
 #include <stdlib.h>
-#include "OpenGLErrorHandling.h"
+#include "../OpenGLErrorHandling.h"
 #include "glad/Glad.h"
 #include "UtilFiles/ReadFile.h"
-#include "OpenGLContext.h"
+#include "../OpenGLContext.h"
 
 
 
@@ -41,7 +41,7 @@ unsigned int linkShaders (const unsigned int vertexShader, const unsigned int fr
  Because we create the shader program in this function,
  this function can be exposed so external developers can add their own shaders
  */
-GLuint createShaderProgram(char *vertexFilePath, char *fragmentFilePath) {
+unsigned int openGLCreateShaderProgram(char *vertexFilePath, char *fragmentFilePath) {
     const unsigned int vertexShader = compileShader(
         vertexFilePath,
         GL_VERTEX_SHADER
@@ -59,8 +59,43 @@ GLuint createShaderProgram(char *vertexFilePath, char *fragmentFilePath) {
     return shaderProgram;
 }
 
-void setActiveShaderProgram(void *context, GLuint programId) {
+void openGLSetActiveShaderProgram(void *context, const unsigned long programId) {
     struct OpenGLContext *openGLContext = (struct OpenGLContext *)context;
+
     glUseProgram(programId);
     openGLContext->activeShaderProgram = programId;
+}
+
+
+//TODO: Register static mesh, put it into one big VBO and use glMultiDrawIndirect for frustum culling of the big static VBO.
+//  The dynamic meshes still need to be frustum culled
+//  Also look into instancing (trees, bullets, etc)
+void openGLRegisterMesh(void *context, const float *vertices, const int *indices,
+    const long vertexDataSize, const long indicesDataSize) {
+    struct OpenGLContext *openGLContext = (struct OpenGLContext *)context;
+
+    unsigned int VAO;
+    glGenVertexArrays(1, &VAO);
+    unsigned int VBO;
+    glGenBuffers(1, &VBO);
+    unsigned int EBO;
+    glGenBuffers(1, &EBO);
+
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, vertexDataSize, vertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesDataSize, indices, GL_STATIC_DRAW); ;
+
+    //Vertex position
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+        6 * sizeof(float), nullptr);
+    glEnableVertexAttribArray(0);
+
+    //Colour position
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,
+        6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    addVAO(openGLContext, VAO, indicesDataSize);
 }

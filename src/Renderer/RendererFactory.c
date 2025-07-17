@@ -2,14 +2,15 @@
 // Created by Carlo Baretta on 13/07/2025.
 //
 
-#include "RendererFactory.h"
+#include "../../include/RendererAPI/RendererFactory.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <Renderer/Renderer.h>
+#include <../include/RendererAPI/Renderer.h>
 #include <Renderer/OpenGL/OpenGLRenderer.h>
 #include <GLFW/glfw3.h>
 #include <string.h>
 #include "OpenGL/OpenGLContext.h"
+#include "OpenGL/ShaderCompiler/OpenGLInjector.h"
 
 struct OpenGLContext;
 
@@ -40,4 +41,26 @@ struct Renderer *renderer = malloc(sizeof(struct Renderer));
     }
 
     return renderer;
+}
+
+struct RendererInjector *createRendererInjector(const RendererType rendererType) {
+    struct RendererInjector *rendererInjector = malloc(sizeof(struct RendererInjector));
+    switch (rendererType) {
+        case OPENGL: {
+            rendererInjector->createShaderProgram = openGLCreateShaderProgram;
+            rendererInjector->setActiveShaderProgram = openGLSetActiveShaderProgram;
+            rendererInjector->registerMesh = openGLRegisterMesh;
+            break;
+        }
+        case VULKAN: {
+            printf("NOT YET IMPLEMENTED.\n");
+            exit(EXIT_FAILURE);
+        }
+        default: {
+            printf("Error: Unknown renderer type.\n");
+            exit(EXIT_FAILURE);
+        };
+    }
+
+    return rendererInjector;
 }

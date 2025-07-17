@@ -7,8 +7,8 @@
 #include <Window.h>
 #include <GLFW/glfw3.h>
 #include <WindowInputController.h>
-#include <Renderer/RendererFactory.h>
-#include "Renderer/Renderer.h"
+#include <../include/RendererAPI/RendererFactory.h>
+#include "../include/RendererAPI/Renderer.h"
 
 int main() {
     constexpr int width = 800;
@@ -22,13 +22,15 @@ int main() {
     GLFWwindow* window = createWindow(width, height);
 
     struct Renderer *renderer = createRenderer(window, OPENGL);
+    struct RendererInjector *rendererInjector = createRendererInjector(OPENGL);
+
     void *context = renderer->context;
     renderer->initialize(context, xPos, yPos, width, height);
 
     //TODO: REMOVE, FOR TESTING ONLY
     //Vertices are constructed as follows:
     //x, y, z; r, g, b
-    const float vertices[] = {
+    constexpr float vertices[] = {
         0.0f,  0.6f, 0.0f,  1.0f, 0.0f, 0.0f,  //0: Top of roof
         0.5f,  0.2f, 0.0f,  0.8f, 0.5f, 0.2f,  //1: Right roof corner
        -0.5f,  0.2f, 0.0f,  0.8f, 0.5f, 0.2f,  //2: Left roof corner
@@ -51,9 +53,8 @@ int main() {
         6, 8, 7,
     };
 
-    const unsigned int VAO = renderer->prepareRenderer(
-        vertices, indices, sizeof(vertices), sizeof(indices), drawWireframe
-        );
+    rendererInjector->registerMesh(context, vertices, indices, sizeof(vertices), sizeof(indices));
+    renderer->prepareRenderer(drawWireframe);
 
     //Main window render loop
     while (!glfwWindowShouldClose(window)) {
@@ -63,7 +64,7 @@ int main() {
         processWindowInput(window);
 
         //Rendering pipeline
-        renderer->render(context, VAO, sizeof(indices));
+        renderer->render(context);
 
         renderer->swapBuffers(renderer->context);
     }

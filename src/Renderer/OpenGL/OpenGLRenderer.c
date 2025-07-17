@@ -9,7 +9,7 @@
 #include <string.h>
 #include <GLFW/glfw3.h>
 #include "OpenGLContext.h"
-
+#include "ShaderCompiler/OpenGLInjector.h"
 
 
 void initializeBaseShaders(struct OpenGLContext *openGLContext) {
@@ -21,9 +21,9 @@ void initializeBaseShaders(struct OpenGLContext *openGLContext) {
     snprintf(fragmentFullPath, sizeof(fragmentFullPath), "%s%s", filePathBase, "Fragment/fragment_main.frag");
 
 
-    const GLuint shaderProgram = createShaderProgram(vertexFullPath, fragmentFullPath);
+    const GLuint shaderProgram = openGLCreateShaderProgram(vertexFullPath, fragmentFullPath);
     addShaderProgram(openGLContext, shaderProgram);
-    setActiveShaderProgram(openGLContext, shaderProgram);
+    openGLSetActiveShaderProgram(openGLContext, shaderProgram);
 }
 
 
@@ -49,48 +49,34 @@ void openGLInitialize(void *context, const int xPos, const int yPos, const int w
 
 
 
-unsigned int openGLPrepareRender (const float *vertices, const float *indices,
-    const long vertexDataSize, const long indicesDataSize, const bool drawWireframe) {
+void openGLPrepareRender (const bool drawWireframe) {
     if (drawWireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-    unsigned int VAO;
-    glGenVertexArrays(1, &VAO);
-    unsigned int VBO;
-    glGenBuffers(1, &VBO);
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertexDataSize, vertices, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesDataSize, indices, GL_STATIC_DRAW); ;
-
-    //Vertex position
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
-        6 * sizeof(float), nullptr);
-    glEnableVertexAttribArray(0);
-
-    //Colour position
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,
-        6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    return VAO;
 }
 
-void openGLRender (void *context, const unsigned int VAO, const long indicesCount) {
+//TODO: See TODO of openGLRegisterMesh.
+void openGLRender (void *context) {
     struct OpenGLContext *openGLContext = (struct OpenGLContext *)context;
+
     //TODO: Temporary background colour
     glClearColor(0.4f, 0.5f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    GLuint activeShaderProgram = openGLContext->activeShaderProgram;
+    const GLuint activeShaderProgram = openGLContext->activeShaderProgram;
 
     glUseProgram(activeShaderProgram);
 
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, nullptr);
+    size_t totalIndicesCount = 0;
+
+    //TODO: Add frustum culling, other types of culling, etc
+    if (openGLContext->vaoCount > 0) {
+        for (int i = 0; i < openGLContext->vaoCount; i++) {
+            const struct VAO vao = openGLContext->vaos[i];
+            glBindVertexArray(vao.id);
+            totalIndicesCount += vao.indicesCount;
+        }
+    }
+
+    glDrawElements(GL_TRIANGLES, (GLsizei) totalIndicesCount, GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
 }
 
@@ -107,11 +93,20 @@ void openGLSwapBuffers (void *context) {
 
 void openGLKill (void *context) {
     struct OpenGLContext *openGLContext = (struct OpenGLContext *)context;
+
     for (int i =0; i < openGLContext->shaderCount; i++) {
         const struct ShaderProgram shaderProgram = openGLContext->shaderPrograms[i];
         glDeleteProgram(shaderProgram.id);
     }
+
+    for (int i =0; i < openGLContext->vaoCount; i++) {
+        const struct VAO vao = openGLContext->vaos[i];
+        glDeleteProgram(vao.id);
+    }
+
     openGLContext->shaderCount = 0;
+    openGLContext->vaoCount = 0;
     free(openGLContext->shaderPrograms);
-    free(context);
+    free(openGLContext->vaos);
+    free(openGLContext);
 }
