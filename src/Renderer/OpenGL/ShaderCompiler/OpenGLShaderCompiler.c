@@ -10,9 +10,9 @@
 #include "Renderer/OpenGL/OpenGLMacros.h"
 
 
-unsigned int compileShader (char fileName[], const unsigned int shaderType) {
+unsigned int compileShader (char filePath[], const unsigned int shaderType) {
     const unsigned int shader = glCreateShader(shaderType);
-    char *shaderSource = readFile(fileName);
+    char *shaderSource = readFile(filePath);
 
     //Attach shader source to the shader object and compile
     glShaderSource(shader, 1, (const GLchar * const*) &shaderSource, nullptr);

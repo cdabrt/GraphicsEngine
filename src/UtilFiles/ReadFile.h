@@ -5,6 +5,12 @@
 #ifndef READFILE_H
 #define READFILE_H
 
-char *readFile (char fileName[]);
+/**
+ * readFile
+ * Reads the file and returns the contents as a string.
+ *
+ * @param filePath the path to the file
+ */
+char *readFile (char filePath[]);
 
 #endif //READFILE_H
