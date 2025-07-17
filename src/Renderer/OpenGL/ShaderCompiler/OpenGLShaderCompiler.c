@@ -7,7 +7,7 @@
 #include "glad/Glad.h"
 #include "UtilFiles/ReadFile.h"
 #include "../OpenGLContext.h"
-
+#include "Renderer/OpenGL/OpenGLMacros.h"
 
 
 unsigned int compileShader (char fileName[], const unsigned int shaderType) {
@@ -60,7 +60,7 @@ unsigned int openGLCreateShaderProgram(char *vertexFilePath, char *fragmentFileP
 }
 
 void openGLSetActiveShaderProgram(void *context, const unsigned long programId) {
-    struct OpenGLContext *openGLContext = (struct OpenGLContext *)context;
+    OPENGL_CTX;
 
     glUseProgram(programId);
     openGLContext->activeShaderProgram = programId;
@@ -72,7 +72,7 @@ void openGLSetActiveShaderProgram(void *context, const unsigned long programId) 
 //  Also look into instancing (trees, bullets, etc)
 void openGLRegisterMesh(void *context, const float *vertices, const int *indices,
     const long vertexDataSize, const long indicesDataSize) {
-    struct OpenGLContext *openGLContext = (struct OpenGLContext *)context;
+    OPENGL_CTX;
 
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);

@@ -11,12 +11,12 @@
 #include "../include/RendererAPI/Renderer.h"
 
 int main() {
-    constexpr int width = 800;
-    constexpr int height = 600;
-    constexpr int xPos = 0;
-    constexpr int yPos = 0;
+    const int width = 800;
+    const int height = 600;
+    const int xPos = 0;
+    const int yPos = 0;
 
-    constexpr bool drawWireframe = false;
+    const bool drawWireframe = false;
 
     glfwWindowSetup();
     GLFWwindow* window = createWindow(width, height);
@@ -30,7 +30,7 @@ int main() {
     //TODO: REMOVE, FOR TESTING ONLY
     //Vertices are constructed as follows:
     //x, y, z; r, g, b
-    constexpr float vertices[] = {
+    const float vertices[] = {
         0.0f,  0.6f, 0.0f,  1.0f, 0.0f, 0.0f,  //0: Top of roof
         0.5f,  0.2f, 0.0f,  0.8f, 0.5f, 0.2f,  //1: Right roof corner
        -0.5f,  0.2f, 0.0f,  0.8f, 0.5f, 0.2f,  //2: Left roof corner

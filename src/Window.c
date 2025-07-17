@@ -13,9 +13,9 @@ void resizeAdjustViewportCallback(GLFWwindow* window, int width, int height);
 
 
 void glfwWindowSetup() {
-    constexpr int majorVersion = 4;
-    constexpr int minorVersionMac = 1;
-    constexpr int minorVersionRest = 6;
+    const int majorVersion = 4;
+    const int minorVersionMac = 1;
+    const int minorVersionRest = 6;
 
     //Initialise GLFW
     glfwInit();
@@ -34,7 +34,7 @@ void glfwWindowSetup() {
 }
 
 GLFWwindow* createWindow(const int width, const int height) {
-    constexpr char programTitle[] = "GraphicsEngine";
+    const char programTitle[] = "GraphicsEngine";
 
     GLFWwindow* window = glfwCreateWindow(width, height, programTitle, nullptr, nullptr);
     if (!window) {

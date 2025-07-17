@@ -6,8 +6,10 @@
 #include "OpenGLContext.h"
 #include <stdlib.h>
 
+#include "OpenGLMacros.h"
+
 void addShaderProgram(struct OpenGLContext *context, const unsigned int shaderProgramID) {
-    struct OpenGLContext *openGLContext = (struct OpenGLContext *)context;
+    OPENGL_CTX;
 
     const size_t newSize = openGLContext->shaderCount + 1;
 
@@ -21,7 +23,7 @@ void addShaderProgram(struct OpenGLContext *context, const unsigned int shaderPr
 }
 
 void addVAO(struct OpenGLContext *context, const unsigned int vaoID, const size_t indicesCount) {
-    struct OpenGLContext *openGLContext = (struct OpenGLContext *)context;
+    OPENGL_CTX;
 
     const size_t newSize = openGLContext->vaoCount + 1;
 

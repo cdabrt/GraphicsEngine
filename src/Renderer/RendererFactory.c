@@ -31,11 +31,11 @@ struct Renderer *renderer = malloc(sizeof(struct Renderer));
             break;
         }
         case VULKAN: {
-            printf("NOT YET IMPLEMENTED.\n");
+            perror("NOT YET IMPLEMENTED.\n");
             exit(EXIT_FAILURE);
         }
         default: {
-            printf("Error: Unknown renderer type.\n");
+            perror("Error: Unknown renderer type.\n");
             exit(EXIT_FAILURE);
         };
     }
@@ -53,11 +53,11 @@ struct RendererInjector *createRendererInjector(const RendererType rendererType)
             break;
         }
         case VULKAN: {
-            printf("NOT YET IMPLEMENTED.\n");
+            perror("NOT YET IMPLEMENTED.\n");
             exit(EXIT_FAILURE);
         }
         default: {
-            printf("Error: Unknown renderer type.\n");
+            perror("Error: Unknown renderer type.\n");
             exit(EXIT_FAILURE);
         };
     }

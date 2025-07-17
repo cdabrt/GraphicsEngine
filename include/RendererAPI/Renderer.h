@@ -11,6 +11,18 @@ typedef void (*RenderFunction) (void *context);
 typedef void (*SwapBuffersFunction) (void *context);
 typedef void (*KillFunction) (void *context);
 
+/**
+ * Renderer
+ * An abstraction for the different renderer implementations. Specific implementations of the functions
+ * that are pointed to within the struct are supplied in @ref createRenderer.
+ *
+ * @param context the renderer context
+ * @param initialize the initialization function
+ * @param prepareRenderer the prepareRenderer function
+ * @param render the render function
+ * @param swapBuffers the swapBuffers function
+ * @param kill the kill function
+ */
 struct Renderer {
     //pointer to instance-specific data or "context"
     void *context;
@@ -28,13 +40,34 @@ typedef void (*SetActiveShaderProgramFunction) (void *context, unsigned long pro
 typedef unsigned int (*RegisterMeshFunction) (void *context, const float *vertices, const int *indices,
     long vertexDataSize, long indicesDataSize);
 
+/**
+ * RendererInjector
+ * An abstraction for the different renderer injection implementations. Specific implementations of the functions
+ * that are pointed to within the struct are supplied in @ref createRendererInjector.
+ *
+ * @param createShaderProgram the createShaderProgram function
+ * @param setActiveShaderProgram the setActiveShaderProgram function
+ * @param registerMesh the registerMesh function
+ */
 struct RendererInjector {
     CreateShaderProgramFunction createShaderProgram;
     SetActiveShaderProgramFunction setActiveShaderProgram;
     RegisterMeshFunction registerMesh;
 };
 
-//usage: swapRenderer(&currentRenderer, &newRenderer);
+/**
+ * RendererInjector
+ * An abstraction for the different renderer injection implementations. Specific implementations of the functions
+ * that are pointed to within the struct are supplied in @ref createRendererInjector.
+ *
+ * @param current the current renderer implementation
+ * @param new the new renderer implementation
+ *
+ * \b Usage:
+ * @code
+ *      swapRenderer(&currentRenderer, &newRenderer);
+ * @endcode
+ */
 void swapRenderer(struct Renderer **current, const struct Renderer *new);
 
 #endif //RENDERINGSTRATEGY_H

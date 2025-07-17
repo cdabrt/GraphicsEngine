@@ -6,14 +6,14 @@
 #include <stdlib.h>
 #include <glad/Glad.h>
 #include "OpenGLRenderer.h"
-#include <string.h>
 #include <GLFW/glfw3.h>
 #include "OpenGLContext.h"
+#include "OpenGLMacros.h"
 #include "ShaderCompiler/OpenGLInjector.h"
 
 
 void initializeBaseShaders(struct OpenGLContext *openGLContext) {
-    constexpr char filePathBase[] = "../src/Renderer/OpenGL/Shaders/";
+    const char filePathBase[] = "../src/Renderer/OpenGL/Shaders/";
     char vertexFullPath[512];
     char fragmentFullPath[512];
 
@@ -29,7 +29,7 @@ void initializeBaseShaders(struct OpenGLContext *openGLContext) {
 
 
 void openGLInitialize(void *context, const int xPos, const int yPos, const int width, const int height) {
-    struct OpenGLContext *openGLContext = (struct OpenGLContext *)context;
+    OPENGL_CTX;
 
     //Initialise GLAD
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -37,11 +37,6 @@ void openGLInitialize(void *context, const int xPos, const int yPos, const int w
         exit(EXIT_FAILURE);
     }
 
-    //Create viewport
-    /*
-     Note: This can be made smaller than the actual window (GLFWwindow*),
-     so that you can use for example native UI elements around the smaller viewport that renders the OpenGL graphics.
-    */
     glViewport(xPos, yPos, width, height);
 
     initializeBaseShaders(openGLContext);
@@ -55,7 +50,7 @@ void openGLPrepareRender (const bool drawWireframe) {
 
 //TODO: See TODO of openGLRegisterMesh.
 void openGLRender (void *context) {
-    struct OpenGLContext *openGLContext = (struct OpenGLContext *)context;
+    OPENGL_CTX;
 
     //TODO: Temporary background colour
     glClearColor(0.4f, 0.5f, 0.2f, 1.0f);
@@ -84,7 +79,7 @@ void openGLRender (void *context) {
 
 //Poll events and swap front buffer with back buffers
 void openGLSwapBuffers (void *context) {
-    struct OpenGLContext *openGLContext = (struct OpenGLContext *)context;
+    OPENGL_CTX;
     glfwPollEvents();
     glfwSwapBuffers(openGLContext->window);
 }
@@ -92,16 +87,16 @@ void openGLSwapBuffers (void *context) {
 
 
 void openGLKill (void *context) {
-    struct OpenGLContext *openGLContext = (struct OpenGLContext *)context;
+    OPENGL_CTX;
 
-    for (int i =0; i < openGLContext->shaderCount; i++) {
+    for (size_t i =0; i < openGLContext->shaderCount; i++) {
         const struct ShaderProgram shaderProgram = openGLContext->shaderPrograms[i];
         glDeleteProgram(shaderProgram.id);
     }
 
-    for (int i =0; i < openGLContext->vaoCount; i++) {
+    for (size_t i =0; i < openGLContext->vaoCount; i++) {
         const struct VAO vao = openGLContext->vaos[i];
-        glDeleteProgram(vao.id);
+        glDeleteVertexArrays(1, &vao.id);
     }
 
     openGLContext->shaderCount = 0;
