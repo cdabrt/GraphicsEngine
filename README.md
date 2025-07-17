@@ -34,4 +34,7 @@ Add the command:
 
 Replace \${PROJECT_DIR} with your absolute path to the project.  
 With this, you can now add your own run configuration. Select CMake Application, choose the run target (name of the project in the CMake file) and you should be able to run the program.  
-Note: Always run the Conan commands before running the CMake configuration.
+***
+**Note:**
+Always run the Conan commands before running the CMake configuration. 
+Also, always run the CMAKE commands after making edits or creating new files (or use the built in CLion functions for reloading the CMake project).
