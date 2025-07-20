@@ -24,17 +24,19 @@ void openGLInitialize(void *context, int xPos, int yPos, int width, int height);
  * openGLPrepareRender
  * Prepares the OpenGL renderer implementation.
  *
+ * @param context @ref OpenGLContext.
  * @param drawWireframe should the meshes be drawn in wireframe mode (TRUE OR FALSE).
  */
-void openGLPrepareRender (bool drawWireframe);
+void openGLPrepareRender (void *context, bool drawWireframe);
 
 /**
  * openGLRender
  * The renderer loop of the OpenGL renderer implementation.
  *
  * @param context @ref OpenGLContext.
+ * @param drawWireframe should the meshes be drawn in wireframe mode (TRUE OR FALSE).
  */
-void openGLRender (void *context);
+void openGLRender (void *context, bool drawWireframe);
 
 /**
  * openGLSwapBuffers

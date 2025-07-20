@@ -11,9 +11,10 @@
  * Creates an OpenGL shader program
  *
  * @param vertexFilePath path to vertex shader file.
+ * @param geometryFullPath path to geometry shader file. <b>This file is optional</b>.
  * @param fragmentFilePath path to fragment shader file.
  */
-unsigned int openGLCreateShaderProgram(char *vertexFilePath, char *fragmentFilePath);
+unsigned int openGLCreateShaderProgram(char *vertexFilePath, char *geometryFullPath, char *fragmentFilePath);
 
 /**
  * openGLSetActiveShaderProgram

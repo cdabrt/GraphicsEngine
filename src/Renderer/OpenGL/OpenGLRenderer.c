@@ -12,21 +12,35 @@
 #include "Window.h"
 
 
-void initializeBaseShaders(struct OpenGLContext *openGLContext) {
+
+void initializeBaseShaders(struct OpenGLContext *openGLContext, const char* vertexPath, const char* geometryPath,
+    const char* fragmentPath) {
     const char filePathBase[] = "../src/Renderer/OpenGL/Shaders/";
-    char vertexFullPath[512];
-    char fragmentFullPath[512];
+    const unsigned int byteSize = 1024;
+    char vertexFullPath[byteSize];
+    char fragmentFullPath[byteSize];
+    char geometryFullPath[byteSize];
 
-    snprintf(vertexFullPath, sizeof(vertexFullPath), "%s%s", filePathBase, "Vertex/vertex_main.vert");
-    snprintf(fragmentFullPath, sizeof(fragmentFullPath), "%s%s", filePathBase, "Fragment/fragment_main.frag");
+    snprintf(vertexFullPath, sizeof(vertexFullPath), "%s%s", filePathBase, vertexPath);
+    snprintf(fragmentFullPath, sizeof(fragmentFullPath), "%s%s", filePathBase, fragmentPath);
 
+    if (geometryPath[0] != '\0') {
+        snprintf(geometryFullPath, sizeof(geometryFullPath), "%s%s", filePathBase, geometryPath);
+    }
 
-    const GLuint shaderProgram = openGLCreateShaderProgram(vertexFullPath, fragmentFullPath);
+    const GLuint shaderProgram = openGLCreateShaderProgram(vertexFullPath, geometryFullPath, fragmentFullPath);
     addShaderProgram(openGLContext, shaderProgram);
     openGLSetActiveShaderProgram(openGLContext, shaderProgram);
 }
 
-
+void initializeWireframeShaders(struct OpenGLContext *openGLContext) {
+    initializeBaseShaders(
+        openGLContext,
+        "Vertex/vertex_wireframe.vert",
+        "\0",
+        "Fragment/fragment_wireframe.frag"
+        );
+}
 
 void openGLInitialize(void *context, const int xPos, const int yPos, const int width, const int height) {
     OPENGL_CTX;
@@ -39,18 +53,24 @@ void openGLInitialize(void *context, const int xPos, const int yPos, const int w
 
     glViewport(xPos, yPos, width, height);
 
-    initializeBaseShaders(openGLContext);
+    initializeBaseShaders(openGLContext, "Vertex/vertex_main.vert", "\0", "Fragment/fragment_main.frag");
 }
 
 
 
-void openGLPrepareRender (const bool drawWireframe) {
-    if (drawWireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+void openGLPrepareRender (void *context, const bool drawWireframe) {
+    OPENGL_CTX;
+
+    if (drawWireframe) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        initializeWireframeShaders(openGLContext);
+    }
 }
 
 //TODO: See TODO of openGLRegisterMesh.
-void openGLRender (void *context) {
+void openGLRender (void *context, const bool drawWireframe) {
     OPENGL_CTX;
+    const int array = 0;
 
     //TODO: Temporary background colour
     glClearColor(0.4f, 0.5f, 0.2f, 1.0f);
@@ -60,27 +80,25 @@ void openGLRender (void *context) {
 
     glUseProgram(activeShaderProgram);
 
-    size_t totalIndicesCount = 0;
-
     //TODO: Add frustum culling, other types of culling, etc
     if (openGLContext->vaoCount > 0) {
         for (int i = 0; i < openGLContext->vaoCount; i++) {
             const struct VAO *vao = &openGLContext->vaos[i];
             glBindVertexArray(vao->id);
 
-
-            for (int j = 0; j < vao->textureCount; j++) {
-                const struct Texture *texture = &vao->textures[j];
-                glActiveTexture(GL_TEXTURE0 + texture->textureUnit);
-                glBindTexture(GL_TEXTURE_2D, texture->id);
-                glUniform1i(glGetUniformLocation(activeShaderProgram, texture->uniformName), j);
+            if (!drawWireframe) {
+                for (int j = 0; j < vao->textureCount; j++) {
+                    const struct Texture *texture = &vao->textures[j];
+                    glActiveTexture(GL_TEXTURE0 + texture->textureUnit);
+                    glBindTexture(GL_TEXTURE_2D, texture->id);
+                    glUniform1i(glGetUniformLocation(activeShaderProgram, texture->uniformName), j);
+                }
             }
-
 
             glDrawElements(GL_TRIANGLES, (GLsizei) vao->indicesCount, GL_UNSIGNED_INT, NULL);
         }
     }
-    glBindVertexArray(0);
+    glBindVertexArray(array);
 }
 
 

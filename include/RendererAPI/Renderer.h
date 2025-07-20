@@ -8,8 +8,8 @@
 #include "RendererAPI/Mesh.h"
 
 typedef void (*InitializeFunction) (void *context, int xPos, int yPos, int width, int height);
-typedef void (*PrepareRendererFunction) (bool drawWireframe);
-typedef void (*RenderFunction) (void *context);
+typedef void (*PrepareRendererFunction) (void *context, bool drawWireframe);
+typedef void (*RenderFunction) (void *context, bool drawWireframe);
 typedef void (*SwapBuffersFunction) (void *context);
 typedef void (*KillFunction) (void *context);
 
@@ -37,7 +37,7 @@ struct Renderer {
 
 
 
-typedef unsigned int (*CreateShaderProgramFunction) (char *vertexFilePath, char *fragmentFilePath);
+typedef unsigned int (*CreateShaderProgramFunction) (char *vertexFilePath, char *geometryFilePath, char *fragmentFilePath);
 typedef void (*SetActiveShaderProgramFunction) (void *context, unsigned long programId);
 typedef void (*RegisterMeshFunction) (void *context, const struct Mesh *mesh);
 

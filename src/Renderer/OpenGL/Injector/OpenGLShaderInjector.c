@@ -29,9 +29,12 @@ unsigned int compileShader (char filePath[], const unsigned int shaderType) {
     return shader;
 }
 
-unsigned int linkShaders (const unsigned int vertexShader, const unsigned int fragmentShader) {
+unsigned int linkShaders (const unsigned int vertexShader, const unsigned int geometryShader, const unsigned int fragmentShader) {
     const unsigned int shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
+    if (geometryShader != GL_NONE) {
+        glAttachShader(shaderProgram, geometryShader);
+    }
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
 
@@ -44,7 +47,7 @@ unsigned int linkShaders (const unsigned int vertexShader, const unsigned int fr
  Because we create the shader program in this function,
  this function can be exposed so external developers can add their own shaders
  */
-unsigned int openGLCreateShaderProgram(char *vertexFilePath, char *fragmentFilePath) {
+unsigned int openGLCreateShaderProgram(char *vertexFilePath, char *geometryFullPath, char *fragmentFilePath) {
     const unsigned int vertexShader = compileShader(
         vertexFilePath,
         GL_VERTEX_SHADER
@@ -55,10 +58,20 @@ unsigned int openGLCreateShaderProgram(char *vertexFilePath, char *fragmentFileP
         GL_FRAGMENT_SHADER
         );
 
-    const unsigned int shaderProgram = linkShaders(vertexShader, fragmentShader);
+    unsigned int geometryShader = GL_NONE;
+    if (geometryFullPath[0] != '\0') {
+        geometryShader = compileShader(
+            geometryFullPath,
+            GL_GEOMETRY_SHADER
+            );
+    }
+
+    const unsigned int shaderProgram = linkShaders(vertexShader, geometryShader, fragmentShader);
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+    if (geometryShader != GL_NONE) glDeleteShader(geometryShader);
+
     return shaderProgram;
 }
 

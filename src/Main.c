@@ -17,7 +17,6 @@ int main() {
     const int height = 600;
     const int xPos = 0;
     const int yPos = 0;
-
     const bool drawWireframe = false;
 
     glfwWindowSetup();
@@ -66,7 +65,11 @@ int main() {
 
     rendererInjector->registerMesh(context, &mesh);
 
-    renderer->prepareRenderer(drawWireframe);
+    /*
+      Shader injection should happen before this call, so that the wireframe shaders
+      are always used when drawWireframe is true.
+    */
+    renderer->prepareRenderer(context, drawWireframe);
 
     //Main window render loop
     while (!glfwWindowShouldClose(window)) {
@@ -74,7 +77,7 @@ int main() {
         processWindowInput(window);
 
         //Rendering pipeline
-        renderer->render(context);
+        renderer->render(context, drawWireframe);
 
         renderer->swapBuffers(renderer->context);
     }
