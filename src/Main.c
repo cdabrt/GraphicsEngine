@@ -71,8 +71,6 @@ int main() {
     //Main window render loop
     while (!glfwWindowShouldClose(window)) {
         //Input processing
-        //TODO: Perhaps we can attach a callback to here, which can register callbacks for certain inputs
-        //  Each renderer can do it for it's own thing or whatever. Have to think about that one carefully
         processWindowInput(window);
 
         //Rendering pipeline
