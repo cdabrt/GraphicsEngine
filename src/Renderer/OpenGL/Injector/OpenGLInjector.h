@@ -35,5 +35,16 @@ void openGLSetActiveShaderProgram(void *context, unsigned long programId);
  * @param vertexDataSize how many items there are in the vertex matrix.
  * @param indicesDataSize how many items there are in the index matrix.
  */
-void openGLRegisterMesh(void *context, struct Mesh mesh);
+void openGLRegisterMesh(void *context, const struct Mesh *mesh);
+
+/**
+ * registerTextures
+ * Registers a list of textures and adds those textures to the VAO.
+ *
+ * @param context the renderer context.
+ * @param textures the to be added texture.
+ * @param textureCount the number of textures that need to be added.
+ * @param vao the vao of which the textures need to be added to.
+ */
+void registerTextures(struct OpenGLContext *context, const struct Texture *textures, size_t textureCount, struct VAO *vao);
 #endif //OPENGLSHADERINJECTOR_H

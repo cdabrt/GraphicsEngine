@@ -39,7 +39,7 @@ struct Renderer {
 
 typedef unsigned int (*CreateShaderProgramFunction) (char *vertexFilePath, char *fragmentFilePath);
 typedef void (*SetActiveShaderProgramFunction) (void *context, unsigned long programId);
-typedef void (*RegisterMeshFunction) (void *context, struct Mesh mesh);
+typedef void (*RegisterMeshFunction) (void *context, const struct Mesh *mesh);
 
 /**
  * RendererInjector

@@ -64,7 +64,7 @@ int main() {
         sizeof(textures) / sizeof(textures[0]),
         };
 
-    rendererInjector->registerMesh(context, mesh);
+    rendererInjector->registerMesh(context, &mesh);
 
     renderer->prepareRenderer(drawWireframe);
 

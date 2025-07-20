@@ -5,7 +5,7 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include "../../src/Renderer/OpenGL/OpenGLHeaders.h"
+#include <Renderer/OpenGL/OpenGLHeaders.h>
 
 enum TextureType {
     DIFFUSE,
