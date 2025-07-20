@@ -37,6 +37,7 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 23)
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/build/Release/generators")
 #Find dependencies provided by Conan
 find_package(glfw3 REQUIRED)
+find_package(stb REQUIRED)
 
 # Include directories
 target_include_directories(
@@ -56,6 +57,7 @@ target_link_libraries(
         #PRIVATE, so that other projects including GraphicsEngine are not forced to link dependencies themselves for their own project.
         PRIVATE
             glfw
+            stb::stb
 )
 
 if(UNIX)

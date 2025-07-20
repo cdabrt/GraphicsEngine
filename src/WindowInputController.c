@@ -2,8 +2,7 @@
 // Created by Carlo Baretta on 13/07/2025.
 //
 
-#include <glad/Glad.h>
-#include <GLFW/glfw3.h>
+#include "Renderer/OpenGL/OpenGLHeaders.h"
 
 void processWindowInput(GLFWwindow *window) {
     //Example:

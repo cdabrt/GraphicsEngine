@@ -2,10 +2,8 @@
 // Created by Carlo Baretta on 13/07/2025.
 //
 
-#include "../../include/RendererAPI/Renderer.h"
+#include <RendererAPI/Renderer.h>
 #include <stdlib.h>
-
-#include "glad/Glad.h"
 
 /*
  **current is the actual renderer.

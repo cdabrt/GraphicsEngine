@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <GLFW/glfw3.h>
+#include "Renderer/OpenGL/OpenGLHeaders.h"
 
 
 
@@ -35,7 +35,7 @@ void glfwWindowSetup() {
 GLFWwindow* createWindow(const int width, const int height) {
     const char programTitle[] = "GraphicsEngine";
 
-    GLFWwindow* window = glfwCreateWindow(width, height, programTitle, nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(width, height, programTitle, NULL, NULL);
     if (!window) {
         perror("Failed to create GLFW window");
         glfwTerminate();

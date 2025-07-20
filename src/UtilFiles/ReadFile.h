@@ -9,7 +9,7 @@
  * readFile
  * Reads the file and returns the contents as a string.
  *
- * @param filePath the path to the file
+ * @param filePath the path to the file.
  */
 char *readFile (char filePath[]);
 

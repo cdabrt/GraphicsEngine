@@ -10,7 +10,7 @@
  * processWindowInput
  * Processes keybord inputs made within a @ref GLFWwindow instance.
  *
- * @param window the active @ref GLFWwindow
+ * @param window the active @ref GLFWwindow.
  */
 void processWindowInput(GLFWwindow *window);
 

@@ -2,10 +2,8 @@
 // Created by Carlo Baretta on 14/07/2025.
 //
 
-
-#include "OpenGLContext.h"
 #include <stdlib.h>
-
+#include "OpenGLContext.h"
 #include "OpenGLMacros.h"
 
 void addShaderProgram(struct OpenGLContext *context, const unsigned int shaderProgramID) {
@@ -28,15 +26,31 @@ void addVAO(struct OpenGLContext *context, const unsigned int vaoID, const size_
     const size_t newSize = openGLContext->vaoCount + 1;
 
     struct VAO *vaos = realloc(
-        openGLContext->vaos, newSize * sizeof(struct ShaderProgram)
+        openGLContext->vaos, newSize * sizeof(struct VAO)
     );
     openGLContext->vaos = vaos;
     openGLContext->vaoCount = newSize;
 
     struct VAO vao = {
         vao.id = vaoID,
-        vao.indicesCount = indicesCount
+        vao.indicesCount = indicesCount,
+        NULL,
+        0
     };
 
     openGLContext->vaos[openGLContext->vaoCount - 1] = vao;
+}
+
+void addTexture(struct OpenGLContext *context, struct VAO *vao, const struct Texture texture) {
+    OPENGL_CTX;
+
+    const size_t newSize = vao->textureCount + 1;
+
+    struct Texture *textures = realloc(
+        vao->textures, newSize * sizeof(struct Texture)
+    );
+    vao->textures = textures;
+    vao->textureCount = newSize;
+
+    vao->textures[vao->textureCount - 1] = texture;
 }

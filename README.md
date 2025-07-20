@@ -21,7 +21,7 @@ Run the following commands below. Make sure to install a C compiler and add it t
 * cd build  
  Cd into build folder.
 * cmake .. -DCMAKE_TOOLCHAIN_FILE=build/Release/generators/conan_toolchain.cmake -DCMAKE_PREFIX_PATH=build/Release/generators -DCMAKE_BUILD_TYPE=Release  
- Set conan toolchain and build type. For release, change type to "Release".
+ Set conan toolchain and build type.
 * cmake --build .  
  Build project using cmake.
 ***

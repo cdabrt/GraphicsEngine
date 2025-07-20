@@ -13,8 +13,7 @@ char *readFile (char fileName[]) {
     FILE *sourceFile = fopen(fileName, "r");
     if (!sourceFile) {
         perror("Failed to open file");
-        fclose(sourceFile);
-        return nullptr;
+        return NULL;
     }
 
     fseek(sourceFile, offset, SEEK_END);

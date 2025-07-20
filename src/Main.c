@@ -4,11 +4,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <_string.h>
 #include <Window.h>
-#include <GLFW/glfw3.h>
 #include <WindowInputController.h>
+#include <../include/RendererAPI/Renderer.h>
+#include <../include/RendererAPI/Mesh.h>
 #include <../include/RendererAPI/RendererFactory.h>
-#include "../include/RendererAPI/Renderer.h"
+#include "Renderer/OpenGL/OpenGLHeaders.h"
 
 int main() {
     const int width = 800;
@@ -31,29 +33,39 @@ int main() {
     //Vertices are constructed as follows:
     //x, y, z; r, g, b
     const float vertices[] = {
-        0.0f,  0.6f, 0.0f,  1.0f, 0.0f, 0.0f,  //0: Top of roof
-        0.5f,  0.2f, 0.0f,  0.8f, 0.5f, 0.2f,  //1: Right roof corner
-       -0.5f,  0.2f, 0.0f,  0.8f, 0.5f, 0.2f,  //2: Left roof corner
-        0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  //3: Bottom right wall
-       -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  //4: Bottom left wall
-        0.3f,  0.3f, 0.0f,  1.0f, 0.0f, 0.0f,  //5: Right bottom chimney
-        0.2f,  0.3f, 0.0f,  0.0f, 1.0f, 0.0f,  //6: Left bottom chimney
-        0.3f,  0.6f, 0.0f,  0.0f, 0.0f, 1.0f,  //7: Right top chimney
-        0.2f,  0.6f, 0.0f,  0.5f, 0.5f, 0.5f,  //8: Left top chimney
+        //Positions         //Colours           //Texture coordinates
+        -0.5f,  0.5f, 0.0f,  0.8f, 0.5f, 0.2f,   0.0f, 1.0f,
+        0.5f,  0.5f, 0.0f,  0.8f, 0.5f, 0.2f,   1.0f, 1.0f,
+        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
+        0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,   1.0f, 0.0f,
    };
 
     const unsigned int indices[] = {
-        //Roof
-        0, 1, 2,
-        //Walls
-        3, 4, 1,
-        4, 2, 1,
-        //Chimney
-        5, 6, 7,
-        6, 8, 7,
+        2, 3, 0,
+        3, 1, 0,
     };
 
-    rendererInjector->registerMesh(context, vertices, indices, sizeof(vertices), sizeof(indices));
+    struct Texture textures[] = {
+        {
+            strdup("../src/Renderer/OpenGL/Textures/House.png"),
+            DIFFUSE,
+            "diffuse",
+            .id = 0,
+            0
+        }
+    };
+
+    struct Mesh mesh = {
+        vertices,
+        indices,
+        sizeof(vertices),
+        sizeof(indices),
+        textures,
+        sizeof(textures) / sizeof(textures[0]),
+        };
+
+    rendererInjector->registerMesh(context, mesh);
+
     renderer->prepareRenderer(drawWireframe);
 
     //Main window render loop
@@ -74,7 +86,6 @@ int main() {
         it does not fully quit the program, just hides it in the background.
         Probably do not terminate the while loop on macOS.
     */
-    cleanupWindow(window);
 
     renderer->kill(renderer->context);
     free(renderer);

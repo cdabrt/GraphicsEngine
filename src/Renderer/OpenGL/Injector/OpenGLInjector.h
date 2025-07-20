@@ -4,6 +4,7 @@
 
 #ifndef OPENGLSHADERINJECTOR_H
 #define OPENGLSHADERINJECTOR_H
+#include <../include/RendererAPI/Mesh.h>
 
 /**
  * openGLCreateShaderProgram
@@ -23,17 +24,16 @@ unsigned int openGLCreateShaderProgram(char *vertexFilePath, char *fragmentFileP
  */
 void openGLSetActiveShaderProgram(void *context, unsigned long programId);
 
-
 /**
  * openGLRegisterMesh
  * Registers a mesh to be rendered.
  *
  * @param context the renderer context.
+ * @param mesh the mesh to be registered.
  * @param vertices the vertex matrix of the mesh.
  * @param indices the index matrix of the mesh.
  * @param vertexDataSize how many items there are in the vertex matrix.
  * @param indicesDataSize how many items there are in the index matrix.
  */
-unsigned int openGLRegisterMesh(void *context, const float *vertices, const int *indices, long vertexDataSize, long indicesDataSize);
-
+void openGLRegisterMesh(void *context, struct Mesh mesh);
 #endif //OPENGLSHADERINJECTOR_H

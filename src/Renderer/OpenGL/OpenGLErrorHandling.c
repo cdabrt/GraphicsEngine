@@ -14,7 +14,7 @@ void checkCompilationSuccess(const unsigned int shader) {
 
     if(!success)
     {
-        glGetShaderInfoLog(shader, infoLogLength, nullptr, infoLog);
+        glGetShaderInfoLog(shader, infoLogLength, NULL, infoLog);
         perror(infoLog);
     }
 }
@@ -27,7 +27,7 @@ void checkLinkingSuccess(const unsigned int program) {
 
     if(!success)
     {
-        glGetProgramInfoLog(program, infoLogLength, nullptr, infoLog);
+        glGetProgramInfoLog(program, infoLogLength, NULL, infoLog);
         snprintf("Program linking failed.\n", sizeof(infoLog), infoLog);
         perror(infoLog);
     }

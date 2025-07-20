@@ -9,7 +9,7 @@
  * OPENGL_CTX
  * Declares and initializes a pointer to the OpenGL rendering context implementation.
  *
- * @param context the renderer context
+ * @param context the renderer context.
  *
  * @note This macro implicitly creates a variable called `openGLContext`. Use carefully to avoid naming conflicts.
  *

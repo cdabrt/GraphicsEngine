@@ -4,7 +4,7 @@
 
 #ifndef RENDERERFACTORY_H
 #define RENDERERFACTORY_H
-#include <GLFW/glfw3.h>
+#include "Renderer/OpenGL/OpenGLHeaders.h".
 
 typedef enum {
     OPENGL,

@@ -4,7 +4,8 @@
 
 #ifndef OPENGLCONTEXT_H
 #define OPENGLCONTEXT_H
-#include "GLFW/glfw3.h"
+#include <RendererAPI/Mesh.h>
+#include "Renderer/OpenGL/OpenGLHeaders.h"
 
 /**
  * ShaderProgram
@@ -26,6 +27,8 @@ struct ShaderProgram {
 struct VAO {
     GLuint id;
     size_t indicesCount;
+    struct Texture *textures;
+    size_t textureCount;
 };
 
 /*
@@ -58,21 +61,31 @@ struct OpenGLContext {
 
 /**
  * addShaderProgram
- * Adds a shader program to the list of shader programs of @ref OpenGLContext
+ * Adds a shader program to the list of shader programs of @ref OpenGLContext.
  *
- * @param context @ref OpenGLContext
- * @param shaderProgramID the ID of the shader program
+ * @param context @ref OpenGLContext.
+ * @param shaderProgramID the ID of the shader program.
  */
 void addShaderProgram(struct OpenGLContext *context, unsigned int shaderProgramID);
 
 /**
  * addShaderProgram
- * Adds a VAO to the list of VAOs of @ref OpenGLContext
+ * Adds a VAO to the list of VAOs of @ref OpenGLContext.
  *
- * @param context @ref OpenGLContext
- * @param vao the ID of the VAO
- * @param indicesCount the number of indices of all the meshes that belong to the VAO
+ * @param context @ref OpenGLContext.
+ * @param vao the ID of the VAO.
+ * @param indicesCount the number of indices of all the meshes that belong to the VAO.
  */
 void addVAO(struct OpenGLContext *context, unsigned int vao, size_t indicesCount);
+
+/**
+ * addTexture
+ * Adds a texture to the VAO.
+ *
+ * @param context @ref OpenGLContext.
+ * @param vao the VAO the texture needs to be added to.
+ * @param texture the texture that needs to be added to the VAO.
+ */
+void addTexture(struct OpenGLContext *context, struct VAO *vao, struct Texture texture);
 
 #endif //OPENGLCONTEXT_H

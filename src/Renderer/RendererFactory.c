@@ -1,16 +1,15 @@
 //
 // Created by Carlo Baretta on 13/07/2025.
 //
-
 #include "../../include/RendererAPI/RendererFactory.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <../include/RendererAPI/Renderer.h>
-#include <Renderer/OpenGL/OpenGLRenderer.h>
-#include <GLFW/glfw3.h>
+#include "Renderer/OpenGL/OpenGLRenderer.h"
 #include <string.h>
 #include "OpenGL/OpenGLContext.h"
-#include "OpenGL/ShaderCompiler/OpenGLInjector.h"
+#include "OpenGL/Injector/OpenGLInjector.h"
+#include <../include/RendererAPI/Renderer.h>
+#include "OpenGL/OpenGLHeaders.h"
 
 struct Renderer *createRenderer(GLFWwindow* window, const RendererType rendererType) {
 struct Renderer *renderer = malloc(sizeof(struct Renderer));
@@ -20,8 +19,8 @@ struct Renderer *renderer = malloc(sizeof(struct Renderer));
 
             struct OpenGLContext* openGLContext = malloc(sizeof(*openGLContext));
             memset(openGLContext, defaultInitValue, sizeof(struct OpenGLContext));
-            openGLContext->window = window;
 
+            openGLContext->window = window;
             renderer->initialize = openGLInitialize;
             renderer->prepareRenderer = openGLPrepareRender;
             renderer->render = openGLRender;
@@ -39,6 +38,7 @@ struct Renderer *renderer = malloc(sizeof(struct Renderer));
             exit(EXIT_FAILURE);
         };
     }
+
 
     return renderer;
 }

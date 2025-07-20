@@ -4,12 +4,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <glad/Glad.h>
 #include "OpenGLRenderer.h"
-#include <GLFW/glfw3.h>
 #include "OpenGLContext.h"
 #include "OpenGLMacros.h"
-#include "ShaderCompiler/OpenGLInjector.h"
+#include "Injector/OpenGLInjector.h"
+#include "OpenGLHeaders.h"
+#include "Window.h"
 
 
 void initializeBaseShaders(struct OpenGLContext *openGLContext) {
@@ -65,13 +65,21 @@ void openGLRender (void *context) {
     //TODO: Add frustum culling, other types of culling, etc
     if (openGLContext->vaoCount > 0) {
         for (int i = 0; i < openGLContext->vaoCount; i++) {
-            const struct VAO vao = openGLContext->vaos[i];
-            glBindVertexArray(vao.id);
-            totalIndicesCount += vao.indicesCount;
+            const struct VAO *vao = &openGLContext->vaos[i];
+            glBindVertexArray(vao->id);
+
+
+            for (int j = 0; j < vao->textureCount; j++) {
+                const struct Texture *texture = &vao->textures[j];
+                glActiveTexture(GL_TEXTURE0 + texture->textureUnit);
+                glBindTexture(GL_TEXTURE_2D, texture->id);
+                glUniform1i(glGetUniformLocation(activeShaderProgram, texture->uniformName), j);
+            }
+
+
+            glDrawElements(GL_TRIANGLES, (GLsizei) vao->indicesCount, GL_UNSIGNED_INT, NULL);
         }
     }
-
-    glDrawElements(GL_TRIANGLES, (GLsizei) totalIndicesCount, GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
 }
 
@@ -88,6 +96,8 @@ void openGLSwapBuffers (void *context) {
 
 void openGLKill (void *context) {
     OPENGL_CTX;
+    glFinish();
+    cleanupWindow(openGLContext->window);
 
     for (size_t i =0; i < openGLContext->shaderCount; i++) {
         const struct ShaderProgram shaderProgram = openGLContext->shaderPrograms[i];
@@ -95,9 +105,17 @@ void openGLKill (void *context) {
     }
 
     const int numberOfVAOs = 1;
+    const int numberOfTexturesToDelete = 1;
     for (size_t i =0; i < openGLContext->vaoCount; i++) {
-        const struct VAO vao = openGLContext->vaos[i];
-        glDeleteVertexArrays(numberOfVAOs, &vao.id);
+        const struct VAO *vao = &openGLContext->vaos[i];
+
+        for (int j = 0; j < vao->textureCount; j ++) {
+            struct Texture *texture = &vao->textures[j];
+            glDeleteTextures(numberOfTexturesToDelete, &texture->id);
+            free(texture->path);
+            texture->path = "";
+        }
+        glDeleteVertexArrays(numberOfVAOs, &vao->id);
     }
 
     openGLContext->shaderCount = 0;
