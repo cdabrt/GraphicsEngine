@@ -14,7 +14,7 @@
 
 
 void initializeBaseShaders(struct OpenGLContext *openGLContext, const char* vertexPath, const char* geometryPath,
-    const char* fragmentPath) {
+    const char* fragmentPath, char* shaderName) {
     const char filePathBase[] = "../src/Renderer/OpenGL/Shaders/";
     const unsigned int byteSize = 1024;
     char vertexFullPath[byteSize];
@@ -29,7 +29,9 @@ void initializeBaseShaders(struct OpenGLContext *openGLContext, const char* vert
     }
 
     const GLuint shaderProgram = openGLCreateShaderProgram(vertexFullPath, geometryFullPath, fragmentFullPath);
-    addShaderProgram(openGLContext, shaderProgram);
+    addShaderProgram(openGLContext, shaderProgram, shaderName);
+
+    //The base shader should always be set up before any VAO, VBO and EBO setup
     openGLSetActiveShaderProgram(openGLContext, shaderProgram);
 }
 
@@ -38,7 +40,8 @@ void initializeWireframeShaders(struct OpenGLContext *openGLContext) {
         openGLContext,
         "Vertex/vertex_wireframe.vert",
         "\0",
-        "Fragment/fragment_wireframe.frag"
+        "Fragment/fragment_wireframe.frag",
+        WIREFRAME_SHADER
         );
 }
 
@@ -53,7 +56,16 @@ void openGLInitialize(void *context, const int xPos, const int yPos, const int w
 
     glViewport(xPos, yPos, width, height);
 
-    initializeBaseShaders(openGLContext, "Vertex/vertex_main.vert", "\0", "Fragment/fragment_main.frag");
+    initializeBaseShaders(
+        openGLContext,
+        "Vertex/vertex_main.vert",
+        "\0",
+        "Fragment/fragment_main.frag",
+        BASE_SHADER
+        );
+
+    // Ensure a valid shader is active before any mesh registration or OpenGL calls that require a shader
+    openGLSetActiveShaderProgram(openGLContext, getShaderProgramID(openGLContext, BASE_SHADER));
 }
 
 
@@ -67,6 +79,8 @@ void openGLPrepareRender (void *context, const bool drawWireframe) {
     }
 }
 
+
+
 //TODO: See TODO of openGLRegisterMesh.
 void openGLRender (void *context, const bool drawWireframe) {
     OPENGL_CTX;
@@ -76,9 +90,11 @@ void openGLRender (void *context, const bool drawWireframe) {
     glClearColor(0.4f, 0.5f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    const GLuint activeShaderProgram = openGLContext->activeShaderProgram;
-
-    glUseProgram(activeShaderProgram);
+    GLuint activeShaderProgram = openGLContext->activeShaderProgram;
+    if (activeShaderProgram == 0) {
+        activeShaderProgram = getShaderProgramID(openGLContext, BASE_SHADER);
+        openGLSetActiveShaderProgram(context, activeShaderProgram);
+    }
 
     //TODO: Add frustum culling, other types of culling, etc
     if (openGLContext->vaoCount > 0) {
@@ -86,12 +102,20 @@ void openGLRender (void *context, const bool drawWireframe) {
             const struct VAO *vao = &openGLContext->vaos[i];
             glBindVertexArray(vao->id);
 
+            if ((vao->shaderProgramID != activeShaderProgram) && vao->shaderProgramID != 0) {
+                openGLSetActiveShaderProgram(context, vao->shaderProgramID);
+                activeShaderProgram = vao->shaderProgramID;
+            }
+
             if (!drawWireframe) {
                 for (int j = 0; j < vao->textureCount; j++) {
                     const struct Texture *texture = &vao->textures[j];
                     glActiveTexture(GL_TEXTURE0 + texture->textureUnit);
                     glBindTexture(GL_TEXTURE_2D, texture->id);
-                    glUniform1i(glGetUniformLocation(activeShaderProgram, texture->uniformName), j);
+                    // if (!glGetUniformLocation(activeShaderProgram, texture->uniformName)) {
+                    //     perror("Uniform does not exist");
+                    // }
+                    glUniform1i(glGetUniformLocation(activeShaderProgram, texture->uniformName), texture->textureUnit);
                 }
             }
 

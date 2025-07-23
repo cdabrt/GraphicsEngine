@@ -15,6 +15,7 @@
  */
 struct ShaderProgram {
     GLuint id;
+    char *name;
 };
 
 /**
@@ -23,9 +24,13 @@ struct ShaderProgram {
  *
  * @param id the id of the VAO.
  * @param indicesCount the amount of indices of all the meshes that belong to the VAO.
+ * @param shaderProgramID it is possible for no shaderProgramID to be defined.
+ * @param textures the list of textures.
+ * @param textureCount the amount of textures in the list of textures.
  */
 struct VAO {
     GLuint id;
+    GLuint shaderProgramID;
     size_t indicesCount;
     struct Texture *textures;
     size_t textureCount;
@@ -65,8 +70,18 @@ struct OpenGLContext {
  *
  * @param context @ref OpenGLContext.
  * @param shaderProgramID the ID of the shader program.
+ * @param shaderName name of the shader program.
  */
-void addShaderProgram(struct OpenGLContext *context, unsigned int shaderProgramID);
+void addShaderProgram(struct OpenGLContext *context, unsigned int shaderProgramID, char *shaderName);
+
+/**
+ * getShaderProgramID
+ * Gets the shader program with the provided shader name.
+ *
+ * @param context @ref OpenGLContext.
+ * @param shaderName name of the shader program.
+ */
+GLuint getShaderProgramID(struct OpenGLContext *context, const char *shaderName);
 
 /**
  * addShaderProgram
@@ -75,8 +90,9 @@ void addShaderProgram(struct OpenGLContext *context, unsigned int shaderProgramI
  * @param context @ref OpenGLContext.
  * @param vao the ID of the VAO.
  * @param indicesCount the number of indices of all the meshes that belong to the VAO.
+ * @param shaderProgramID ID of the shader program that is associated with the VAO.
  */
-void addVAO(struct OpenGLContext *context, unsigned int vao, size_t indicesCount);
+void addVAO(struct OpenGLContext *context, unsigned int vao, size_t indicesCount, unsigned long shaderProgramID);
 
 /**
  * addTexture

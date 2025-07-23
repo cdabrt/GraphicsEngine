@@ -56,8 +56,12 @@ void layOutVertexAttributes() {
 //TODO: Register static mesh, put it into one big VBO and use glMultiDrawIndirect for frustum culling of the big static VBO.
 //  The dynamic meshes still need to be frustum culled
 //  Also look into instancing (trees, bullets, etc)
-void openGLRegisterMesh(void *context, const struct Mesh *mesh) {
+unsigned int openGLRegisterMesh(void *context, const struct Mesh *mesh, const unsigned long shaderProgramID) {
     OPENGL_CTX;
+
+    if (openGLContext->activeShaderProgram != shaderProgramID && shaderProgramID != 0) {
+        openGLSetActiveShaderProgram(openGLContext, shaderProgramID);
+    }
 
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
@@ -66,6 +70,8 @@ void openGLRegisterMesh(void *context, const struct Mesh *mesh) {
     registerEBO(mesh);
     layOutVertexAttributes();
 
-    addVAO(openGLContext, VAO, mesh->indicesDataSize);
+    addVAO(openGLContext, VAO, mesh->indicesDataSize, shaderProgramID);
     registerTextures(openGLContext, mesh->textures, mesh->textureCount, &openGLContext->vaos[openGLContext->vaoCount - 1]);
+
+    return VAO;
 }

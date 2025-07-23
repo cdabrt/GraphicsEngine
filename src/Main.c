@@ -11,6 +11,13 @@
 #include <../include/RendererAPI/Mesh.h>
 #include <../include/RendererAPI/RendererFactory.h>
 #include "Renderer/OpenGL/OpenGLHeaders.h"
+#include "Renderer/OpenGL/OpenGLMacros.h"
+
+void killProgram(struct Renderer *renderer, struct RendererInjector *rendererInjector) {
+    renderer->kill(renderer->context);
+    free(renderer);
+    free(rendererInjector);
+}
 
 int main() {
     const int width = 800;
@@ -26,6 +33,7 @@ int main() {
     struct RendererInjector *rendererInjector = createRendererInjector(OPENGL);
 
     void *context = renderer->context;
+    //The base shader should always be set up before any VAO, VBO and EBO setup
     renderer->initialize(context, xPos, yPos, width, height);
 
     //TODO: REMOVE, FOR TESTING ONLY
@@ -44,13 +52,14 @@ int main() {
         3, 1, 0,
     };
 
+    //TODO: Base shader requires uniform names to equivalent as stated in the fragment_main.frag file. Maybe enforce this somehow?
     struct Texture textures[] = {
         {
             strdup("../src/Renderer/OpenGL/Textures/House.png"),
             DIFFUSE,
             "diffuse",
             .id = 0,
-            0
+            1
         }
     };
 
@@ -63,7 +72,10 @@ int main() {
         sizeof(textures) / sizeof(textures[0]),
         };
 
-    rendererInjector->registerMesh(context, &mesh);
+    //For testing
+    OPENGL_CTX;
+    GLuint id = getShaderProgramID(openGLContext, BASE_SHADER);
+    rendererInjector->registerMesh(context, &mesh, id);
 
     /*
       Shader injection should happen before this call, so that the wireframe shaders
@@ -84,12 +96,11 @@ int main() {
 
     /*
      TODO: Perhaps this should be a Windows and Linux only thing. In Mac if you press the "x",
-        it does not fully quit the program, just hides it in the background.
-        Probably do not terminate the while loop on macOS.
+        it does not fully quit a program, just hides it in the background.
+        Maybe do not terminate the while loop on macOS.
     */
 
-    renderer->kill(renderer->context);
-    free(renderer);
+    killProgram(renderer, rendererInjector);
 
     return EXIT_SUCCESS;
 }

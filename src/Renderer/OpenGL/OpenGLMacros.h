@@ -4,6 +4,7 @@
 
 #ifndef OPENGLMACROS_H
 #define OPENGLMACROS_H
+#include <Renderer/OpenGL/OpenGLContext.h>
 
 /**
  * OPENGL_CTX
@@ -27,5 +28,9 @@
  * @endcode
  */
 #define OPENGL_CTX struct OpenGLContext *openGLContext = (struct OpenGLContext *)context
+
+#define BASE_SHADER "baseShader"
+
+#define WIREFRAME_SHADER "wireframeShader"
 
 #endif //OPENGLMACROS_H

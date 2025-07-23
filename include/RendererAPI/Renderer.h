@@ -39,7 +39,7 @@ struct Renderer {
 
 typedef unsigned int (*CreateShaderProgramFunction) (char *vertexFilePath, char *geometryFilePath, char *fragmentFilePath);
 typedef void (*SetActiveShaderProgramFunction) (void *context, unsigned long programId);
-typedef void (*RegisterMeshFunction) (void *context, const struct Mesh *mesh);
+typedef unsigned int (*RegisterMeshFunction) (void *context, const struct Mesh *mesh, unsigned long shaderProgramID);
 
 /**
  * RendererInjector
@@ -48,7 +48,7 @@ typedef void (*RegisterMeshFunction) (void *context, const struct Mesh *mesh);
  *
  * @param createShaderProgram the createShaderProgram function
  * @param setActiveShaderProgram the setActiveShaderProgram function
- * @param registerMesh the registerMesh function
+ * @param registerMesh the registerMesh function. Returns the ID of the created VAO
  */
 struct RendererInjector {
     CreateShaderProgramFunction createShaderProgram;

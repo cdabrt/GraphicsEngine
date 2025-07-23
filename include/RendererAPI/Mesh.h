@@ -18,7 +18,7 @@ struct Texture {
     char *path;
     enum TextureType type;
     char *uniformName;
-    GLuint id;
+    unsigned int id;
     int textureUnit;
 };
 

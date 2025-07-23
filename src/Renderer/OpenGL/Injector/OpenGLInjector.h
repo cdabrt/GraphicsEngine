@@ -31,12 +31,10 @@ void openGLSetActiveShaderProgram(void *context, unsigned long programId);
  *
  * @param context the renderer context.
  * @param mesh the mesh to be registered.
- * @param vertices the vertex matrix of the mesh.
- * @param indices the index matrix of the mesh.
- * @param vertexDataSize how many items there are in the vertex matrix.
- * @param indicesDataSize how many items there are in the index matrix.
+* @param shaderProgramID ID of the shader program that is associated with the mesh. If no ID is provided the renderer
+ * will use the active shader program instead.
  */
-void openGLRegisterMesh(void *context, const struct Mesh *mesh);
+unsigned int openGLRegisterMesh(void *context, const struct Mesh *mesh, unsigned long shaderProgramID);
 
 /**
  * registerTextures

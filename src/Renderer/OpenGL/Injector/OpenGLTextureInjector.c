@@ -32,7 +32,7 @@ void generateTexture(struct Texture *texture, const GLuint textureID, const int 
     glGenerateMipmap(GL_TEXTURE_2D);
 
     texture->id = textureID;
-    texture->textureUnit = GL_TEXTURE0 + index;
+    texture->textureUnit = index;
 }
 
 void registerFileNotFoundImage(struct OpenGLContext *context, struct VAO *vao) {
