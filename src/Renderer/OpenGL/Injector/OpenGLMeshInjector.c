@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "../include/RendererAPI/Mesh.h"
 #include "Renderer/OpenGL/OpenGLContext.h"
-#include "../../../UtilFiles/OpenGLMacrosAndUtils.h"
+#include "../../../UtilFiles/OpenGLMacrosAndUniforms.h"
 #include <stb_image.h>
 #include <string.h>
 #include "Renderer/OpenGL/OpenGLHeaders.h"

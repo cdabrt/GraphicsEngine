@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include "OpenGLRenderer.h"
 #include "OpenGLContext.h"
-#include "../../UtilFiles/OpenGLMacrosAndUtils.h"
+#include "../../UtilFiles/OpenGLMacrosAndUniforms.h"
 #include "Injector/OpenGLInjector.h"
 #include "OpenGLHeaders.h"
 #include "Window.h"
@@ -44,7 +44,7 @@ void initializeWireframeShaders(struct OpenGLContext *openGLContext) {
         "Vertex/vertex_wireframe.vert",
         "\0",
         "Fragment/fragment_wireframe.frag",
-        getBaseShaderString(WIREFRAME_SHADER)
+        getBaseShaderUniformString(WIREFRAME_SHADER)
         );
 }
 
@@ -64,7 +64,7 @@ void openGLInitialize(void *context, const int xPos, const int yPos, const int w
         "Vertex/vertex_main.vert",
         "\0",
         "Fragment/fragment_main.frag",
-        getBaseShaderString(BASE_SHADER)
+        getBaseShaderUniformString(BASE_SHADER)
         );
 }
 
@@ -92,7 +92,7 @@ void openGLRender (void *context, const bool drawWireframe) {
 
     GLuint activeShaderProgram = openGLContext->activeShaderProgram;
     if (activeShaderProgram == 0) {
-        activeShaderProgram = getShaderProgramID(openGLContext, getBaseShaderString(BASE_SHADER));
+        activeShaderProgram = getShaderProgramID(openGLContext, getBaseShaderUniformString(BASE_SHADER));
         openGLSetActiveShaderProgram(context, activeShaderProgram);
     }
 
@@ -118,6 +118,13 @@ void openGLRender (void *context, const bool drawWireframe) {
                     glUniform1i(glGetUniformLocation(activeShaderProgram, texture->uniformName), texture->textureUnit);
                 }
             }
+
+            // glm::mat4 trans = glm::mat4(1.0f);
+            // trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+            // trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+            //
+            // unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
+            // glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 
             glDrawElements(GL_TRIANGLES, (GLsizei) vao->indicesCount, GL_UNSIGNED_INT, NULL);
         }

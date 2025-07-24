@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../../UtilFiles/OpenGLMacrosAndUtils.h"
+#include "../../UtilFiles/OpenGLMacrosAndUniforms.h"
 
 void addShaderProgram(struct OpenGLContext *context, const unsigned int shaderProgramID, char *shaderName) {
     OPENGL_CTX;

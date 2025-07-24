@@ -8,6 +8,7 @@
 #include <string.h>
 #include "Renderer/OpenGL/OpenGLHeaders.h"
 #include "Renderer/OpenGL/Injector/OpenGLInjector.h"
+#include "UtilFiles/OpenGLMacrosAndUniforms.h"
 
 
 
@@ -51,7 +52,7 @@ void registerFileNotFoundImage(struct OpenGLContext *context, struct VAO *vao) {
     struct Texture texture = {
         (char *) fileNotFoundPath,
         DIFFUSE,
-        getBaseTextureTypeString(DIFFUSE),
+        getBaseTextureTypeUniformString(DIFFUSE),
         textureID,
         GL_TEXTURE0
     };
