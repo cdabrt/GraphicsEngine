@@ -102,7 +102,7 @@ void openGLRender (void *context, const bool drawWireframe) {
             const struct VAO *vao = &openGLContext->vaos[i];
             glBindVertexArray(vao->id);
 
-            if ((vao->shaderProgramID != activeShaderProgram) && vao->shaderProgramID != 0) {
+            if (vao->shaderProgramID != activeShaderProgram) {
                 openGLSetActiveShaderProgram(context, vao->shaderProgramID);
                 activeShaderProgram = vao->shaderProgramID;
             }

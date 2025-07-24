@@ -74,7 +74,18 @@ int main() {
 
     //For testing
     OPENGL_CTX;
+
+    //Confirms switching to vao set shader works.
+    //To create and register a shader program:
+    // GLuint shaderProgram = rendererInjector->createShaderProgram(
+    //     "../src/Renderer/OpenGL/Shaders/Vertex/vertex_wireframe.vert",
+    //     "\0",
+    //     "../src/Renderer/OpenGL/Shaders/Fragment/fragment_wireframe.frag"
+    //     );
+    // addShaderProgram(openGLContext, shaderProgram, WIREFRAME_SHADER);
+    //Set to WIREFRAME_SHADER for testing
     GLuint id = getShaderProgramID(openGLContext, BASE_SHADER);
+
     rendererInjector->registerMesh(context, &mesh, id);
 
     /*
