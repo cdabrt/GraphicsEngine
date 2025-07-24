@@ -117,7 +117,7 @@ void cleanUpRenderer(const struct Model *model) {
 //  instancing
 void openGLRender (void *context, const bool drawWireframe) {
     OPENGL_CTX;
-    const int array = 0;
+    const int unbindArray = 0;
 
     //TODO: Temporary background colour
     glClearColor(0.4f, 0.5f, 0.2f, 1.0f);
@@ -167,7 +167,7 @@ void openGLRender (void *context, const bool drawWireframe) {
             }
         }
     }
-    glBindVertexArray(array);
+    glBindVertexArray(unbindArray);
 }
 
 
