@@ -31,8 +31,10 @@ void initializeBaseShaders(struct OpenGLContext *openGLContext, const char* vert
     const GLuint shaderProgram = openGLCreateShaderProgram(vertexFullPath, geometryFullPath, fragmentFullPath);
     addShaderProgram(openGLContext, shaderProgram, shaderName);
 
-    //The base shader should always be set up before any VAO, VBO and EBO setup.
-    //For macOS this needs to happen immediately after creating the shader programs
+    /*The base shader should always be set up before any VAO, VBO and EBO setup.
+      For macOS this needs to happen immediately after creating the shader programs. Do not move this line somewhere else.
+      It would work on Windows, not on macOS.
+    */
     openGLSetActiveShaderProgram(openGLContext, shaderProgram);
 }
 

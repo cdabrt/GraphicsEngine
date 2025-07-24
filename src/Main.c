@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <_string.h>
+#include <string.h>
 #include <Window.h>
 #include <WindowInputController.h>
 #include <../include/RendererAPI/Renderer.h>

@@ -7,7 +7,7 @@
 #include "Renderer/OpenGL/OpenGLContext.h"
 #include "Renderer/OpenGL/OpenGLMacros.h"
 #include <stb_image.h>
-#include <_string.h>
+#include <string.h>
 #include "Renderer/OpenGL/OpenGLHeaders.h"
 #include "Renderer/OpenGL/Injector/OpenGLInjector.h"
 
