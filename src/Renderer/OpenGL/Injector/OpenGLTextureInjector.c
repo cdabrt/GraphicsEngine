@@ -19,7 +19,7 @@ void setTextureParameters() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-void generateTexture(struct Texture *texture, const GLuint textureID, const int index, const int nrChannels,
+void generateTexture(struct Texture *texture, const GLuint textureID, const int textureUnit, const int nrChannels,
     const int width, const int height, const unsigned char *data) {
     const int border = 0;
     const int level = 0;
@@ -33,7 +33,7 @@ void generateTexture(struct Texture *texture, const GLuint textureID, const int 
     glGenerateMipmap(GL_TEXTURE_2D);
 
     texture->id = textureID;
-    texture->textureUnit = index;
+    texture->textureUnit = textureUnit;
 }
 
 void registerFileNotFoundImage(struct OpenGLContext *context, struct VAO *vao) {
@@ -57,12 +57,12 @@ void registerFileNotFoundImage(struct OpenGLContext *context, struct VAO *vao) {
         GL_TEXTURE0
     };
 
-    generateTexture(&texture, textureID, 0, nrChannels, width, height, data);
+    generateTexture(&texture, textureID, 1, nrChannels, width, height, data);
     addTexture(context, vao, texture);
     stbi_image_free(data);
 }
 
-void registerTextures(struct OpenGLContext *context, const struct Texture *textures, const size_t textureCount,
+void openGLRegisterTextures(struct OpenGLContext *context, const struct Texture *textures, const size_t textureCount,
     struct VAO *vao) {
     const int numberOfRegistersAtTime = 1;
     int width, height, nrChannels;
@@ -73,8 +73,8 @@ void registerTextures(struct OpenGLContext *context, const struct Texture *textu
     } else {
         for (int i = 0; i < textureCount; i++) {
             struct Texture texture = textures[i];
-            GLuint textureID;
 
+            GLuint textureID;
             glGenTextures(numberOfRegistersAtTime, &textureID);
             setTextureParameters();
 
@@ -82,7 +82,7 @@ void registerTextures(struct OpenGLContext *context, const struct Texture *textu
             unsigned char *data = stbi_load(texture.path, &width, &height, &nrChannels, desiredChannels);
 
             if (data) {
-                generateTexture(&texture, textureID, i, nrChannels, width, height, data);
+                generateTexture(&texture, textureID, i + 1, nrChannels, width, height, data);
                 addTexture(context, vao, texture);
             }
             else {

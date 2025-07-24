@@ -18,12 +18,12 @@ typedef void (*KillFunction) (void *context);
  * An abstraction for the different renderer implementations. Specific implementations of the functions
  * that are pointed to within the struct are supplied in @ref createRenderer.
  *
- * @param context the renderer context
- * @param initialize the initialization function
- * @param prepareRenderer the prepareRenderer function
- * @param render the render function
- * @param swapBuffers the swapBuffers function
- * @param kill the kill function
+ * @param context the renderer context.
+ * @param initialize the initialization function.
+ * @param prepareRenderer the prepareRenderer function.
+ * @param render the render function.
+ * @param swapBuffers the swapBuffers function.
+ * @param kill the kill function.
  */
 struct Renderer {
     //pointer to instance-specific data or "context"

@@ -45,5 +45,5 @@ unsigned int openGLRegisterMesh(void *context, const struct Mesh *mesh, unsigned
  * @param textureCount the number of textures that need to be added.
  * @param vao the vao of which the textures need to be added to.
  */
-void registerTextures(struct OpenGLContext *context, const struct Texture *textures, size_t textureCount, struct VAO *vao);
+void openGLRegisterTextures(struct OpenGLContext *context, const struct Texture *textures, size_t textureCount, struct VAO *vao);
 #endif //OPENGLSHADERINJECTOR_H

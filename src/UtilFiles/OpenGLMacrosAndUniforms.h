@@ -82,4 +82,23 @@ inline char *getBaseTextureTypeUniformString(const enum TextureType textureType)
     return string;
 }
 
+
+
+enum MeshUniforms {
+    TRANSFORM
+};
+
+inline char *getBaseMeshUniformString(const enum TextureType textureType)
+{
+    char *string = "\0";
+
+    switch(textureType) {
+        case TRANSFORM: string="transform"; break;
+        default:
+            perror("Unknown mesh uniform");
+    }
+
+    return string;
+}
+
 #endif //OPENGLMACROS_H

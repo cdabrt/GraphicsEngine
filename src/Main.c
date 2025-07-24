@@ -58,8 +58,9 @@ int main() {
             strdup("../src/Renderer/OpenGL/Textures/House.png"),
             DIFFUSE,
             getBaseTextureTypeUniformString(DIFFUSE),
-            .id = 0,
-            1
+            //The id and textureUnit are handled under the hood.
+            0,
+            0
         }
     };
 

@@ -67,7 +67,7 @@ unsigned int openGLRegisterMesh(void *context, const struct Mesh *mesh, const un
     layOutVertexAttributes();
 
     addVAO(openGLContext, VAO, mesh->indicesDataSize, shaderProgramID);
-    registerTextures(openGLContext, mesh->textures, mesh->textureCount, &openGLContext->vaos[openGLContext->vaoCount - 1]);
+    openGLRegisterTextures(openGLContext, mesh->textures, mesh->textureCount, &openGLContext->vaos[openGLContext->vaoCount - 1]);
 
     return VAO;
 }

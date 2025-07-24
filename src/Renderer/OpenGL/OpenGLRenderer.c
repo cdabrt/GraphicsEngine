@@ -10,6 +10,7 @@
 #include "Injector/OpenGLInjector.h"
 #include "OpenGLHeaders.h"
 #include "Window.h"
+#include "cglm/struct.h"
 
 
 
@@ -81,6 +82,16 @@ void openGLPrepareRender (void *context, const bool drawWireframe) {
 
 
 
+void cleanUpRenderer(const struct VAO *vao) {
+    //Unbind textures
+    for (int i = 0; i < vao->textureCount; i++) {
+        const struct Texture *texture = &vao->textures[i];
+        glActiveTexture(GL_TEXTURE0 + texture->textureUnit);
+        //Texture 0 = "No texture"
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+}
+
 //TODO: See TODO of openGLRegisterMesh.
 void openGLRender (void *context, const bool drawWireframe) {
     OPENGL_CTX;
@@ -109,24 +120,37 @@ void openGLRender (void *context, const bool drawWireframe) {
 
             if (!drawWireframe) {
                 for (int j = 0; j < vao->textureCount; j++) {
+
                     const struct Texture *texture = &vao->textures[j];
                     glActiveTexture(GL_TEXTURE0 + texture->textureUnit);
                     glBindTexture(GL_TEXTURE_2D, texture->id);
-                    if (glGetUniformLocation(activeShaderProgram, texture->uniformName) == -1) {
+                    GLint uniformLocation = glGetUniformLocation(activeShaderProgram, texture->uniformName);
+                    if (uniformLocation == -1) {
                         printf("Uniform does not exist");
                     }
-                    glUniform1i(glGetUniformLocation(activeShaderProgram, texture->uniformName), texture->textureUnit);
+                    glUniform1i(uniformLocation, texture->textureUnit);
                 }
             }
 
-            // glm::mat4 trans = glm::mat4(1.0f);
-            // trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
-            // trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
-            //
-            // unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
-            // glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+            //TODO: Testing, this has to be somewhere else.
+            //  Maybe a mesh function. Perhaps we can make another abstraction on top of VAO. A GameObject has a VAO.
+            //  So we have Mesh -> Texture. (The Mesh struct is only used as a DTO for using the vertex data in the registration of a VAO)
+            //  and
+            //  GameObject -> VAO (dependency on Mesh for meshdata and textures) -> Texture * -> ShaderProgram (ID, sort of primary key relation)
+            mat4s transformation = glms_mat4_identity();
+            transformation = glms_rotate(transformation, glm_rad(90.0f), (vec3s){ .x = 0.0f, .y = 0.0f, .z = 1.0f });
+            transformation = glms_scale(transformation, (vec3s){ .x = 0.5f, .y = 0.5f, .z = 0.5f});
+
+            const unsigned int transformLoc = glGetUniformLocation(activeShaderProgram, getBaseMeshUniformString(TRANSFORM));
+            glUniformMatrix4fv(transformLoc, 1, GL_FALSE, &transformation.raw[0]);
+
+            //------------------------------------------------------------------------------------------
 
             glDrawElements(GL_TRIANGLES, (GLsizei) vao->indicesCount, GL_UNSIGNED_INT, NULL);
+
+            if (!drawWireframe) {
+                cleanUpRenderer(vao);
+            }
         }
     }
     glBindVertexArray(array);

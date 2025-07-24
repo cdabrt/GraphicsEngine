@@ -15,8 +15,8 @@ typedef enum {
  * createRenderer
  * Creates, initializes and returns a renderer implementation according to the supplied @ref RendererType.
  *
- * @param window the active @ref GLFWwindow
- * @param rendererType the type of renderer implementation @ref RendererType
+ * @param window the active @ref GLFWwindow.
+ * @param rendererType the type of renderer implementation @ref RendererType.
  */
 struct Renderer *createRenderer(GLFWwindow* window,RendererType rendererType);
 
@@ -24,7 +24,7 @@ struct Renderer *createRenderer(GLFWwindow* window,RendererType rendererType);
  * createRendererInjector
  * Creates, initializes and returns a renderer injector according to the supplied @ref RendererType.
  *
- * @param rendererType the type of renderer implementation @ref RendererType
+ * @param rendererType the type of renderer implementation @ref RendererType.
  */
 struct RendererInjector *createRendererInjector(RendererType rendererType);
 
