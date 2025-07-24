@@ -112,9 +112,9 @@ void openGLRender (void *context, const bool drawWireframe) {
                     const struct Texture *texture = &vao->textures[j];
                     glActiveTexture(GL_TEXTURE0 + texture->textureUnit);
                     glBindTexture(GL_TEXTURE_2D, texture->id);
-                    // if (!glGetUniformLocation(activeShaderProgram, texture->uniformName)) {
-                    //     perror("Uniform does not exist");
-                    // }
+                    if (glGetUniformLocation(activeShaderProgram, texture->uniformName) == -1) {
+                        printf("Uniform does not exist");
+                    }
                     glUniform1i(glGetUniformLocation(activeShaderProgram, texture->uniformName), texture->textureUnit);
                 }
             }
