@@ -46,7 +46,7 @@ inline char *getBaseShaderString(const BaseShader shader)
     }
 
     return string;
-  }
+}
 
 
 #endif //OPENGLMACROS_H

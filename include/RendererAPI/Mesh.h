@@ -5,14 +5,38 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include <Renderer/OpenGL/OpenGLHeaders.h>
+#include "Renderer/OpenGL/OpenGLHeaders.h"
 
 enum TextureType {
     DIFFUSE,
-    NORMAL,
-    SPECULAR,
-    AO,
+    NORMAL_MAP,
+    SPECULAR_MAP,
+    AO_MAP,
+    HEIGHT_MAP,
+    EMISSIVE_MAP,
+    CUBE_MAP,
+    LUT
 };
+
+inline char *getBaseTextureTypeString(const enum TextureType textureType)
+{
+    char *string = "\0";
+
+    switch(textureType) {
+        case DIFFUSE: string="diffuse"; break;
+        case NORMAL_MAP: string="normalMap"; break;
+        case SPECULAR_MAP: string="specularMap"; break;
+        case AO_MAP: string="aoMap"; break;
+        case HEIGHT_MAP: string="heightMap"; break;
+        case EMISSIVE_MAP: string="emissiveMap"; break;
+        case CUBE_MAP: string="cubeMap"; break;
+        case LUT: string="lut"; break;
+        default:
+            perror("Unknown texture type");
+    }
+
+    return string;
+}
 
 struct Texture {
     char *path;

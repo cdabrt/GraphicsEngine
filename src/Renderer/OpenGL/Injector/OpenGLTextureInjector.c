@@ -51,7 +51,7 @@ void registerFileNotFoundImage(struct OpenGLContext *context, struct VAO *vao) {
     struct Texture texture = {
         (char *) fileNotFoundPath,
         DIFFUSE,
-        "diffuse",
+        getBaseTextureTypeString(DIFFUSE),
         textureID,
         GL_TEXTURE0
     };

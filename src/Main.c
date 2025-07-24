@@ -57,7 +57,7 @@ int main() {
         {
             strdup("../src/Renderer/OpenGL/Textures/House.png"),
             DIFFUSE,
-            "diffuse",
+            getBaseTextureTypeString(DIFFUSE),
             .id = 0,
             1
         }
