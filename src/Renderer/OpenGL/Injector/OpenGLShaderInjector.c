@@ -7,7 +7,7 @@
 #include "Renderer/OpenGL/OpenGLErrorHandling.h"
 #include "UtilFiles/ReadFile.h"
 #include "Renderer/OpenGL/OpenGLContext.h"
-#include "Renderer/OpenGL/OpenGLMacros.h"
+#include "../../../UtilFiles/OpenGLMacrosAndUtils.h"
 #include <stb_image.h>
 #include "Renderer/OpenGL/OpenGLHeaders.h"
 #include "Renderer/OpenGL/Injector/OpenGLInjector.h"

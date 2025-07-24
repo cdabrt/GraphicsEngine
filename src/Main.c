@@ -11,7 +11,7 @@
 #include <../include/RendererAPI/Mesh.h>
 #include <../include/RendererAPI/RendererFactory.h>
 #include "Renderer/OpenGL/OpenGLHeaders.h"
-#include "Renderer/OpenGL/OpenGLMacros.h"
+#include "UtilFiles/OpenGLMacrosAndUtils.h"
 
 void killProgram(struct Renderer *renderer, struct RendererInjector *rendererInjector) {
     renderer->kill(renderer->context);
@@ -84,7 +84,7 @@ int main() {
     //     );
     // addShaderProgram(openGLContext, shaderProgram, WIREFRAME_SHADER);
     //Set to WIREFRAME_SHADER for testing
-    GLuint id = getShaderProgramID(openGLContext, BASE_SHADER);
+    GLuint id = getShaderProgramID(openGLContext, getBaseShaderString(BASE_SHADER));
 
     rendererInjector->registerMesh(context, &mesh, id);
 

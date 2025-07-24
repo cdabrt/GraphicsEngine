@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include "OpenGLRenderer.h"
 #include "OpenGLContext.h"
-#include "OpenGLMacros.h"
+#include "../../UtilFiles/OpenGLMacrosAndUtils.h"
 #include "Injector/OpenGLInjector.h"
 #include "OpenGLHeaders.h"
 #include "Window.h"
@@ -44,7 +44,7 @@ void initializeWireframeShaders(struct OpenGLContext *openGLContext) {
         "Vertex/vertex_wireframe.vert",
         "\0",
         "Fragment/fragment_wireframe.frag",
-        WIREFRAME_SHADER
+        getBaseShaderString(WIREFRAME_SHADER)
         );
 }
 
@@ -64,7 +64,7 @@ void openGLInitialize(void *context, const int xPos, const int yPos, const int w
         "Vertex/vertex_main.vert",
         "\0",
         "Fragment/fragment_main.frag",
-        BASE_SHADER
+        getBaseShaderString(BASE_SHADER)
         );
 }
 
@@ -92,7 +92,7 @@ void openGLRender (void *context, const bool drawWireframe) {
 
     GLuint activeShaderProgram = openGLContext->activeShaderProgram;
     if (activeShaderProgram == 0) {
-        activeShaderProgram = getShaderProgramID(openGLContext, BASE_SHADER);
+        activeShaderProgram = getShaderProgramID(openGLContext, getBaseShaderString(BASE_SHADER));
         openGLSetActiveShaderProgram(context, activeShaderProgram);
     }
 

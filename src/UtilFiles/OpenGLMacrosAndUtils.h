@@ -29,8 +29,24 @@
  */
 #define OPENGL_CTX struct OpenGLContext *openGLContext = (struct OpenGLContext *)context
 
-#define BASE_SHADER "baseShader"
+typedef enum {
+    BASE_SHADER,
+    WIREFRAME_SHADER,
+} BaseShader;
 
-#define WIREFRAME_SHADER "wireframeShader"
+inline char *getBaseShaderString(const BaseShader shader)
+{
+    char *string = "\0";
+
+    switch(shader) {
+        case BASE_SHADER: string="baseShader"; break;
+        case WIREFRAME_SHADER: string="wireframeShader"; break;
+        default:
+            perror("Unknown shader type");
+    }
+
+    return string;
+  }
+
 
 #endif //OPENGLMACROS_H
