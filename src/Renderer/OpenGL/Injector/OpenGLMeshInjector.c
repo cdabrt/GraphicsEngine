@@ -3,7 +3,7 @@
 //
 
 #include <stdio.h>
-#include "../include/RendererAPI/Mesh.h"
+#include "../include/RendererAPI/RawMesh.h"
 #include "Renderer/OpenGL/OpenGLContext.h"
 #include "../../../UtilFiles/OpenGLMacrosAndUniforms.h"
 #include <stb_image.h>
@@ -13,14 +13,14 @@
 
 
 
-void registerVBO(const struct Mesh *mesh) {
+void registerVBO(const struct RawMesh *mesh) {
     unsigned int VBO;
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, mesh->vertexDataSize, mesh->vertices, GL_STATIC_DRAW);
 }
 
-void registerEBO(const struct Mesh *mesh) {
+void registerEBO(const struct RawMesh *mesh) {
     unsigned int EBO;
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -56,7 +56,7 @@ void layOutVertexAttributes() {
 //TODO: Register static mesh, put it into one big VBO and use glMultiDrawIndirect for frustum culling of the big static VBO.
 //  The dynamic meshes still need to be frustum culled
 //  Also look into instancing (trees, bullets, etc)
-unsigned int openGLRegisterMesh(void *context, const struct Mesh *mesh, const unsigned long shaderProgramID) {
+unsigned int openGLRegisterMesh(void *context, const struct RawMesh *mesh, const unsigned long shaderProgramID) {
     OPENGL_CTX;
 
     unsigned int VAO;
@@ -66,8 +66,8 @@ unsigned int openGLRegisterMesh(void *context, const struct Mesh *mesh, const un
     registerEBO(mesh);
     layOutVertexAttributes();
 
-    addVAO(openGLContext, VAO, mesh->indicesDataSize, shaderProgramID);
-    openGLRegisterTextures(openGLContext, mesh->textures, mesh->textureCount, &openGLContext->vaos[openGLContext->vaoCount - 1]);
+    addModel(openGLContext, VAO, mesh->indicesDataSize, shaderProgramID);
+    openGLRegisterTextures(openGLContext, mesh->textures, mesh->textureCount, &openGLContext->models[openGLContext->modelCount - 1]);
 
     return VAO;
 }

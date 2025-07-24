@@ -4,7 +4,7 @@
 
 #ifndef OPENGLSHADERINJECTOR_H
 #define OPENGLSHADERINJECTOR_H
-#include <../include/RendererAPI/Mesh.h>
+#include <../include/RendererAPI/RawMesh.h>
 
 /**
  * openGLCreateShaderProgram
@@ -34,16 +34,16 @@ void openGLSetActiveShaderProgram(void *context, unsigned long programId);
 * @param shaderProgramID ID of the shader program that is associated with the mesh. If no ID is provided the renderer
  * will use the active shader program instead.
  */
-unsigned int openGLRegisterMesh(void *context, const struct Mesh *mesh, unsigned long shaderProgramID);
+unsigned int openGLRegisterMesh(void *context, const struct RawMesh *mesh, unsigned long shaderProgramID);
 
 /**
  * registerTextures
- * Registers a list of textures and adds those textures to the VAO.
+ * Registers a list of textures and adds those textures to the Modelf Model.
  *
  * @param context the renderer context.
  * @param textures the to be added texture.
  * @param textureCount the number of textures that need to be added.
- * @param vao the vao of which the textures need to be added to.
+ * @param model the model of which the textures need to be added to.
  */
-void openGLRegisterTextures(struct OpenGLContext *context, const struct Texture *textures, size_t textureCount, struct VAO *vao);
+void openGLRegisterTextures(struct OpenGLContext *context, const struct Texture *textures, size_t textureCount, struct Model *model);
 #endif //OPENGLSHADERINJECTOR_H

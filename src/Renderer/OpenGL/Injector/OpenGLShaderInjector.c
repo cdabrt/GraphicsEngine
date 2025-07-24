@@ -3,7 +3,7 @@
 //
 
 #include <stdio.h>
-#include "../include/RendererAPI/Mesh.h"
+#include "../include/RendererAPI/RawMesh.h"
 #include "Renderer/OpenGL/OpenGLErrorHandling.h"
 #include "UtilFiles/ReadFile.h"
 #include "Renderer/OpenGL/OpenGLContext.h"

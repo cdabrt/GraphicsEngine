@@ -43,42 +43,42 @@ GLuint getShaderProgramID(struct OpenGLContext *context, const char *shaderName)
     return 0;
 }
 
-void addVAO(struct OpenGLContext *context, const unsigned int vaoID, const size_t indicesCount,
+void addModel(struct OpenGLContext *context, const unsigned int modelID, const size_t indicesCount,
     const unsigned long shaderProgramID) {
     OPENGL_CTX;
 
-    const size_t newSize = openGLContext->vaoCount + 1;
+    const size_t newSize = openGLContext->modelCount + 1;
 
-    struct VAO *vaos = realloc(
-        openGLContext->vaos, newSize * sizeof(struct VAO)
+    struct Model *models = realloc(
+        openGLContext->models, newSize * sizeof(struct Model)
     );
 
-    if (vaos == NULL) {
-        perror("Failed to allocate memory for VAOs");
+    if (models == NULL) {
+        perror("Failed to allocate memory for models");
         exit(EXIT_FAILURE);
     }
 
-    openGLContext->vaos = vaos;
-    openGLContext->vaoCount = newSize;
+    openGLContext->models = models;
+    openGLContext->modelCount = newSize;
 
-    struct VAO vao = {
-        vao.id = vaoID,
+    struct Model model = {
+        model.id = modelID,
         shaderProgramID,
-        vao.indicesCount = indicesCount,
+        model.indicesCount = indicesCount,
         NULL,
         0
     };
 
-    openGLContext->vaos[openGLContext->vaoCount - 1] = vao;
+    openGLContext->models[openGLContext->modelCount - 1] = model;
 }
 
-void addTexture(struct OpenGLContext *context, struct VAO *vao, const struct Texture texture) {
+void addTexture(struct OpenGLContext *context, struct Model *model, const struct Texture texture) {
     OPENGL_CTX;
 
-    const size_t newSize = vao->textureCount + 1;
+    const size_t newSize = model->textureCount + 1;
 
     struct Texture *textures = realloc(
-        vao->textures, newSize * sizeof(struct Texture)
+        model->textures, newSize * sizeof(struct Texture)
     );
 
     if (textures == NULL) {
@@ -86,8 +86,8 @@ void addTexture(struct OpenGLContext *context, struct VAO *vao, const struct Tex
         exit(EXIT_FAILURE);
     }
 
-    vao->textures = textures;
-    vao->textureCount = newSize;
+    model->textures = textures;
+    model->textureCount = newSize;
 
-    vao->textures[vao->textureCount - 1] = texture;
+    model->textures[model->textureCount - 1] = texture;
 }

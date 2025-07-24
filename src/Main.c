@@ -8,7 +8,7 @@
 #include <Window.h>
 #include <WindowInputController.h>
 #include <../include/RendererAPI/Renderer.h>
-#include <../include/RendererAPI/Mesh.h>
+#include <../include/RendererAPI/RawMesh.h>
 #include <../include/RendererAPI/RendererFactory.h>
 #include "Renderer/OpenGL/OpenGLHeaders.h"
 #include "UtilFiles/OpenGLMacrosAndUniforms.h"
@@ -33,7 +33,7 @@ int main() {
     struct RendererInjector *rendererInjector = createRendererInjector(OPENGL);
 
     void *context = renderer->context;
-    //The base shader should always be set up before any VAO, VBO and EBO setup
+    //The base shader should always be set up before any Model, VBO and EBO setup
     renderer->initialize(context, xPos, yPos, width, height);
 
     //TODO: REMOVE, FOR TESTING ONLY
@@ -64,7 +64,7 @@ int main() {
         }
     };
 
-    struct Mesh mesh = {
+    struct RawMesh mesh = {
         vertices,
         indices,
         sizeof(vertices),
@@ -76,7 +76,7 @@ int main() {
     //For testing
     OPENGL_CTX;
 
-    //Confirms switching to vao set shader works.
+    //Confirms switching models and using different associated shaders works.
     //To create and register a shader program:
     // GLuint shaderProgram = rendererInjector->createShaderProgram(
     //     "../src/Renderer/OpenGL/Shaders/Vertex/vertex_wireframe.vert",

@@ -5,7 +5,7 @@
 #ifndef RENDERINGSTRATEGY_H
 #define RENDERINGSTRATEGY_H
 
-#include "RendererAPI/Mesh.h"
+#include "RendererAPI/RawMesh.h"
 
 typedef void (*InitializeFunction) (void *context, int xPos, int yPos, int width, int height);
 typedef void (*PrepareRendererFunction) (void *context, bool drawWireframe);
@@ -39,7 +39,7 @@ struct Renderer {
 
 typedef unsigned int (*CreateShaderProgramFunction) (char *vertexFilePath, char *geometryFilePath, char *fragmentFilePath);
 typedef void (*SetActiveShaderProgramFunction) (void *context, unsigned long programId);
-typedef unsigned int (*RegisterMeshFunction) (void *context, const struct Mesh *mesh, unsigned long shaderProgramID);
+typedef unsigned int (*RegisterMeshFunction) (void *context, const struct RawMesh *mesh, unsigned long shaderProgramID);
 
 /**
  * RendererInjector

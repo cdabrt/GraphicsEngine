@@ -32,7 +32,8 @@ void initializeBaseShaders(struct OpenGLContext *openGLContext, const char* vert
     const GLuint shaderProgram = openGLCreateShaderProgram(vertexFullPath, geometryFullPath, fragmentFullPath);
     addShaderProgram(openGLContext, shaderProgram, shaderName);
 
-    /*The base shader should always be set up before any VAO, VBO and EBO setup.
+    /*
+      The base shader should always be set up before any Model, VBO and EBO setup.
       For macOS this needs to happen immediately after creating the shader programs. Do not move this line somewhere else.
       It would work on Windows, not on macOS.
     */
@@ -82,10 +83,10 @@ void openGLPrepareRender (void *context, const bool drawWireframe) {
 
 
 
-void cleanUpRenderer(const struct VAO *vao) {
+void cleanUpRenderer(const struct Model *model) {
     //Unbind textures
-    for (int i = 0; i < vao->textureCount; i++) {
-        const struct Texture *texture = &vao->textures[i];
+    for (int i = 0; i < model->textureCount; i++) {
+        const struct Texture *texture = &model->textures[i];
         glActiveTexture(GL_TEXTURE0 + texture->textureUnit);
         //Texture 0 = "No texture"
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -108,20 +109,20 @@ void openGLRender (void *context, const bool drawWireframe) {
     }
 
     //TODO: Add frustum culling, other types of culling, etc
-    if (openGLContext->vaoCount > 0) {
-        for (int i = 0; i < openGLContext->vaoCount; i++) {
-            const struct VAO *vao = &openGLContext->vaos[i];
-            glBindVertexArray(vao->id);
+    if (openGLContext->modelCount > 0) {
+        for (int i = 0; i < openGLContext->modelCount; i++) {
+            const struct Model *model = &openGLContext->models[i];
+            glBindVertexArray(model->id);
 
-            if (vao->shaderProgramID != activeShaderProgram) {
-                openGLSetActiveShaderProgram(context, vao->shaderProgramID);
-                activeShaderProgram = vao->shaderProgramID;
+            if (model->shaderProgramID != activeShaderProgram) {
+                openGLSetActiveShaderProgram(context, model->shaderProgramID);
+                activeShaderProgram = model->shaderProgramID;
             }
 
             if (!drawWireframe) {
-                for (int j = 0; j < vao->textureCount; j++) {
+                for (int j = 0; j < model->textureCount; j++) {
 
-                    const struct Texture *texture = &vao->textures[j];
+                    const struct Texture *texture = &model->textures[j];
                     glActiveTexture(GL_TEXTURE0 + texture->textureUnit);
                     glBindTexture(GL_TEXTURE_2D, texture->id);
                     GLint uniformLocation = glGetUniformLocation(activeShaderProgram, texture->uniformName);
@@ -133,10 +134,10 @@ void openGLRender (void *context, const bool drawWireframe) {
             }
 
             //TODO: Testing, this has to be somewhere else.
-            //  Maybe a mesh function. Perhaps we can make another abstraction on top of VAO. A GameObject has a VAO.
-            //  So we have Mesh -> Texture. (The Mesh struct is only used as a DTO for using the vertex data in the registration of a VAO)
+            //  Maybe a mesh function. Perhaps we can make another abstraction on top of ModelModel. A GameObject has a ModelModel.
+            //  So we have RawMesh -> Texture. (The RawMesh struct is only used as a DTO for using the vertex data in the registration of a ModelModel)
             //  and
-            //  GameObject -> VAO (dependency on Mesh for meshdata and textures) -> Texture * -> ShaderProgram (ID, sort of primary key relation)
+            //  GameObject -> ModelModel (dependency on RawMesh for meshdata and textures) -> Texture * -> ShaderProgram (ID, sort of primary key relation)
             mat4s transformation = glms_mat4_identity();
             transformation = glms_rotate(transformation, glm_rad(90.0f), (vec3s){ .x = 0.0f, .y = 0.0f, .z = 1.0f });
             transformation = glms_scale(transformation, (vec3s){ .x = 0.5f, .y = 0.5f, .z = 0.5f});
@@ -146,10 +147,10 @@ void openGLRender (void *context, const bool drawWireframe) {
 
             //------------------------------------------------------------------------------------------
 
-            glDrawElements(GL_TRIANGLES, (GLsizei) vao->indicesCount, GL_UNSIGNED_INT, NULL);
+            glDrawElements(GL_TRIANGLES, (GLsizei) model->indicesCount, GL_UNSIGNED_INT, NULL);
 
             if (!drawWireframe) {
-                cleanUpRenderer(vao);
+                cleanUpRenderer(model);
             }
         }
     }
@@ -177,23 +178,23 @@ void openGLKill (void *context) {
         glDeleteProgram(shaderProgram.id);
     }
 
-    const int numberOfVAOs = 1;
+    const int numberOfmodels = 1;
     const int numberOfTexturesToDelete = 1;
-    for (size_t i =0; i < openGLContext->vaoCount; i++) {
-        const struct VAO *vao = &openGLContext->vaos[i];
+    for (size_t i =0; i < openGLContext->modelCount; i++) {
+        const struct Model *model = &openGLContext->models[i];
 
-        for (int j = 0; j < vao->textureCount; j ++) {
-            struct Texture *texture = &vao->textures[j];
+        for (int j = 0; j < model->textureCount; j ++) {
+            struct Texture *texture = &model->textures[j];
             glDeleteTextures(numberOfTexturesToDelete, &texture->id);
             free(texture->path);
             texture->path = "";
         }
-        glDeleteVertexArrays(numberOfVAOs, &vao->id);
+        glDeleteVertexArrays(numberOfmodels, &model->id);
     }
 
     openGLContext->shaderCount = 0;
-    openGLContext->vaoCount = 0;
+    openGLContext->modelCount = 0;
     free(openGLContext->shaderPrograms);
-    free(openGLContext->vaos);
+    free(openGLContext->models);
     free(openGLContext);
 }
