@@ -108,10 +108,13 @@ void cleanUpRenderer(const struct Model *model) {
 
 //TODO: See TODO of openGLRegisterMesh.
 //TODO: Optimizations such as:
-//  batching,
-//  texture atlases or arrays,
-//  instancing,
 //  material sorting (sort objects that use the same shader and textures to reduce binding calls)
+//  batching (add static boolean to mesh. Sort all static meshes together, add them to a single big mesh).
+//      Static batches could be updated incrementally if only some static objects change
+//      (let's say many houses with doors. The doors do not move most of the time, but occasionally move.
+//      If the object moves a lot, it is of course more efficient to flag it as not-static.),
+//  texture atlases or arrays,
+//  instancing
 void openGLRender (void *context, const bool drawWireframe) {
     OPENGL_CTX;
     const int array = 0;
