@@ -59,10 +59,6 @@ void layOutVertexAttributes() {
 unsigned int openGLRegisterMesh(void *context, const struct Mesh *mesh, const unsigned long shaderProgramID) {
     OPENGL_CTX;
 
-    if (openGLContext->activeShaderProgram != shaderProgramID && shaderProgramID != 0) {
-        openGLSetActiveShaderProgram(openGLContext, shaderProgramID);
-    }
-
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);

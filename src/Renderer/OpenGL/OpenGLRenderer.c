@@ -31,7 +31,8 @@ void initializeBaseShaders(struct OpenGLContext *openGLContext, const char* vert
     const GLuint shaderProgram = openGLCreateShaderProgram(vertexFullPath, geometryFullPath, fragmentFullPath);
     addShaderProgram(openGLContext, shaderProgram, shaderName);
 
-    //The base shader should always be set up before any VAO, VBO and EBO setup
+    //The base shader should always be set up before any VAO, VBO and EBO setup.
+    //For macOS this needs to happen immediately after creating the shader programs
     openGLSetActiveShaderProgram(openGLContext, shaderProgram);
 }
 
@@ -63,9 +64,6 @@ void openGLInitialize(void *context, const int xPos, const int yPos, const int w
         "Fragment/fragment_main.frag",
         BASE_SHADER
         );
-
-    // Ensure a valid shader is active before any mesh registration or OpenGL calls that require a shader
-    openGLSetActiveShaderProgram(openGLContext, getShaderProgramID(openGLContext, BASE_SHADER));
 }
 
 
