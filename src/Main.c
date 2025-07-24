@@ -52,7 +52,6 @@ int main() {
         3, 1, 0,
     };
 
-    //TODO: Base shader requires uniform names to equivalent as stated in the fragment_main.frag file. Maybe enforce this somehow?
     struct Texture textures[] = {
         {
             strdup("../src/Renderer/OpenGL/Textures/House.png"),

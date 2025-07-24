@@ -83,6 +83,19 @@ void openGLPrepareRender (void *context, const bool drawWireframe) {
 
 
 
+void bindTextures(const struct Model *model, const GLuint activeShaderProgram) {
+    for (int i = 0; i < model->textureCount; i++) {
+        const struct Texture *texture = &model->textures[i];
+        glActiveTexture(GL_TEXTURE0 + texture->textureUnit);
+        glBindTexture(GL_TEXTURE_2D, texture->id);
+        GLint uniformLocation = glGetUniformLocation(activeShaderProgram, texture->uniformName);
+        if (uniformLocation == -1) {
+            printf("Uniform does not exist");
+        }
+        glUniform1i(uniformLocation, texture->textureUnit);
+    }
+}
+
 void cleanUpRenderer(const struct Model *model) {
     //Unbind textures
     for (int i = 0; i < model->textureCount; i++) {
@@ -94,6 +107,11 @@ void cleanUpRenderer(const struct Model *model) {
 }
 
 //TODO: See TODO of openGLRegisterMesh.
+//TODO: Optimizations such as:
+//  batching,
+//  texture atlases or arrays,
+//  instancing,
+//  material sorting (sort objects that use the same shader and textures to reduce binding calls)
 void openGLRender (void *context, const bool drawWireframe) {
     OPENGL_CTX;
     const int array = 0;
@@ -120,18 +138,10 @@ void openGLRender (void *context, const bool drawWireframe) {
             }
 
             if (!drawWireframe) {
-                for (int j = 0; j < model->textureCount; j++) {
-
-                    const struct Texture *texture = &model->textures[j];
-                    glActiveTexture(GL_TEXTURE0 + texture->textureUnit);
-                    glBindTexture(GL_TEXTURE_2D, texture->id);
-                    GLint uniformLocation = glGetUniformLocation(activeShaderProgram, texture->uniformName);
-                    if (uniformLocation == -1) {
-                        printf("Uniform does not exist");
-                    }
-                    glUniform1i(uniformLocation, texture->textureUnit);
-                }
+                bindTextures(model, activeShaderProgram);
             }
+
+            //------------------------------------------------------------------------------------------
 
             //TODO: Testing, this has to be somewhere else.
             //  Maybe a mesh function. Perhaps we can make another abstraction on top of ModelModel. A GameObject has a ModelModel.
