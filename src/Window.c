@@ -17,7 +17,13 @@ void glfwWindowSetup() {
     const int minorVersionMac = 1;
     const int minorVersionRest = 6;
 
-    glfwInit();
+    const int glfwStatus = glfwInit();
+    if (!glfwStatus) {
+        perror("Failed to initialize glfw:");
+        glfwTerminate();
+        exit(EXIT_FAILURE);
+    }
+
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     #ifdef __APPLE__
@@ -37,7 +43,7 @@ GLFWwindow* createWindow(const int width, const int height) {
 
     GLFWwindow* window = glfwCreateWindow(width, height, programTitle, NULL, NULL);
     if (!window) {
-        perror("Failed to create GLFW window");
+        perror("Failed to create GLFW window:");
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
