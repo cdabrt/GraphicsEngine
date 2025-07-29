@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "GeneralErrorHandling.h"
 
@@ -31,7 +32,7 @@ char *readFile (char filePath[]) {
 
     fclose(sourceFile);
 
-    if (bytesRead == 0) {
+    if (strcmp(sourceString, "") == 0 || bytesRead == 0) {
         fprintf(stderr, "Failed to read file: %s\n", filePath);
         exit(EXIT_FAILURE);
     }

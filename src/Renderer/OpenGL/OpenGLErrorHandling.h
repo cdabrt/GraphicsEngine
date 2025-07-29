@@ -21,4 +21,12 @@ void checkCompilationSuccess(unsigned int shader);
  */
 void checkLinkingSuccess(unsigned int program);
 
+/**
+ * checkUniformLocation
+ * Checks whether the provided uniform location exists.
+ *
+ * @param uniformLocation the uniform location.
+ */
+void checkUniformLocation(GLuint uniformLocation);
+
 #endif //OPENGLERRORHANDLING_H

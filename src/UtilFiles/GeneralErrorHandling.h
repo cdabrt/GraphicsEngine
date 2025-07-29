@@ -5,6 +5,12 @@
 #ifndef GENERALERRORHANDLING_H
 #define GENERALERRORHANDLING_H
 
+/**
+ * checkMalloc
+ * Checks whether a memory allocation was performed successfully.
+ *
+ * @param mallocItem the memory allocated item.
+ */
 void checkMalloc(void *mallocItem);
 
 #endif //GENERALERRORHANDLING_H

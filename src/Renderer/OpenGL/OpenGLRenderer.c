@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include "OpenGLRenderer.h"
 #include "OpenGLContext.h"
+#include "OpenGLErrorHandling.h"
 #include "../../UtilFiles/OpenGLMacrosAndUniforms.h"
 #include "Injector/OpenGLInjector.h"
 #include "OpenGLHeaders.h"
@@ -89,9 +90,7 @@ void bindTextures(const struct Model *model, const GLuint activeShaderProgram) {
         glActiveTexture(GL_TEXTURE0 + texture->textureUnit);
         glBindTexture(GL_TEXTURE_2D, texture->id);
         GLint uniformLocation = glGetUniformLocation(activeShaderProgram, texture->uniformName);
-        if (uniformLocation == -1) {
-            printf("Uniform does not exist");
-        }
+        checkUniformLocation(uniformLocation);
         glUniform1i(uniformLocation, texture->textureUnit);
     }
 }
@@ -156,6 +155,7 @@ void openGLRender (void *context, const bool drawWireframe) {
             transformation = glms_scale(transformation, (vec3s){ .x = 0.5f, .y = 0.5f, .z = 0.5f});
 
             const unsigned int transformLoc = glGetUniformLocation(activeShaderProgram, getBaseMeshUniformString(TRANSFORM));
+            checkUniformLocation(transformLoc);
             glUniformMatrix4fv(transformLoc, 1, GL_FALSE, &transformation.raw[0]);
 
             //------------------------------------------------------------------------------------------

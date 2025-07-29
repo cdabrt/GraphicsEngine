@@ -4,7 +4,7 @@
 
 
 #include <stdio.h>
-#include "glad/Glad.h"
+#include "OpenGLHeaders.h"
 
 void checkCompilationSuccess(const unsigned int shader) {
     const int infoLogLength = 512;
@@ -30,5 +30,11 @@ void checkLinkingSuccess(const unsigned int program) {
         glGetProgramInfoLog(program, infoLogLength, NULL, infoLog);
         snprintf("Program linking failed.\n", sizeof(infoLog), infoLog);
         perror(infoLog);
+    }
+}
+
+void checkUniformLocation(const GLuint uniformLocation) {
+    if (uniformLocation == -1) {
+        fprintf(stderr, "Uniform does not exist \n");
     }
 }
