@@ -6,6 +6,13 @@
 #define OPENGLERRORHANDLING_H
 
 /**
+ * checkOpenGLError
+ * Checks whether any openGL error was thrown.
+ */
+void checkOpenGLError();
+
+
+/**
  * checkCompilationSuccess
  * Checks whether compilation of the shaders was a success.
  *

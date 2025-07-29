@@ -72,6 +72,8 @@ unsigned int openGLCreateShaderProgram(char *vertexFilePath, char *geometryFullP
     glDeleteShader(fragmentShader);
     if (geometryShader != GL_NONE) glDeleteShader(geometryShader);
 
+    checkOpenGLError();
+
     return shaderProgram;
 }
 
@@ -79,4 +81,6 @@ void openGLSetActiveShaderProgram(void *context, const unsigned long programId) 
     OPENGL_CTX;
     glUseProgram(programId);
     openGLContext->activeShaderProgram = programId;
+
+    checkOpenGLError();
 }

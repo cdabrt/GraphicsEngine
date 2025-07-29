@@ -8,6 +8,7 @@
 #include <string.h>
 
 #include "../../UtilFiles/OpenGLMacrosAndUniforms.h"
+#include "UtilFiles/GeneralErrorHandling.h"
 
 void registerShaderProgram(struct OpenGLContext *context, const unsigned int shaderProgramID, char *shaderName) {
     OPENGL_CTX;
@@ -17,11 +18,7 @@ void registerShaderProgram(struct OpenGLContext *context, const unsigned int sha
     struct ShaderProgram *shaderPrograms = realloc(
         openGLContext->shaderPrograms, newSize * sizeof(struct ShaderProgram)
     );
-
-    if (shaderPrograms == NULL) {
-        perror("Failed to allocate memory for shader programs");
-        exit(EXIT_FAILURE);
-    }
+    checkMalloc(shaderPrograms);
 
     openGLContext->shaderPrograms = shaderPrograms;
     openGLContext->shaderCount = newSize;
@@ -52,11 +49,7 @@ void registerModel(struct OpenGLContext *context, const unsigned int modelID, co
     struct Model *models = realloc(
         openGLContext->models, newSize * sizeof(struct Model)
     );
-
-    if (models == NULL) {
-        perror("Failed to allocate memory for models");
-        exit(EXIT_FAILURE);
-    }
+    checkMalloc(models);
 
     openGLContext->models = models;
     openGLContext->modelCount = newSize;
@@ -80,11 +73,7 @@ void registerTexture(struct OpenGLContext *context, struct Model *model, const s
     struct Texture *textures = realloc(
         model->textures, newSize * sizeof(struct Texture)
     );
-
-    if (textures == NULL) {
-        perror("Failed to allocate memory for textures");
-        exit(EXIT_FAILURE);
-    }
+    checkMalloc(textures);
 
     model->textures = textures;
     model->textureCount = newSize;

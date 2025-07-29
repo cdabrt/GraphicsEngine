@@ -8,6 +8,8 @@
 #include "../../../UtilFiles/OpenGLMacrosAndUniforms.h"
 #include <stb_image.h>
 #include <string.h>
+
+#include "Renderer/OpenGL/OpenGLErrorHandling.h"
 #include "Renderer/OpenGL/OpenGLHeaders.h"
 #include "Renderer/OpenGL/Injector/OpenGLInjector.h"
 
@@ -18,13 +20,15 @@ void registerVBO(const struct RawMesh *mesh) {
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, mesh->vertexDataSize, mesh->vertices, GL_STATIC_DRAW);
+    checkOpenGLError();
 }
 
 void registerEBO(const struct RawMesh *mesh) {
     unsigned int EBO;
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indicesDataSize, mesh->indices, GL_STATIC_DRAW); ;
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indicesDataSize, mesh->indices, GL_STATIC_DRAW);
+    checkOpenGLError();
 }
 
 void layOutVertexAttributes() {
@@ -49,6 +53,7 @@ void layOutVertexAttributes() {
     glVertexAttribPointer(textureCoordinatesIndex, textureCoordinatesBlockSize, GL_FLOAT, GL_FALSE,
         stride * sizeof(float), (void*)(vertexBlockSize * textureCoordinatesBlockSize * sizeof(float)));
     glEnableVertexAttribArray(textureCoordinatesIndex);
+    checkOpenGLError();
 }
 
 
@@ -62,6 +67,8 @@ unsigned int openGLRegisterMesh(void *context, const struct RawMesh *mesh, const
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
+    checkOpenGLError();
+
     registerVBO(mesh);
     registerEBO(mesh);
     layOutVertexAttributes();

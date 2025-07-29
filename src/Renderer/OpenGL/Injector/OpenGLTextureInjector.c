@@ -6,6 +6,8 @@
 #include "Renderer/OpenGL/OpenGLContext.h"
 #include <stb_image.h>
 #include <string.h>
+
+#include "Renderer/OpenGL/OpenGLErrorHandling.h"
 #include "Renderer/OpenGL/OpenGLHeaders.h"
 #include "Renderer/OpenGL/Injector/OpenGLInjector.h"
 #include "UtilFiles/OpenGLMacrosAndUniforms.h"
@@ -17,6 +19,8 @@ void setTextureParameters() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    checkOpenGLError();
 }
 
 void generateTexture(struct Texture *texture, const GLuint textureID, const int textureUnit, const int nrChannels,
@@ -34,6 +38,8 @@ void generateTexture(struct Texture *texture, const GLuint textureID, const int 
 
     texture->id = textureID;
     texture->textureUnit = textureUnit;
+
+    checkOpenGLError();
 }
 
 void registerFileNotFoundImage(struct OpenGLContext *context, struct Model *model) {
@@ -88,7 +94,7 @@ void openGLRegisterTextures(struct OpenGLContext *context, const struct Texture 
             else {
                 stbi_image_free(data);
                 registerFileNotFoundImage(context, model);
-                printf("Failed to load texture: %s\n", stbi_failure_reason());
+                fprintf(stderr, "Failed to load texture: %s\n", stbi_failure_reason());
                 return;
             }
             stbi_image_free(data);

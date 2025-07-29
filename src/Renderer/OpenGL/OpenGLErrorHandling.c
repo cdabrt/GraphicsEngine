@@ -6,6 +6,13 @@
 #include <stdio.h>
 #include "OpenGLHeaders.h"
 
+void checkOpenGLError() {
+    GLenum error;
+    while ((error = glGetError()) != GL_NO_ERROR) {
+        fprintf(stderr, "OpenGL error %X at %s:%d:", error, __FILE__, __LINE__);
+    }
+}
+
 void checkCompilationSuccess(const unsigned int shader) {
     const int infoLogLength = 512;
     char infoLog[infoLogLength];
@@ -17,6 +24,7 @@ void checkCompilationSuccess(const unsigned int shader) {
         glGetShaderInfoLog(shader, infoLogLength, NULL, infoLog);
         perror(infoLog);
     }
+    checkOpenGLError();
 }
 
 void checkLinkingSuccess(const unsigned int program) {
@@ -31,6 +39,7 @@ void checkLinkingSuccess(const unsigned int program) {
         snprintf("Program linking failed.\n", sizeof(infoLog), infoLog);
         perror(infoLog);
     }
+    checkOpenGLError();
 }
 
 void checkUniformLocation(const GLuint uniformLocation) {
