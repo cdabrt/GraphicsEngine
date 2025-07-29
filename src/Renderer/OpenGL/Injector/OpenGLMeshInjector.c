@@ -21,7 +21,7 @@ void registerVBO(const struct RawMesh *mesh) {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, mesh->vertexDataSize, mesh->vertices, GL_STATIC_DRAW);
 
-    checkOpenGLError(__FILE__, __LINE__);
+    checkOpenGLErrors(__FILE__, __LINE__);
 }
 
 void registerEBO(const struct RawMesh *mesh) {
@@ -30,7 +30,7 @@ void registerEBO(const struct RawMesh *mesh) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indicesDataSize, mesh->indices, GL_STATIC_DRAW);
 
-    checkOpenGLError(__FILE__, __LINE__);
+    checkOpenGLErrors(__FILE__, __LINE__);
 }
 
 void layOutVertexAttributes() {
@@ -56,7 +56,7 @@ void layOutVertexAttributes() {
         stride * sizeof(float), (void*)(vertexBlockSize * textureCoordinatesBlockSize * sizeof(float)));
     glEnableVertexAttribArray(textureCoordinatesIndex);
 
-    checkOpenGLError(__FILE__, __LINE__);
+    checkOpenGLErrors(__FILE__, __LINE__);
 }
 
 
@@ -71,7 +71,7 @@ unsigned int openGLRegisterMesh(void *context, const struct RawMesh *mesh, const
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
 
-    checkOpenGLError(__FILE__, __LINE__);
+    checkOpenGLErrors(__FILE__, __LINE__);
 
     registerVBO(mesh);
     registerEBO(mesh);

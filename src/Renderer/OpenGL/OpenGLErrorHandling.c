@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include "OpenGLHeaders.h"
 
-void checkOpenGLError(char *file, const int line) {
+void checkOpenGLErrors(char *file, const int line) {
     GLenum error;
     while ((error = glGetError()) != GL_NO_ERROR) {
         fprintf(stderr, "OpenGL error %X at %s:%d:", error, file, line);
@@ -24,7 +24,7 @@ void checkCompilationSuccess(const unsigned int shader) {
         glGetShaderInfoLog(shader, infoLogLength, NULL, infoLog);
         perror(infoLog);
     }
-    checkOpenGLError(__FILE__, __LINE__);
+    checkOpenGLErrors(__FILE__, __LINE__);
 }
 
 void checkLinkingSuccess(const unsigned int program) {
@@ -39,7 +39,7 @@ void checkLinkingSuccess(const unsigned int program) {
         fprintf(stderr,"Program linking failed.\n", sizeof(infoLog), infoLog);
         perror(infoLog);
     }
-    checkOpenGLError(__FILE__, __LINE__);
+    checkOpenGLErrors(__FILE__, __LINE__);
 }
 
 void checkUniformLocation(const GLuint uniformLocation) {

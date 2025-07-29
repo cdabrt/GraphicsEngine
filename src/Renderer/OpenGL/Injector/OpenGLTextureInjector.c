@@ -20,7 +20,7 @@ void setTextureParameters() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    checkOpenGLError(__FILE__, __LINE__);
+    checkOpenGLErrors(__FILE__, __LINE__);
 }
 
 void generateTexture(struct Texture *texture, const GLuint textureID, const int textureUnit, const int nrChannels,
@@ -39,7 +39,7 @@ void generateTexture(struct Texture *texture, const GLuint textureID, const int 
     texture->id = textureID;
     texture->textureUnit = textureUnit;
 
-    checkOpenGLError(__FILE__, __LINE__);
+    checkOpenGLErrors(__FILE__, __LINE__);
 }
 
 void registerFileNotFoundImage(struct OpenGLContext *context, struct Model *model) {

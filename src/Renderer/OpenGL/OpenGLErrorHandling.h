@@ -6,10 +6,10 @@
 #define OPENGLERRORHANDLING_H
 
 /**
- * checkOpenGLError
- * Checks whether any openGL error was thrown.
+ * checkOpenGLErrors
+ * Checks whether any openGL errors were thrown.
  */
-void checkOpenGLError(char *file, int line);
+void checkOpenGLErrors(char *file, int line);
 
 
 /**
