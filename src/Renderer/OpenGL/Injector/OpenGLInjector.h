@@ -17,6 +17,15 @@
 unsigned int openGLCreateShaderProgram(char *vertexFilePath, char *geometryFullPath, char *fragmentFilePath);
 
 /**
+ * openGLGetShaderProgramID
+ * Gets the shader program with the provided shader name.
+ *
+ * @param context @ref OpenGLContext.
+ * @param shaderName name of the shader program.
+ */
+unsigned int openGLGetShaderProgramID(void *context, const char *shaderName);
+
+/**
  * openGLSetActiveShaderProgram
  * Sets an OpenGL Shader Program as active.
  *

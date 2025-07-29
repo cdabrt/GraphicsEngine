@@ -54,6 +54,7 @@ struct RendererInjector *createRendererInjector(const RendererType rendererType)
             rendererInjector->createShaderProgram = openGLCreateShaderProgram;
             rendererInjector->setActiveShaderProgram = openGLSetActiveShaderProgram;
             rendererInjector->registerMesh = openGLRegisterMesh;
+            rendererInjector->getShaderProgramID = openGLGetShaderProgramID;
             break;
         }
         case VULKAN: {

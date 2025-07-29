@@ -7,8 +7,9 @@
 #include "Renderer/OpenGL/OpenGLErrorHandling.h"
 #include "UtilFiles/ReadFile.h"
 #include "Renderer/OpenGL/OpenGLContext.h"
-#include "../../../UtilFiles/OpenGLMacrosAndUniforms.h"
+#include "../../../UtilFiles/MacrosAndUniforms.h"
 #include <stb_image.h>
+#include <string.h>
 #include "Renderer/OpenGL/OpenGLHeaders.h"
 #include "Renderer/OpenGL/Injector/OpenGLInjector.h"
 
@@ -75,6 +76,19 @@ unsigned int openGLCreateShaderProgram(char *vertexFilePath, char *geometryFullP
     CHECK_OPENGL_ERRORS;
 
     return shaderProgram;
+}
+
+unsigned int openGLGetShaderProgramID(void *context, const char *shaderName) {
+    OPENGL_CTX;
+    for (int i = 0; i < openGLContext->shaderCount; i++) {
+        const struct ShaderProgram *shaderProgram = &openGLContext->shaderPrograms[i];
+        if (strcmp(shaderName, shaderProgram->name) == 0) {
+            return shaderProgram->id;
+        }
+    }
+
+    perror("Failed to find shader program id");
+    return 0;
 }
 
 void openGLSetActiveShaderProgram(void *context, const unsigned long programId) {

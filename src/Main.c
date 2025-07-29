@@ -11,7 +11,7 @@
 #include <../include/RendererAPI/RawMesh.h>
 #include <../include/RendererAPI/RendererFactory.h>
 #include "Renderer/OpenGL/OpenGLHeaders.h"
-#include "UtilFiles/OpenGLMacrosAndUniforms.h"
+#include "UtilFiles/MacrosAndUniforms.h"
 
 void killProgram(struct Renderer *renderer, struct RendererInjector *rendererInjector) {
     renderer->kill(renderer->context);
@@ -82,10 +82,9 @@ int main() {
     //     "\0",
     //     "../src/Renderer/OpenGL/Shaders/Fragment/fragment_wireframe.frag"
     //     );
-    // registerregisterShaderProgram(openGLContext, shaderProgram, WIREFRAME_SHADER);
+    // registerShaderProgram(openGLContext, shaderProgram, WIREFRAME_SHADER);
     //Set to WIREFRAME_SHADER for testing
-    GLuint id = getShaderProgramID(openGLContext, getBaseShaderUniformString(BASE_SHADER));
-
+    unsigned int id = rendererInjector->getShaderProgramID(openGLContext, getBaseShaderUniformString(BASE_SHADER));
     rendererInjector->registerMesh(context, &mesh, id);
 
     /*

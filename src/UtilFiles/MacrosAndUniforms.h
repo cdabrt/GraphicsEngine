@@ -30,6 +30,8 @@
  */
 #define OPENGL_CTX struct OpenGLContext *openGLContext = (struct OpenGLContext *)context
 
+
+
 typedef enum {
     BASE_SHADER,
     WIREFRAME_SHADER,

@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../../UtilFiles/OpenGLMacrosAndUniforms.h"
+#include "../../UtilFiles/MacrosAndUniforms.h"
 #include "UtilFiles/GeneralErrorHandling.h"
 
 void registerShaderProgram(struct OpenGLContext *context, const unsigned int shaderProgramID, char *shaderName) {
@@ -25,19 +25,6 @@ void registerShaderProgram(struct OpenGLContext *context, const unsigned int sha
     struct ShaderProgram *shaderProgram = &openGLContext->shaderPrograms[openGLContext->shaderCount - 1];
     shaderProgram->id = shaderProgramID;
     shaderProgram->name = shaderName;
-}
-
-GLuint getShaderProgramID(struct OpenGLContext *context, const char *shaderName) {
-    OPENGL_CTX;
-    for (int i = 0; i < openGLContext->shaderCount; i++) {
-        const struct ShaderProgram *shaderProgram = &openGLContext->shaderPrograms[i];
-        if (strcmp(shaderName, shaderProgram->name) == 0) {
-            return shaderProgram->id;
-        }
-    }
-
-    perror("Failed to find shader program id");
-    return 0;
 }
 
 void registerModel(struct OpenGLContext *context, const unsigned int modelID, const size_t indicesCount,

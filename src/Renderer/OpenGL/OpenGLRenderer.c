@@ -7,7 +7,7 @@
 #include "OpenGLRenderer.h"
 #include "OpenGLContext.h"
 #include "OpenGLErrorHandling.h"
-#include "../../UtilFiles/OpenGLMacrosAndUniforms.h"
+#include "../../UtilFiles/MacrosAndUniforms.h"
 #include "Injector/OpenGLInjector.h"
 #include "OpenGLHeaders.h"
 #include "Window.h"
@@ -124,7 +124,7 @@ void openGLRender (void *context, const bool drawWireframe) {
 
     GLuint activeShaderProgram = openGLContext->activeShaderProgram;
     if (activeShaderProgram == 0) {
-        activeShaderProgram = getShaderProgramID(openGLContext, getBaseShaderUniformString(BASE_SHADER));
+        activeShaderProgram = openGLGetShaderProgramID(openGLContext, getBaseShaderUniformString(BASE_SHADER));
         openGLSetActiveShaderProgram(context, activeShaderProgram);
     }
 

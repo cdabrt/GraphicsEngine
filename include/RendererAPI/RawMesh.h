@@ -6,7 +6,7 @@
 #define MESH_H
 
 #include "Renderer/OpenGL/OpenGLHeaders.h"
-#include "UtilFiles/OpenGLMacrosAndUniforms.h"
+#include "UtilFiles/MacrosAndUniforms.h"
 
 /**
  * Texture

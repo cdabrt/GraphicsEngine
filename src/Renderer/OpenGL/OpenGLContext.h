@@ -75,15 +75,6 @@ struct OpenGLContext {
 void registerShaderProgram(struct OpenGLContext *context, unsigned int shaderProgramID, char *shaderName);
 
 /**
- * getShaderProgramID
- * Gets the shader program with the provided shader name.
- *
- * @param context @ref OpenGLContext.
- * @param shaderName name of the shader program.
- */
-GLuint getShaderProgramID(struct OpenGLContext *context, const char *shaderName);
-
-/**
  * registerModel
  * Registers a Model to the list of models of @ref OpenGLContext.
  *

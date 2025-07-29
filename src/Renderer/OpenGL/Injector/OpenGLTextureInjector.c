@@ -9,7 +9,7 @@
 #include "Renderer/OpenGL/OpenGLErrorHandling.h"
 #include "Renderer/OpenGL/OpenGLHeaders.h"
 #include "Renderer/OpenGL/Injector/OpenGLInjector.h"
-#include "UtilFiles/OpenGLMacrosAndUniforms.h"
+#include "UtilFiles/MacrosAndUniforms.h"
 
 
 
