@@ -8,16 +8,19 @@
 #include <string.h>
 #include "OpenGL/OpenGLContext.h"
 #include "OpenGL/Injector/OpenGLInjector.h"
-#include <../include/RendererAPI/Renderer.h>
+#include "../include/RendererAPI/Renderer.h"
 #include "OpenGL/OpenGLHeaders.h"
+#include "../UtilFiles/GeneralErrorHandling.h"
 
 struct Renderer *createRenderer(GLFWwindow* window, const RendererType rendererType) {
-struct Renderer *renderer = malloc(sizeof(struct Renderer));
+    struct Renderer *renderer = malloc(sizeof(struct Renderer));
+    checkMalloc(renderer);
     switch (rendererType) {
         case OPENGL: {
             const int defaultInitValue = 0;
 
             struct OpenGLContext* openGLContext = malloc(sizeof(*openGLContext));
+            checkMalloc(openGLContext);
             memset(openGLContext, defaultInitValue, sizeof(struct OpenGLContext));
 
             openGLContext->window = window;
@@ -45,6 +48,7 @@ struct Renderer *renderer = malloc(sizeof(struct Renderer));
 
 struct RendererInjector *createRendererInjector(const RendererType rendererType) {
     struct RendererInjector *rendererInjector = malloc(sizeof(struct RendererInjector));
+    checkMalloc(rendererInjector);
     switch (rendererType) {
         case OPENGL: {
             rendererInjector->createShaderProgram = openGLCreateShaderProgram;

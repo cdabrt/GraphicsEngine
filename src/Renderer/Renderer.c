@@ -4,6 +4,7 @@
 
 #include <RendererAPI/Renderer.h>
 #include <stdlib.h>
+#include "UtilFiles/GeneralErrorHandling.h"
 
 /*
  **current is the actual renderer.
@@ -19,5 +20,6 @@
 void swapRenderer(struct Renderer **current, const struct Renderer *new) {
     free(*current);
     *current = malloc(sizeof(struct Renderer));
+    checkMalloc(*current);
     **current = *new;
 }

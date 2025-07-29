@@ -18,10 +18,6 @@ unsigned int compileShader (char filePath[], const unsigned int shaderType) {
     const unsigned int shader = glCreateShader(shaderType);
     const int numberOfShaders = 1;
     char *shaderSource = readFile(filePath);
-    if (!shaderSource) {
-        fprintf(stderr, "Failed to read shader source: %s\n", filePath);
-        exit(EXIT_FAILURE);
-    }
 
     //Attach shader source to the shader object and compile
     glShaderSource(shader, numberOfShaders, (const GLchar * const*) &shaderSource, NULL);

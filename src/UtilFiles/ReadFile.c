@@ -6,11 +6,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char *readFile (char fileName[]) {
+#include "GeneralErrorHandling.h"
+
+char *readFile (char filePath[]) {
     const int offset = 0;
     const int elementSize = 1;
 
-    FILE *sourceFile = fopen(fileName, "r");
+    FILE *sourceFile = fopen(filePath, "r");
     if (!sourceFile) {
         perror("Failed to open file");
         return NULL;
@@ -21,11 +23,18 @@ char *readFile (char fileName[]) {
     rewind(sourceFile);
 
     char *sourceString = malloc(fileSize + 1);
+    checkMalloc(sourceString);
 
-    size_t bytesRead = fread(sourceString, elementSize, fileSize, sourceFile);
+
+    const size_t bytesRead = fread(sourceString, elementSize, fileSize, sourceFile);
     sourceString[bytesRead] = '\0';
 
     fclose(sourceFile);
+
+    if (bytesRead == 0) {
+        fprintf(stderr, "Failed to read file: %s\n", filePath);
+        exit(EXIT_FAILURE);
+    }
 
     return sourceString;
 }
