@@ -4,6 +4,7 @@
 
 #ifndef OPENGLMACROS_H
 #define OPENGLMACROS_H
+#include <stdio.h>
 #include <Renderer/OpenGL/OpenGLContext.h>
 
 /**
