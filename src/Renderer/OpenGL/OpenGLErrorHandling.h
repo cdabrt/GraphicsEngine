@@ -9,7 +9,7 @@
  * checkOpenGLError
  * Checks whether any openGL error was thrown.
  */
-void checkOpenGLError();
+void checkOpenGLError(char *file, int line);
 
 
 /**
