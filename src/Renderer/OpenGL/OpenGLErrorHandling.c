@@ -36,7 +36,7 @@ void checkLinkingSuccess(const unsigned int program) {
     if(!success)
     {
         glGetProgramInfoLog(program, infoLogLength, NULL, infoLog);
-        snprintf("Program linking failed.\n", sizeof(infoLog), infoLog);
+        fprintf(stderr,"Program linking failed.\n", sizeof(infoLog), infoLog);
         perror(infoLog);
     }
     checkOpenGLError();
