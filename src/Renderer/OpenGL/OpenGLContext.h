@@ -40,7 +40,7 @@ struct Model {
   In the future use function pointers in the struct, so that the variables within the struct can be used in the function.
   Then create an init function, like is done in the factories, that pass the pointers to the functions.
   Perhaps could've just used C++ and write the entire program in C except for when creating these patterns.
-  However, one could argue this is too much, as addShaderProgram and addModel are specifically only used within the
+  However, one could argue this is too much, as registerregisterShaderProgram and registerregisterModel are specifically only used within the
   OpenGLRenderer implementation. This avoids unnecessary complexity when adding these function pointers.
   */
 
@@ -65,14 +65,14 @@ struct OpenGLContext {
 };
 
 /**
- * addShaderProgram
- * Adds a shader program to the list of shader programs of @ref OpenGLContext.
+ * registerShaderProgram
+ * Registers a shader program to the list of shader programs of @ref OpenGLContext.
  *
  * @param context @ref OpenGLContext.
  * @param shaderProgramID the ID of the shader program.
  * @param shaderName name of the shader program.
  */
-void addShaderProgram(struct OpenGLContext *context, unsigned int shaderProgramID, char *shaderName);
+void registerShaderProgram(struct OpenGLContext *context, unsigned int shaderProgramID, char *shaderName);
 
 /**
  * getShaderProgramID
@@ -84,24 +84,24 @@ void addShaderProgram(struct OpenGLContext *context, unsigned int shaderProgramI
 GLuint getShaderProgramID(struct OpenGLContext *context, const char *shaderName);
 
 /**
- * addShaderProgram
- * Adds a Model to the list of models of @ref OpenGLContext.
+ * registerModel
+ * Registers a Model to the list of models of @ref OpenGLContext.
  *
  * @param context @ref OpenGLContext.
  * @param modelID the ID of the model.
  * @param indicesCount the number of indices of all the meshes that belong to the model.
  * @param shaderProgramID ID of the shader program that is associated with the model.
  */
-void addModel(struct OpenGLContext *context, unsigned int modelID, size_t indicesCount, unsigned long shaderProgramID);
+void registerModel(struct OpenGLContext *context, unsigned int modelID, size_t indicesCount, unsigned long shaderProgramID);
 
 /**
- * addTexture
- * Adds a texture to the ModelMesh.
+ * registerTexture
+ * Registers a texture to the ModelMesh.
  *
  * @param context @ref OpenGLContext.
  * @param model the Mesh the texture needs to be added to.
  * @param texture the texture that needs to be added to the model.
  */
-void addTexture(struct OpenGLContext *context, struct Model *model, struct Texture texture);
+void registerTexture(struct OpenGLContext *context, struct Model *model, struct Texture texture);
 
 #endif //OPENGLCONTEXT_H

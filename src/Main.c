@@ -82,7 +82,7 @@ int main() {
     //     "\0",
     //     "../src/Renderer/OpenGL/Shaders/Fragment/fragment_wireframe.frag"
     //     );
-    // addShaderProgram(openGLContext, shaderProgram, WIREFRAME_SHADER);
+    // registerregisterShaderProgram(openGLContext, shaderProgram, WIREFRAME_SHADER);
     //Set to WIREFRAME_SHADER for testing
     GLuint id = getShaderProgramID(openGLContext, getBaseShaderUniformString(BASE_SHADER));
 

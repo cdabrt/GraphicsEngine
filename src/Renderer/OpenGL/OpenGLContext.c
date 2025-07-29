@@ -9,7 +9,7 @@
 
 #include "../../UtilFiles/OpenGLMacrosAndUniforms.h"
 
-void addShaderProgram(struct OpenGLContext *context, const unsigned int shaderProgramID, char *shaderName) {
+void registerShaderProgram(struct OpenGLContext *context, const unsigned int shaderProgramID, char *shaderName) {
     OPENGL_CTX;
 
     const size_t newSize = openGLContext->shaderCount + 1;
@@ -43,7 +43,7 @@ GLuint getShaderProgramID(struct OpenGLContext *context, const char *shaderName)
     return 0;
 }
 
-void addModel(struct OpenGLContext *context, const unsigned int modelID, const size_t indicesCount,
+void registerModel(struct OpenGLContext *context, const unsigned int modelID, const size_t indicesCount,
     const unsigned long shaderProgramID) {
     OPENGL_CTX;
 
@@ -72,7 +72,7 @@ void addModel(struct OpenGLContext *context, const unsigned int modelID, const s
     openGLContext->models[openGLContext->modelCount - 1] = model;
 }
 
-void addTexture(struct OpenGLContext *context, struct Model *model, const struct Texture texture) {
+void registerTexture(struct OpenGLContext *context, struct Model *model, const struct Texture texture) {
     OPENGL_CTX;
 
     const size_t newSize = model->textureCount + 1;

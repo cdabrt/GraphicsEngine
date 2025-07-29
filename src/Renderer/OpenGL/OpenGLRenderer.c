@@ -30,7 +30,7 @@ void initializeBaseShaders(struct OpenGLContext *openGLContext, const char* vert
     }
 
     const GLuint shaderProgram = openGLCreateShaderProgram(vertexFullPath, geometryFullPath, fragmentFullPath);
-    addShaderProgram(openGLContext, shaderProgram, shaderName);
+    registerShaderProgram(openGLContext, shaderProgram, shaderName);
 
     /*
       The base shader should always be set up before any Model, VBO and EBO setup.

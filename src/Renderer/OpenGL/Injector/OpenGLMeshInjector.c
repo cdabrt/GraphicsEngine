@@ -66,7 +66,7 @@ unsigned int openGLRegisterMesh(void *context, const struct RawMesh *mesh, const
     registerEBO(mesh);
     layOutVertexAttributes();
 
-    addModel(openGLContext, VAO, mesh->indicesDataSize, shaderProgramID);
+    registerModel(openGLContext, VAO, mesh->indicesDataSize, shaderProgramID);
     openGLRegisterTextures(openGLContext, mesh->textures, mesh->textureCount, &openGLContext->models[openGLContext->modelCount - 1]);
 
     return VAO;

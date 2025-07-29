@@ -58,7 +58,7 @@ void registerFileNotFoundImage(struct OpenGLContext *context, struct Model *mode
     };
 
     generateTexture(&texture, textureID, 1, nrChannels, width, height, data);
-    addTexture(context, model, texture);
+    registerTexture(context, model, texture);
     stbi_image_free(data);
 }
 
@@ -83,7 +83,7 @@ void openGLRegisterTextures(struct OpenGLContext *context, const struct Texture 
 
             if (data) {
                 generateTexture(&texture, textureID, i + 1, nrChannels, width, height, data);
-                addTexture(context, model, texture);
+                registerTexture(context, model, texture);
             }
             else {
                 stbi_image_free(data);
