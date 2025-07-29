@@ -72,9 +72,10 @@ int main() {
         sizeof(textures) / sizeof(textures[0]),
         };
 
+    //For testing
     //Confirms switching models and using different associated shaders works.
     //To create and register a shader program:
-    // GLuint shaderProgram = rendererInjector->createShaderProgram(
+    // unsigned int shaderProgram = rendererInjector->createShaderProgram(
     //     "../src/Renderer/OpenGL/Shaders/Vertex/vertex_wireframe.vert",
     //     "\0",
     //     "../src/Renderer/OpenGL/Shaders/Fragment/fragment_wireframe.frag"
