@@ -8,7 +8,6 @@
 #include "../../../UtilFiles/OpenGLMacrosAndUniforms.h"
 #include <stb_image.h>
 #include <string.h>
-
 #include "Renderer/OpenGL/OpenGLErrorHandling.h"
 #include "Renderer/OpenGL/OpenGLHeaders.h"
 #include "Renderer/OpenGL/Injector/OpenGLInjector.h"
@@ -21,7 +20,7 @@ void registerVBO(const struct RawMesh *mesh) {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, mesh->vertexDataSize, mesh->vertices, GL_STATIC_DRAW);
 
-    checkOpenGLErrors(__FILE__, __LINE__);
+    CHECK_OPENGL_ERRORS;
 }
 
 void registerEBO(const struct RawMesh *mesh) {
@@ -30,7 +29,7 @@ void registerEBO(const struct RawMesh *mesh) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indicesDataSize, mesh->indices, GL_STATIC_DRAW);
 
-    checkOpenGLErrors(__FILE__, __LINE__);
+    CHECK_OPENGL_ERRORS;
 }
 
 void layOutVertexAttributes() {
@@ -56,7 +55,7 @@ void layOutVertexAttributes() {
         stride * sizeof(float), (void*)(vertexBlockSize * textureCoordinatesBlockSize * sizeof(float)));
     glEnableVertexAttribArray(textureCoordinatesIndex);
 
-    checkOpenGLErrors(__FILE__, __LINE__);
+    CHECK_OPENGL_ERRORS;
 }
 
 
@@ -71,7 +70,7 @@ unsigned int openGLRegisterMesh(void *context, const struct RawMesh *mesh, const
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
 
-    checkOpenGLErrors(__FILE__, __LINE__);
+    CHECK_OPENGL_ERRORS;
 
     registerVBO(mesh);
     registerEBO(mesh);

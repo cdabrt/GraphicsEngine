@@ -6,6 +6,12 @@
 #define OPENGLERRORHANDLING_H
 
 /**
+ * CHECK_OPENGL_ERRORS
+ * Checks whether any openGL errors were thrown and shows where in the file this error occured.
+ */
+#define CHECK_OPENGL_ERRORS checkOpenGLErrors(__FILE__, __LINE__)
+
+/**
  * checkOpenGLErrors
  * Checks whether any openGL errors were thrown.
  */

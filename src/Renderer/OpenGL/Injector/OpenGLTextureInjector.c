@@ -6,7 +6,6 @@
 #include "Renderer/OpenGL/OpenGLContext.h"
 #include <stb_image.h>
 #include <string.h>
-
 #include "Renderer/OpenGL/OpenGLErrorHandling.h"
 #include "Renderer/OpenGL/OpenGLHeaders.h"
 #include "Renderer/OpenGL/Injector/OpenGLInjector.h"
@@ -20,7 +19,7 @@ void setTextureParameters() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    checkOpenGLErrors(__FILE__, __LINE__);
+    CHECK_OPENGL_ERRORS;
 }
 
 void generateTexture(struct Texture *texture, const GLuint textureID, const int textureUnit, const int nrChannels,
@@ -39,7 +38,7 @@ void generateTexture(struct Texture *texture, const GLuint textureID, const int 
     texture->id = textureID;
     texture->textureUnit = textureUnit;
 
-    checkOpenGLErrors(__FILE__, __LINE__);
+    CHECK_OPENGL_ERRORS;
 }
 
 void registerFileNotFoundImage(struct OpenGLContext *context, struct Model *model) {

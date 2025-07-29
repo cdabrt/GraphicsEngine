@@ -2,9 +2,9 @@
 // Created by Carlo Baretta on 14/07/2025.
 //
 
-
 #include <stdio.h>
 #include "OpenGLHeaders.h"
+#include "OpenGLErrorHandling.h"
 
 void checkOpenGLErrors(char *file, const int line) {
     GLenum error;
@@ -24,7 +24,7 @@ void checkCompilationSuccess(const unsigned int shader) {
         glGetShaderInfoLog(shader, infoLogLength, NULL, infoLog);
         perror(infoLog);
     }
-    checkOpenGLErrors(__FILE__, __LINE__);
+    CHECK_OPENGL_ERRORS;
 }
 
 void checkLinkingSuccess(const unsigned int program) {
@@ -36,10 +36,10 @@ void checkLinkingSuccess(const unsigned int program) {
     if(!success)
     {
         glGetProgramInfoLog(program, infoLogLength, NULL, infoLog);
-        fprintf(stderr,"Program linking failed.\n", sizeof(infoLog), infoLog);
+        fprintf(stderr,"Program linking failed.\n");
         perror(infoLog);
     }
-    checkOpenGLErrors(__FILE__, __LINE__);
+    CHECK_OPENGL_ERRORS;
 }
 
 void checkUniformLocation(const GLuint uniformLocation) {
