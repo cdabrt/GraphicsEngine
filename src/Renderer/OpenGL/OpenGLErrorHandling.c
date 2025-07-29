@@ -9,7 +9,7 @@
 void checkOpenGLErrors(char *file, const int line) {
     GLenum error;
     while ((error = glGetError()) != GL_NO_ERROR) {
-        fprintf(stderr, "OpenGL error %X at %s:%d:", error, file, line);
+        fprintf(stderr, "OpenGL error %X at %s:%d\n", error, file, line);
     }
 }
 

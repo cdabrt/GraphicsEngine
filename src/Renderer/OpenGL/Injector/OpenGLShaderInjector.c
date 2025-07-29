@@ -23,7 +23,7 @@ unsigned int compileShader (char filePath[], const unsigned int shaderType) {
     glShaderSource(shader, numberOfShaders, (const GLchar * const*) &shaderSource, NULL);
     free(shaderSource);
     glCompileShader(shader);
-
+    CHECK_OPENGL_ERRORS;
     checkCompilationSuccess(shader);
 
     return shader;
@@ -37,7 +37,7 @@ unsigned int linkShaders (const unsigned int vertexShader, const unsigned int ge
     }
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
-
+    CHECK_OPENGL_ERRORS;
     checkLinkingSuccess(shaderProgram);
 
     return shaderProgram;
