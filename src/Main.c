@@ -72,9 +72,6 @@ int main() {
         sizeof(textures) / sizeof(textures[0]),
         };
 
-    //For testing
-    OPENGL_CTX;
-
     //Confirms switching models and using different associated shaders works.
     //To create and register a shader program:
     // GLuint shaderProgram = rendererInjector->createShaderProgram(
@@ -84,7 +81,7 @@ int main() {
     //     );
     // registerShaderProgram(openGLContext, shaderProgram, WIREFRAME_SHADER);
     //Set to WIREFRAME_SHADER for testing
-    unsigned int id = rendererInjector->getShaderProgramID(openGLContext, getBaseShaderUniformString(BASE_SHADER));
+    unsigned int id = rendererInjector->getShaderProgramID(context, getBaseShaderUniformString(BASE_SHADER));
     rendererInjector->registerMesh(context, &mesh, id);
 
     /*
