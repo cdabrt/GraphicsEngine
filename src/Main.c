@@ -10,6 +10,9 @@
 #include <../include/RendererAPI/Renderer.h>
 #include <../include/RendererAPI/RawMesh.h>
 #include <../include/RendererAPI/RendererFactory.h>
+
+#include "cglm/struct/affine-pre.h"
+#include "cglm/struct/affine.h"
 #include "Renderer/OpenGL/OpenGLHeaders.h"
 #include "UtilFiles/MacrosAndUniforms.h"
 
@@ -72,7 +75,8 @@ int main() {
         sizeof(textures) / sizeof(textures[0]),
         };
 
-    //For testing
+    //For testing:
+
     //Confirms switching models and using different associated shaders works.
     //To create and register a shader program:
     // unsigned int shaderProgram = rendererInjector->createShaderProgram(
@@ -82,8 +86,15 @@ int main() {
     //     );
     // registerShaderProgram(openGLContext, shaderProgram, WIREFRAME_SHADER);
     //Set to WIREFRAME_SHADER for testing
-    unsigned int id = rendererInjector->getShaderProgramID(context, getBaseShaderUniformString(BASE_SHADER));
-    rendererInjector->registerMesh(context, &mesh, id);
+    const unsigned int id = rendererInjector->getShaderProgramID(context, getBaseShaderUniformString(BASE_SHADER));
+    rendererInjector->registerMesh(context, &mesh, "FirstMesh", id);
+
+    //Apply some transformations
+    const struct Model *model = rendererInjector->getModel(context, rendererInjector->getModelID(context, "FirstMesh"));
+    //printf("%.6f", model->localTransformation->col->x);
+
+    *model->localTransformation = glms_rotate(*model->localTransformation, glm_rad(90.0f), (vec3s){ .x = 0.0f, .y = 0.0f, .z = 1.0f });
+    *model->localTransformation  = glms_scale(*model->localTransformation , (vec3s){ .x = 0.5f, .y = 0.5f, .z = 0.5f});
 
     /*
       Shader injection should happen before this call, so that the wireframe shaders

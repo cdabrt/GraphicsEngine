@@ -87,7 +87,7 @@ unsigned int openGLGetShaderProgramID(void *context, const char *shaderName) {
         }
     }
 
-    perror("Failed to find shader program id");
+    fprintf(stderr, "Failed to find shader program id");
     return 0;
 }
 

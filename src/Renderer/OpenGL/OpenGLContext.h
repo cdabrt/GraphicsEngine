@@ -6,6 +6,7 @@
 #define OPENGLCONTEXT_H
 #include <RendererAPI/RawMesh.h>
 #include "Renderer/OpenGL/OpenGLHeaders.h"
+#include "../include/RendererAPI/Model.h"
 
 /**
  * ShaderProgram
@@ -18,30 +19,11 @@ struct ShaderProgram {
     char *name;
 };
 
-/**
- * Model
- * Struct representing an OpenGL Model.
- *
- * @param id the id of the model.
- * @param indicesCount the amount of indices of all the meshes that belong to the model.
- * @param shaderProgramID it is possible for no shaderProgramID to be defined.
- * @param textures the list of textures.
- * @param textureCount the amount of textures in the list of textures.
- */
-struct Model {
-    GLuint id;
-    GLuint shaderProgramID;
-    size_t indicesCount;
-    struct Texture *textures;
-    size_t textureCount;
-};
-
 /*
-  In the future use function pointers in the struct, so that the variables within the struct can be used in the function.
-  Then create an init function, like is done in the factories, that pass the pointers to the functions.
-  Perhaps could've just used C++ and write the entire program in C except for when creating these patterns.
-  However, one could argue this is too much, as registerregisterShaderProgram and registerregisterModel are specifically only used within the
-  OpenGLRenderer implementation. This avoids unnecessary complexity when adding these function pointers.
+  Function pointers have not been used for creating these patterns. They have been used in the renderer factory,
+  however one could argue that for the functions of OpenGLContext this is overkill.
+  registerShaderProgram, registerModel, and registerTexture are specifically only used within the
+  OpenGLRenderer implementation. The complexity these function pointers add are unnecessary in this case.
   */
 
 /**
@@ -81,9 +63,11 @@ void registerShaderProgram(struct OpenGLContext *context, unsigned int shaderPro
  * @param context @ref OpenGLContext.
  * @param modelID the ID of the model.
  * @param indicesCount the number of indices of all the meshes that belong to the model.
+ * @param modelName the name of the model.
  * @param shaderProgramID ID of the shader program that is associated with the model.
  */
-void registerModel(struct OpenGLContext *context, unsigned int modelID, size_t indicesCount, unsigned long shaderProgramID);
+void registerModel(struct OpenGLContext *context, unsigned int modelID, size_t indicesCount,
+    char* modelName, unsigned long shaderProgramID);
 
 /**
  * registerTexture

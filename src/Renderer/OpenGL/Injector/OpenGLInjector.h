@@ -40,10 +40,29 @@ void openGLSetActiveShaderProgram(void *context, unsigned long programId);
  *
  * @param context the renderer context.
  * @param mesh the mesh to be registered.
-* @param shaderProgramID ID of the shader program that is associated with the mesh. If no ID is provided the renderer
+ * @param modelName the name of the resulting model that will be created using the mesh.
+ * @param shaderProgramID ID of the shader program that is associated with the mesh. If no ID is provided the renderer
  * will use the active shader program instead.
  */
-unsigned int openGLRegisterMesh(void *context, const struct RawMesh *mesh, unsigned long shaderProgramID);
+unsigned int openGLRegisterMesh(void *context, const struct RawMesh *mesh, char *modelName, unsigned long shaderProgramID);
+
+/**
+ * openGLGetModel
+ * Gets the model with the provided model ID.
+ *
+ * @param context @ref OpenGLContext.
+ * @param modelID ID of the model.
+ */
+struct Model *openGLGetModel(void *context, unsigned int modelID);
+
+/**
+ * openGLGetModel
+ * Gets the model with the provided model name.
+ *
+ * @param context @ref OpenGLContext.
+ * @param modelName name of the model.
+ */
+unsigned int openGLGetModelID(void *context, const char *modelName);
 
 /**
  * registerTextures

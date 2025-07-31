@@ -143,22 +143,10 @@ void openGLRender (void *context, const bool drawWireframe) {
                 bindTextures(model, activeShaderProgram);
             }
 
-            //------------------------------------------------------------------------------------------
-
-            //TODO: Testing, this has to be somewhere else.
-            //  Maybe a mesh function. Perhaps we can make another abstraction on top of ModelModel. A GameObject has a ModelModel.
-            //  So we have RawMesh -> Texture. (The RawMesh struct is only used as a DTO for using the vertex data in the registration of a ModelModel)
-            //  and
-            //  GameObject -> ModelModel (dependency on RawMesh for meshdata and textures) -> Texture * -> ShaderProgram (ID, sort of primary key relation)
-            mat4s transformation = glms_mat4_identity();
-            transformation = glms_rotate(transformation, glm_rad(90.0f), (vec3s){ .x = 0.0f, .y = 0.0f, .z = 1.0f });
-            transformation = glms_scale(transformation, (vec3s){ .x = 0.5f, .y = 0.5f, .z = 0.5f});
-
-            const unsigned int transformLoc = glGetUniformLocation(activeShaderProgram, getBaseMeshUniformString(TRANSFORM));
-            checkUniformLocation(transformLoc);
-            glUniformMatrix4fv(transformLoc, 1, GL_FALSE, &transformation.raw[0]);
-
-            //------------------------------------------------------------------------------------------
+            const unsigned int transformUniform = glGetUniformLocation(activeShaderProgram, getBaseMeshUniformString(TRANSFORM));
+            checkUniformLocation(transformUniform);
+            //TODO: Do not just use local transform. Use world transform as well.
+            glUniformMatrix4fv((GLint)transformUniform, 1, GL_FALSE, model->localTransformation->raw[0]);
 
             glDrawElements(GL_TRIANGLES, (GLsizei) model->indicesCount, GL_UNSIGNED_INT, NULL);
 
@@ -194,7 +182,7 @@ void openGLKill (void *context) {
     const int numberOfmodels = 1;
     const int numberOfTexturesToDelete = 1;
     for (size_t i =0; i < openGLContext->modelCount; i++) {
-        const struct Model *model = &openGLContext->models[i];
+        struct Model *model = &openGLContext->models[i];
 
         for (int j = 0; j < model->textureCount; j ++) {
             struct Texture *texture = &model->textures[j];
@@ -203,6 +191,9 @@ void openGLKill (void *context) {
             texture->path = "";
         }
         glDeleteVertexArrays(numberOfmodels, &model->id);
+
+        free(model->localTransformation);
+        free(model->worldTransformation);
     }
 
     openGLContext->shaderCount = 0;

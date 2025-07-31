@@ -28,7 +28,7 @@ void registerShaderProgram(struct OpenGLContext *context, const unsigned int sha
 }
 
 void registerModel(struct OpenGLContext *context, const unsigned int modelID, const size_t indicesCount,
-    const unsigned long shaderProgramID) {
+    char* modelName, const unsigned long shaderProgramID) {
     OPENGL_CTX;
 
     const size_t newSize = openGLContext->modelCount + 1;
@@ -41,12 +41,23 @@ void registerModel(struct OpenGLContext *context, const unsigned int modelID, co
     openGLContext->models = models;
     openGLContext->modelCount = newSize;
 
+    mat4s *localTransformations = malloc(sizeof(mat4s));
+    checkMalloc(localTransformations);
+    mat4s *worldTransformations = malloc(sizeof(mat4s));
+    checkMalloc(worldTransformations);
+
+    *localTransformations = glms_mat4_identity();
+    *worldTransformations = glms_mat4_identity();
+
     struct Model model = {
+        modelName,
         model.id = modelID,
         shaderProgramID,
         model.indicesCount = indicesCount,
         NULL,
-        0
+        0,
+        localTransformations,
+        worldTransformations
     };
 
     openGLContext->models[openGLContext->modelCount - 1] = model;

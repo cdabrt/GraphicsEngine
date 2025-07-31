@@ -63,7 +63,7 @@ void layOutVertexAttributes() {
 //TODO: Register static mesh, put it into one big VBO and use glMultiDrawIndirect for frustum culling of the big static VBO.
 //  The dynamic meshes still need to be frustum culled
 //  Also look into instancing (trees, bullets, etc)
-unsigned int openGLRegisterMesh(void *context, const struct RawMesh *mesh, const unsigned long shaderProgramID) {
+unsigned int openGLRegisterMesh(void *context, const struct RawMesh *mesh, char *modelName, const unsigned long shaderProgramID) {
     OPENGL_CTX;
 
     unsigned int VAO;
@@ -76,8 +76,34 @@ unsigned int openGLRegisterMesh(void *context, const struct RawMesh *mesh, const
     registerEBO(mesh);
     layOutVertexAttributes();
 
-    registerModel(openGLContext, VAO, mesh->indicesDataSize, shaderProgramID);
+    registerModel(openGLContext, VAO, mesh->indicesDataSize, modelName, shaderProgramID);
     openGLRegisterTextures(openGLContext, mesh->textures, mesh->textureCount, &openGLContext->models[openGLContext->modelCount - 1]);
 
     return VAO;
+}
+
+struct Model *openGLGetModel(void *context, const unsigned int modelID) {
+    OPENGL_CTX;
+    for (int i = 0; i < openGLContext->modelCount; i++) {
+        struct Model *model = &openGLContext->models[i];
+        if (model->id == modelID) {
+            return model;
+        }
+    }
+
+    fprintf(stderr, "Failed to find model");
+    return NULL;
+}
+
+unsigned int openGLGetModelID(void *context, const char *modelName) {
+    OPENGL_CTX;
+    for (int i = 0; i < openGLContext->modelCount; i++) {
+        const struct Model *model = &openGLContext->models[i];
+        if (strcmp(modelName, model->name) == 0) {
+            return model->id;
+        }
+    }
+
+    fprintf(stderr, "Failed to find model id");
+    return 0;
 }

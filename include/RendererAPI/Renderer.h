@@ -39,8 +39,10 @@ struct Renderer {
 
 typedef unsigned int (*CreateShaderProgramFunction) (char *vertexFilePath, char *geometryFilePath, char *fragmentFilePath);
 typedef void (*SetActiveShaderProgramFunction) (void *context, unsigned long programId);
-typedef unsigned int (*RegisterMeshFunction) (void *context, const struct RawMesh *mesh, unsigned long shaderProgramID);
+typedef unsigned int (*RegisterMeshFunction) (void *context, const struct RawMesh *mesh, char *modelName, unsigned long shaderProgramID);
 typedef unsigned int (*getShaderProgramIdFunction) (void *context, const char *shaderName);
+typedef struct Model *(*getModelFunction) (void *context, unsigned int modelID);
+typedef unsigned int (*getModelIDFunction) (void *context, const char *meshName);
 
 /**
  * RendererInjector
@@ -56,6 +58,8 @@ struct RendererInjector {
     SetActiveShaderProgramFunction setActiveShaderProgram;
     RegisterMeshFunction registerMesh;
     getShaderProgramIdFunction getShaderProgramID;
+    getModelFunction getModel;
+    getModelIDFunction getModelID;
 };
 
 /**
