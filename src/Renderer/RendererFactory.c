@@ -3,7 +3,6 @@
 //
 #include "../../include/RendererAPI/RendererFactory.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include "Renderer/OpenGL/OpenGLRenderer.h"
 #include <string.h>
 #include "OpenGL/OpenGLContext.h"
@@ -11,6 +10,7 @@
 #include "../include/RendererAPI/Renderer.h"
 #include "OpenGL/OpenGLHeaders.h"
 #include "../UtilFiles/GeneralErrorHandling.h"
+#include "RendererAPI/Context.h"
 
 struct Renderer *createRenderer(GLFWwindow* window, const RendererType rendererType) {
     struct Renderer *renderer = malloc(sizeof(struct Renderer));
@@ -19,17 +19,20 @@ struct Renderer *createRenderer(GLFWwindow* window, const RendererType rendererT
         case OPENGL: {
             const int defaultInitValue = 0;
 
+            struct Context *context = malloc(sizeof(struct Context));
             struct OpenGLContext* openGLContext = malloc(sizeof(*openGLContext));
             checkMalloc(openGLContext);
             memset(openGLContext, defaultInitValue, sizeof(struct OpenGLContext));
 
-            openGLContext->window = window;
+            context->window = window;
+            context->backendSpecificContext = openGLContext;
+
             renderer->initialize = openGLInitialize;
             renderer->prepareRenderer = openGLPrepareRender;
             renderer->render = openGLRender;
             renderer->swapBuffers = openGLSwapBuffers;
             renderer->kill = openGLKill;
-            renderer->context = openGLContext;
+            renderer->context = context;
             break;
         }
         case VULKAN: {

@@ -28,7 +28,7 @@
  *      }
  * @endcode
  */
-#define OPENGL_CTX struct OpenGLContext *openGLContext = (struct OpenGLContext *)context
+#define OPENGL_CTX struct OpenGLContext *openGLContext = (struct OpenGLContext *)context->backendSpecificContext
 
 
 

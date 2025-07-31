@@ -4,15 +4,10 @@
 
 #include <stdlib.h>
 #include "OpenGLContext.h"
-#include <stdio.h>
 #include <string.h>
-
-#include "../../UtilFiles/MacrosAndUniforms.h"
 #include "UtilFiles/GeneralErrorHandling.h"
 
-void registerShaderProgram(struct OpenGLContext *context, const unsigned int shaderProgramID, char *shaderName) {
-    OPENGL_CTX;
-
+void registerShaderProgram(struct OpenGLContext *openGLContext, const unsigned int shaderProgramID, char *shaderName) {
     const size_t newSize = openGLContext->shaderCount + 1;
 
     struct ShaderProgram *shaderPrograms = realloc(
@@ -27,9 +22,8 @@ void registerShaderProgram(struct OpenGLContext *context, const unsigned int sha
     shaderProgram->name = shaderName;
 }
 
-void registerModel(struct OpenGLContext *context, const unsigned int modelID, const size_t indicesCount,
+void registerModel(struct OpenGLContext *openGLContext, const unsigned int modelID, const size_t indicesCount,
     char* modelName, const unsigned long shaderProgramID) {
-    OPENGL_CTX;
 
     const size_t newSize = openGLContext->modelCount + 1;
 
@@ -63,9 +57,7 @@ void registerModel(struct OpenGLContext *context, const unsigned int modelID, co
     openGLContext->models[openGLContext->modelCount - 1] = model;
 }
 
-void registerTexture(struct OpenGLContext *context, struct Model *model, const struct Texture texture) {
-    OPENGL_CTX;
-
+void registerTexture(struct Model *model, const struct Texture texture) {
     const size_t newSize = model->textureCount + 1;
 
     struct Texture *textures = realloc(

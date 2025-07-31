@@ -12,11 +12,11 @@
 #include "OpenGLHeaders.h"
 #include "Window.h"
 #include "cglm/struct.h"
+#include "RendererAPI/Context.h"
 
-
-
-void initializeBaseShaders(struct OpenGLContext *openGLContext, const char* vertexPath, const char* geometryPath,
+void initializeBaseShaders(struct Context *context, const char* vertexPath, const char* geometryPath,
     const char* fragmentPath, char* shaderName) {
+    OPENGL_CTX;
     const char filePathBase[] = "../src/Renderer/OpenGL/Shaders/";
     const unsigned int byteSize = 1024;
     char vertexFullPath[byteSize];
@@ -38,12 +38,12 @@ void initializeBaseShaders(struct OpenGLContext *openGLContext, const char* vert
       For macOS this needs to happen immediately after creating the shader programs. Do not move this line somewhere else.
       It would work on Windows, not on macOS.
     */
-    openGLSetActiveShaderProgram(openGLContext, shaderProgram);
+    openGLSetActiveShaderProgram(context, shaderProgram);
 }
 
-void initializeWireframeShaders(struct OpenGLContext *openGLContext) {
+void initializeWireframeShaders(struct Context *context) {
     initializeBaseShaders(
-        openGLContext,
+        context,
         "Vertex/vertex_wireframe.vert",
         "\0",
         "Fragment/fragment_wireframe.frag",
@@ -51,9 +51,7 @@ void initializeWireframeShaders(struct OpenGLContext *openGLContext) {
         );
 }
 
-void openGLInitialize(void *context, const int xPos, const int yPos, const int width, const int height) {
-    OPENGL_CTX;
-
+void openGLInitialize(struct Context *context, const int xPos, const int yPos, const int width, const int height) {
     //Initialise GLAD
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         perror("Failed to initialize GLAD \n");
@@ -63,7 +61,7 @@ void openGLInitialize(void *context, const int xPos, const int yPos, const int w
     glViewport(xPos, yPos, width, height);
 
     initializeBaseShaders(
-        openGLContext,
+        context,
         "Vertex/vertex_main.vert",
         "\0",
         "Fragment/fragment_main.frag",
@@ -73,12 +71,10 @@ void openGLInitialize(void *context, const int xPos, const int yPos, const int w
 
 
 
-void openGLPrepareRender (void *context, const bool drawWireframe) {
-    OPENGL_CTX;
-
+void openGLPrepareRender (struct Context *context, const bool drawWireframe) {
     if (drawWireframe) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        initializeWireframeShaders(openGLContext);
+        initializeWireframeShaders(context);
     }
 }
 
@@ -114,7 +110,7 @@ void cleanUpRenderer(const struct Model *model) {
 //      If the object moves a lot, it is of course more efficient to flag it as not-static.),
 //  texture atlases or arrays,
 //  instancing
-void openGLRender (void *context, const bool drawWireframe) {
+void openGLRender (const struct Context *context, const bool drawWireframe) {
     OPENGL_CTX;
     const int unbindArray = 0;
 
@@ -161,18 +157,17 @@ void openGLRender (void *context, const bool drawWireframe) {
 
 
 //Poll events and swap front buffer with back buffers
-void openGLSwapBuffers (void *context) {
-    OPENGL_CTX;
+void openGLSwapBuffers (const struct Context *context) {
     glfwPollEvents();
-    glfwSwapBuffers(openGLContext->window);
+    glfwSwapBuffers(context->window);
 }
 
 
 
-void openGLKill (void *context) {
+void openGLKill (struct Context *context) {
     OPENGL_CTX;
     glFinish();
-    cleanupWindow(openGLContext->window);
+    cleanupWindow(context->window);
 
     for (size_t i =0; i < openGLContext->shaderCount; i++) {
         const struct ShaderProgram shaderProgram = openGLContext->shaderPrograms[i];
@@ -201,4 +196,5 @@ void openGLKill (void *context) {
     free(openGLContext->shaderPrograms);
     free(openGLContext->models);
     free(openGLContext);
+    free(context);
 }

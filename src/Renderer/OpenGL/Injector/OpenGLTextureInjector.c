@@ -11,8 +11,6 @@
 #include "Renderer/OpenGL/Injector/OpenGLInjector.h"
 #include "UtilFiles/MacrosAndUniforms.h"
 
-
-
 void setTextureParameters() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -41,7 +39,7 @@ void generateTexture(struct Texture *texture, const GLuint textureID, const int 
     CHECK_OPENGL_ERRORS;
 }
 
-void registerFileNotFoundImage(struct OpenGLContext *context, struct Model *model) {
+void registerFileNotFoundImage(struct Model *model) {
     const char *fileNotFoundPath = strdup("../src/Renderer/OpenGL/Textures/FileNotFound.png");
     const int numberOfRegistersAtTime = 1;
     int width, height, nrChannels;
@@ -63,18 +61,18 @@ void registerFileNotFoundImage(struct OpenGLContext *context, struct Model *mode
     };
 
     generateTexture(&texture, textureID, 1, nrChannels, width, height, data);
-    registerTexture(context, model, texture);
+    registerTexture(model, texture);
     stbi_image_free(data);
 }
 
-void openGLRegisterTextures(struct OpenGLContext *context, const struct Texture *textures, const size_t textureCount,
+void openGLRegisterTextures(const struct Texture *textures, const size_t textureCount,
     struct Model *model) {
     const int numberOfRegistersAtTime = 1;
     int width, height, nrChannels;
     const int desiredChannels = 0;
 
     if (textureCount == 0) {
-        registerFileNotFoundImage(context, model);
+        registerFileNotFoundImage(model);
     } else {
         for (int i = 0; i < textureCount; i++) {
             struct Texture texture = textures[i];
@@ -88,11 +86,11 @@ void openGLRegisterTextures(struct OpenGLContext *context, const struct Texture 
 
             if (data) {
                 generateTexture(&texture, textureID, i + 1, nrChannels, width, height, data);
-                registerTexture(context, model, texture);
+                registerTexture(model, texture);
             }
             else {
                 stbi_image_free(data);
-                registerFileNotFoundImage(context, model);
+                registerFileNotFoundImage(model);
                 fprintf(stderr, "Failed to load texture: %s\n", stbi_failure_reason());
                 return;
             }

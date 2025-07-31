@@ -38,7 +38,6 @@ struct ShaderProgram {
  * @param activeShaderProgram the active shader program, this is the shader that is currently used by the renderer.
  */
 struct OpenGLContext {
-    GLFWwindow *window;
     struct ShaderProgram *shaderPrograms;
     struct Model *models;
     size_t shaderCount;
@@ -77,6 +76,6 @@ void registerModel(struct OpenGLContext *context, unsigned int modelID, size_t i
  * @param model the Mesh the texture needs to be added to.
  * @param texture the texture that needs to be added to the model.
  */
-void registerTexture(struct OpenGLContext *context, struct Model *model, struct Texture texture);
+void registerTexture(struct Model *model, struct Texture texture);
 
 #endif //OPENGLCONTEXT_H

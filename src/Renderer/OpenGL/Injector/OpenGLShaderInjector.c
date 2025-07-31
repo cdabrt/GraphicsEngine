@@ -12,8 +12,7 @@
 #include <string.h>
 #include "Renderer/OpenGL/OpenGLHeaders.h"
 #include "Renderer/OpenGL/Injector/OpenGLInjector.h"
-
-
+#include "RendererAPI/Context.h"
 
 unsigned int compileShader (char filePath[], const unsigned int shaderType) {
     const unsigned int shader = glCreateShader(shaderType);
@@ -78,7 +77,7 @@ unsigned int openGLCreateShaderProgram(char *vertexFilePath, char *geometryFullP
     return shaderProgram;
 }
 
-unsigned int openGLGetShaderProgramID(void *context, const char *shaderName) {
+unsigned int openGLGetShaderProgramID(const struct Context *context, const char *shaderName) {
     OPENGL_CTX;
     for (int i = 0; i < openGLContext->shaderCount; i++) {
         const struct ShaderProgram *shaderProgram = &openGLContext->shaderPrograms[i];
@@ -91,7 +90,7 @@ unsigned int openGLGetShaderProgramID(void *context, const char *shaderName) {
     return 0;
 }
 
-void openGLSetActiveShaderProgram(void *context, const unsigned long programId) {
+void openGLSetActiveShaderProgram(const struct Context *context, const unsigned long programId) {
     OPENGL_CTX;
     glUseProgram(programId);
     openGLContext->activeShaderProgram = programId;

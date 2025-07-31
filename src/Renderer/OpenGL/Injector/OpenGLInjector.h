@@ -5,6 +5,7 @@
 #ifndef OPENGLSHADERINJECTOR_H
 #define OPENGLSHADERINJECTOR_H
 #include <../include/RendererAPI/RawMesh.h>
+#include "RendererAPI/Context.h"
 
 /**
  * openGLCreateShaderProgram
@@ -23,7 +24,7 @@ unsigned int openGLCreateShaderProgram(char *vertexFilePath, char *geometryFullP
  * @param context @ref OpenGLContext.
  * @param shaderName name of the shader program.
  */
-unsigned int openGLGetShaderProgramID(void *context, const char *shaderName);
+unsigned int openGLGetShaderProgramID(const struct Context *context, const char *shaderName);
 
 /**
  * openGLSetActiveShaderProgram
@@ -32,7 +33,7 @@ unsigned int openGLGetShaderProgramID(void *context, const char *shaderName);
  * @param context the renderer context.
  * @param programId ID of the shader program.
  */
-void openGLSetActiveShaderProgram(void *context, unsigned long programId);
+void openGLSetActiveShaderProgram(const struct Context *context, unsigned long programId);
 
 /**
  * openGLRegisterMesh
@@ -44,7 +45,7 @@ void openGLSetActiveShaderProgram(void *context, unsigned long programId);
  * @param shaderProgramID ID of the shader program that is associated with the mesh. If no ID is provided the renderer
  * will use the active shader program instead.
  */
-unsigned int openGLRegisterMesh(void *context, const struct RawMesh *mesh, char *modelName, unsigned long shaderProgramID);
+unsigned int openGLRegisterMesh(const struct Context *context, const struct RawMesh *mesh, char *modelName, unsigned long shaderProgramID);
 
 /**
  * openGLGetModel
@@ -53,7 +54,7 @@ unsigned int openGLRegisterMesh(void *context, const struct RawMesh *mesh, char 
  * @param context @ref OpenGLContext.
  * @param modelID ID of the model.
  */
-struct Model *openGLGetModel(void *context, unsigned int modelID);
+struct Model *openGLGetModel(const struct Context *context, unsigned int modelID);
 
 /**
  * openGLGetModel
@@ -62,16 +63,15 @@ struct Model *openGLGetModel(void *context, unsigned int modelID);
  * @param context @ref OpenGLContext.
  * @param modelName name of the model.
  */
-unsigned int openGLGetModelID(void *context, const char *modelName);
+unsigned int openGLGetModelID(const struct Context *context, const char *modelName);
 
 /**
  * registerTextures
  * Registers a list of textures and adds those textures to the Modelf Model.
  *
- * @param context the renderer context.
  * @param textures the to be added texture.
  * @param textureCount the number of textures that need to be added.
  * @param model the model of which the textures need to be added to.
  */
-void openGLRegisterTextures(struct OpenGLContext *context, const struct Texture *textures, size_t textureCount, struct Model *model);
+void openGLRegisterTextures(const struct Texture *textures, size_t textureCount, struct Model *model);
 #endif //OPENGLSHADERINJECTOR_H

@@ -3,23 +3,43 @@
 //
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <Window.h>
 #include <WindowInputController.h>
 #include <../include/RendererAPI/Renderer.h>
 #include <../include/RendererAPI/RawMesh.h>
 #include <../include/RendererAPI/RendererFactory.h>
-
 #include "cglm/struct/affine-pre.h"
 #include "cglm/struct/affine.h"
 #include "Renderer/OpenGL/OpenGLHeaders.h"
+#include "RendererAPI/Model.h"
 #include "UtilFiles/MacrosAndUniforms.h"
 
+/*
+    When the Graphics Engine is turned into a library or framework of some sorts,
+    subsequent projects would need a main function like this.
+    I am planning on making a game engine. The main loop should be injectable.
+    Every script should have an init and loop function. In the loop in the main all scripts are loaded
+    and their loop functions are ran. Same goes for the init functions of all the files in the main initialization
+*/
 void killProgram(struct Renderer *renderer, struct RendererInjector *rendererInjector) {
     renderer->kill(renderer->context);
     free(renderer);
     free(rendererInjector);
+}
+
+void programLoop(struct Context *context, const struct Renderer *renderer, const bool drawWireframe) {
+    GLFWwindow* window = renderer->context->window;
+    //Main window render loop.
+    while (!glfwWindowShouldClose(window)) {
+        //Input processing
+        processWindowInput(window);
+
+        //Rendering pipeline
+        renderer->render(context, drawWireframe);
+
+        renderer->swapBuffers(renderer->context);
+    }
 }
 
 int main() {
@@ -102,16 +122,7 @@ int main() {
     */
     renderer->prepareRenderer(context, drawWireframe);
 
-    //Main window render loop
-    while (!glfwWindowShouldClose(window)) {
-        //Input processing
-        processWindowInput(window);
-
-        //Rendering pipeline
-        renderer->render(context, drawWireframe);
-
-        renderer->swapBuffers(renderer->context);
-    }
+    programLoop(context, renderer, drawWireframe);
 
     /*
      TODO: Perhaps this should be a Windows and Linux only thing. In Mac if you press the "x",

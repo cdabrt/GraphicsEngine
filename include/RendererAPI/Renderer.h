@@ -6,12 +6,13 @@
 #define RENDERINGSTRATEGY_H
 
 #include "RendererAPI/RawMesh.h"
+#include "RendererAPI/Context.h"
 
-typedef void (*InitializeFunction) (void *context, int xPos, int yPos, int width, int height);
-typedef void (*PrepareRendererFunction) (void *context, bool drawWireframe);
-typedef void (*RenderFunction) (void *context, bool drawWireframe);
-typedef void (*SwapBuffersFunction) (void *context);
-typedef void (*KillFunction) (void *context);
+typedef void (*InitializeFunction) (struct Context *context, int xPos, int yPos, int width, int height);
+typedef void (*PrepareRendererFunction) (struct Context *context, bool drawWireframe);
+typedef void (*RenderFunction) (const struct Context *context, bool drawWireframe);
+typedef void (*SwapBuffersFunction) (const struct Context *context);
+typedef void (*KillFunction) (struct Context *context);
 
 /**
  * Renderer
@@ -26,8 +27,7 @@ typedef void (*KillFunction) (void *context);
  * @param kill the kill function.
  */
 struct Renderer {
-    //pointer to instance-specific data or "context"
-    void *context;
+    struct Context *context;
     InitializeFunction initialize;
     PrepareRendererFunction prepareRenderer;
     RenderFunction render;
@@ -38,11 +38,11 @@ struct Renderer {
 
 
 typedef unsigned int (*CreateShaderProgramFunction) (char *vertexFilePath, char *geometryFilePath, char *fragmentFilePath);
-typedef void (*SetActiveShaderProgramFunction) (void *context, unsigned long programId);
-typedef unsigned int (*RegisterMeshFunction) (void *context, const struct RawMesh *mesh, char *modelName, unsigned long shaderProgramID);
-typedef unsigned int (*getShaderProgramIdFunction) (void *context, const char *shaderName);
-typedef struct Model *(*getModelFunction) (void *context, unsigned int modelID);
-typedef unsigned int (*getModelIDFunction) (void *context, const char *meshName);
+typedef void (*SetActiveShaderProgramFunction) (const struct Context *context, unsigned long programId);
+typedef unsigned int (*RegisterMeshFunction) (const struct Context *context, const struct RawMesh *mesh, char *modelName, unsigned long shaderProgramID);
+typedef unsigned int (*getShaderProgramIdFunction) (const struct Context *context, const char *shaderName);
+typedef struct Model *(*getModelFunction) (const struct Context *context, unsigned int modelID);
+typedef unsigned int (*getModelIDFunction) (const struct Context *context, const char *meshName);
 
 /**
  * RendererInjector

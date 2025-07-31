@@ -5,6 +5,8 @@
 #ifndef OPENGLRENDERER_H
 #define OPENGLRENDERER_H
 
+#include "RendererAPI/Context.h"
+
 /**
  * openGLInitialize
  * Initializes OpenGL.
@@ -18,7 +20,7 @@
  * @note The viewport can be made smaller than the actual @ref GLFWwindow,
  * so that you can use for example native UI elements around the smaller viewport that renders the OpenGL graphics.
  */
-void openGLInitialize(void *context, int xPos, int yPos, int width, int height);
+void openGLInitialize(struct Context *context, int xPos, int yPos, int width, int height);
 
 /**
  * openGLPrepareRender
@@ -27,7 +29,7 @@ void openGLInitialize(void *context, int xPos, int yPos, int width, int height);
  * @param context @ref OpenGLContext.
  * @param drawWireframe should the meshes be drawn in wireframe mode (TRUE OR FALSE).
  */
-void openGLPrepareRender (void *context, bool drawWireframe);
+void openGLPrepareRender (struct Context *context, bool drawWireframe);
 
 /**
  * openGLRender
@@ -36,7 +38,7 @@ void openGLPrepareRender (void *context, bool drawWireframe);
  * @param context @ref OpenGLContext.
  * @param drawWireframe should the meshes be drawn in wireframe mode (TRUE OR FALSE).
  */
-void openGLRender (void *context, bool drawWireframe);
+void openGLRender (const struct Context *context, bool drawWireframe);
 
 /**
  * openGLSwapBuffers
@@ -44,7 +46,7 @@ void openGLRender (void *context, bool drawWireframe);
  *
  * @param context @ref OpenGLContext.
  */
-void openGLSwapBuffers (void *context);
+void openGLSwapBuffers (const struct Context *context);
 
 /**
  * openGLKill
@@ -52,6 +54,6 @@ void openGLSwapBuffers (void *context);
  *
  * @param context @ref OpenGLContext.
  */
-void openGLKill (void *context);
+void openGLKill (struct Context *context);
 
 #endif //OPENGLRENDERER_H
