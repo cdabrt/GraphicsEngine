@@ -47,6 +47,7 @@ void registerFileNotFoundImage(struct Model *model) {
     GLuint textureID;
 
     glGenTextures(numberOfRegistersAtTime, &textureID);
+    CHECK_OPENGL_ERRORS;
     setTextureParameters();
 
     unsigned char *data = stbi_load(fileNotFoundPath, &width, &height, &nrChannels, desiredChannels);
@@ -79,6 +80,7 @@ void openGLRegisterTextures(const struct Texture *textures, const size_t texture
 
             GLuint textureID;
             glGenTextures(numberOfRegistersAtTime, &textureID);
+            CHECK_OPENGL_ERRORS;
             setTextureParameters();
 
             stbi_set_flip_vertically_on_load(1);
