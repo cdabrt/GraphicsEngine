@@ -6,14 +6,15 @@
 #include <string.h>
 #include <Window.h>
 #include <WindowInputController.h>
-#include <../include/RendererAPI/Renderer.h>
-#include <../include/RendererAPI/RawMesh.h>
-#include <../include/RendererAPI/RendererFactory.h>
+#include <RendererAPI/Renderer.h>
+#include <RendererAPI/RawMesh.h>
+#include <RendererAPI/RendererFactory.h>
 #include "cglm/struct/affine-pre.h"
 #include "cglm/struct/affine.h"
 #include "Renderer/OpenGL/OpenGLHeaders.h"
 #include "RendererAPI/Model.h"
 #include "UtilFiles/MacrosAndUniforms.h"
+#include "RendererAPI/Context.h"
 
 /*
     When the Graphics Engine is turned into a library or framework of some sorts,
@@ -22,44 +23,9 @@
     Every script should have an init and loop function. In the loop in the main all scripts are loaded
     and their loop functions are ran. Same goes for the init functions of all the files in the main initialization
 */
-void killProgram(struct Renderer *renderer, struct RendererInjector *rendererInjector) {
-    renderer->kill(renderer->context);
-    free(renderer);
-    free(rendererInjector);
-}
 
-void programLoop(struct Context *context, const struct Renderer *renderer, const bool drawWireframe) {
-    GLFWwindow* window = renderer->context->window;
-    //Main window render loop.
-    while (!glfwWindowShouldClose(window)) {
-        //Input processing
-        processWindowInput(window);
-
-        //Rendering pipeline
-        renderer->render(context, drawWireframe);
-
-        renderer->swapBuffers(renderer->context);
-    }
-}
-
-int main() {
-    const int width = 800;
-    const int height = 600;
-    const int xPos = 0;
-    const int yPos = 0;
-    const bool drawWireframe = false;
-
-    glfwWindowSetup();
-    GLFWwindow* window = createWindow(width, height);
-
-    struct Renderer *renderer = createRenderer(window, OPENGL);
-    struct RendererInjector *rendererInjector = createRendererInjector(OPENGL);
-
-    void *context = renderer->context;
-    //The base shader should always be set up before any Model, VBO and EBO setup
-    renderer->initialize(context, xPos, yPos, width, height);
-
-    //TODO: REMOVE, FOR TESTING ONLY
+//TODO: REMOVE, FOR TESTING ONLY
+void testProgram(struct Context *context, struct RendererInjector *rendererInjector) {
     //Vertices are constructed as follows:
     //x, y, z; r, g, b
     const float vertices[] = {
@@ -116,13 +82,54 @@ int main() {
     *model->localTransformation = glms_rotate(*model->localTransformation, glm_rad(90.0f), (vec3s){ .x = 0.0f, .y = 0.0f, .z = 1.0f });
     *model->localTransformation  = glms_scale(*model->localTransformation , (vec3s){ .x = 0.5f, .y = 0.5f, .z = 0.5f});
 
+}
+
+void loopProgram(const struct Context *context, const struct Renderer *renderer, const bool drawWireframe) {
+    GLFWwindow* window = renderer->context->window;
+    //Main window render loop.
+    while (!glfwWindowShouldClose(window)) {
+        //Input processing
+        processWindowInput(window);
+
+        //Rendering pipeline
+        renderer->render(context, drawWireframe);
+
+        renderer->swapBuffers(renderer->context);
+    }
+}
+
+void killProgram(struct Renderer *renderer, struct RendererInjector *rendererInjector) {
+    renderer->kill(renderer->context);
+    free(renderer);
+    free(rendererInjector);
+}
+
+int main() {
+    const int width = 800;
+    const int height = 600;
+    const int xPos = 0;
+    const int yPos = 0;
+    const bool drawWireframe = false;
+
+    glfwWindowSetup();
+    GLFWwindow* window = createWindow(width, height);
+
+    struct Renderer *renderer = createRenderer(window, OPENGL);
+    struct RendererInjector *rendererInjector = createRendererInjector(OPENGL);
+
+    struct Context *context = renderer->context;
+    //The base shader should always be set up before any Model, VBO and EBO setup
+    renderer->initialize(context, xPos, yPos, width, height);
+
+    testProgram(context, rendererInjector);
+
     /*
       Shader injection should happen before this call, so that the wireframe shaders
       are always used when drawWireframe is true.
     */
     renderer->prepareRenderer(context, drawWireframe);
 
-    programLoop(context, renderer, drawWireframe);
+    loopProgram(context, renderer, drawWireframe);
 
     /*
      TODO: Perhaps this should be a Windows and Linux only thing. In Mac if you press the "x",
