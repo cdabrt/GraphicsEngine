@@ -18,10 +18,17 @@
 struct Context {
     GLFWwindow *window;
     struct Camera *camera;
+    double lastTime;
     int viewportWidth;
     int viewportHeight;
     bool drawWireframe;
     void *backendSpecificContext;
 };
+
+inline double getDeltaTime(struct Context *context) {
+    double deltaTime = glfwGetTime() - context->lastTime;
+    context->lastTime = glfwGetTime();
+    return deltaTime;
+}
 
 #endif //CONTEXT_H

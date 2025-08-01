@@ -107,13 +107,12 @@ void testProgram(struct Context *context, const struct RendererInjector *rendere
 
     //Apply some transformations
     struct Model *model = rendererInjector->getModel(context, rendererInjector->getModelID(context, "FirstMesh"));
-    //printf("%.6f", model->localTransformation->col->x);
 
     model->transformation.localTransformation = glms_rotate(model->transformation.localTransformation, glm_rad(-55.0f), (vec3s){ .x = 1.0f, .y = 0.0f, .z = 0.0f });
     model->transformation.localTransformation = glms_scale(model->transformation.localTransformation , (vec3s){ .x = 1.0f, .y = 1.0f, .z = 1.0f});
 }
 
-void loopProgram(const struct Context *context, const struct Renderer *renderer) {
+void loopProgram(struct Context *context, const struct Renderer *renderer) {
     GLFWwindow* window = renderer->context->window;
     //Main window render loop.
     while (!glfwWindowShouldClose(window)) {
@@ -123,7 +122,11 @@ void loopProgram(const struct Context *context, const struct Renderer *renderer)
         //TODO: Inject movement into the render loop, including camera "movement"
         //Testing:
         struct Model *model = renderer->injector->getModel(context, renderer->injector->getModelID(context, "FirstMesh"));
-        model->transformation.localTransformation = glms_rotate(model->transformation.localTransformation, glm_rad(1.0f), (vec3s){ .x = 0.0f, .y = 0.0f, .z = 1.0f });
+        model->transformation.localTransformation = glms_rotate(
+            model->transformation.localTransformation,
+            (float) getDeltaTime(context) * glm_rad(50.0f),
+            (vec3s){ .x = 0.0f, .y = 0.0f, .z = 1.0f }
+            );
 
 
         //Rendering pipeline
