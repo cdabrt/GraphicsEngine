@@ -19,7 +19,6 @@
 
 void openGLPrepareRender(struct Context *context, const int xPos, const int yPos,
     const int width, const int height) {
-
     //Initialise GLAD
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         perror("Failed to initialize GLAD \n");
@@ -49,9 +48,11 @@ void openGLRender (const struct Context *context) {
     const int unbindArray = 0;
     const bool drawWireframe = context->drawWireframe;
 
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
     //TODO: Temporary background colour
     glClearColor(0.4f, 0.5f, 0.2f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     GLuint activeShaderProgram = openGLContext->activeShaderProgram;
     if (activeShaderProgram == 0) {

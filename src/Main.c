@@ -59,17 +59,65 @@ void testProgram(struct Context *context, const struct RendererInjector *rendere
     //Vertices are constructed as follows:
     //x, y, z; r, g, b
     const float vertices[] = {
-        //Positions         //Colours           //Texture coordinates
-        -0.5f,  0.5f, 0.0f,  0.8f, 0.5f, 0.2f,   0.0f, 1.0f,
-        0.5f,  0.5f, 0.0f,  0.8f, 0.5f, 0.2f,   1.0f, 1.0f,
-        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
-        0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,   1.0f, 0.0f,
-   };
+        //Positions          //Colours          //Texture coordinates
+        //Front
+        -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f, //0
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,   1.0f, 0.0f, //1
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,   1.0f, 1.0f, //2
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 1.0f, //3
+        //Back
+        -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f, //4
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,   1.0f, 0.0f, //5
+         0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,   1.0f, 1.0f, //6
+        -0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 1.0f, //7
+        //Left
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 1.0f,   0.0f, 0.0f, //8
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 0.0f, //9
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f, //10
+        -0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,   0.0f, 1.0f, //11
+        //Right
+         0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f,   1.0f, 0.0f, //12
+         0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 0.0f,   0.0f, 0.0f, //13
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,   0.0f, 1.0f, //14
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,   1.0f, 1.0f, //15
+        //Top
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 0.0f, //16
+         0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 1.0f,   1.0f, 0.0f, //17
+         0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   1.0f, 1.0f, //18
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f, //19
+        //Bottom
+        -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 1.0f,   1.0f, 1.0f, //20
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 1.0f,   0.0f, 1.0f, //21
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f,   0.0f, 0.0f, //22
+        -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f,   1.0f, 0.0f, //23
+    };
 
     const unsigned int indices[] = {
+        //Front
+        0, 1, 2,
         2, 3, 0,
-        3, 1, 0,
+
+        //Back
+        4, 6, 5,
+        6, 4, 7,
+
+        //Left
+        9, 10, 8,
+        11, 8, 10,
+
+        //Right
+        12, 14, 13,
+        15, 14, 12,
+
+        //Top
+        16, 17, 18,
+        18, 19, 16,
+
+        //Bottom
+        22, 21, 20,
+        20, 23, 22
     };
+
 
     struct Texture textures[] = {
         {
@@ -106,30 +154,27 @@ void testProgram(struct Context *context, const struct RendererInjector *rendere
     rendererInjector->registerMesh(context, &mesh, "FirstMesh", id);
 
     //Apply some transformations
-    struct Model *model = rendererInjector->getModel(context, rendererInjector->getModelID(context, "FirstMesh"));
-
-    model->transformation.localTransformation = glms_rotate(model->transformation.localTransformation, glm_rad(-55.0f), (vec3s){ .x = 1.0f, .y = 0.0f, .z = 0.0f });
-    model->transformation.localTransformation = glms_scale(model->transformation.localTransformation , (vec3s){ .x = 1.0f, .y = 1.0f, .z = 1.0f});
+    //struct Model *model = rendererInjector->getModel(context, rendererInjector->getModelID(context, "FirstMesh"));
+    //model->transformation.localTransformation = glms_rotate(model->transformation.localTransformation, glm_rad(-55.0f), (vec3s){ .x = 1.0f, .y = 0.0f, .z = 0.0f });
+    //model->transformation.localTransformation = glms_scale(model->transformation.localTransformation , (vec3s){ .x = 1.0f, .y = 1.0f, .z = 1.0f});
 }
 
 void loopProgram(struct Context *context, const struct Renderer *renderer) {
     GLFWwindow* window = renderer->context->window;
     //Main window render loop.
     while (!glfwWindowShouldClose(window)) {
-        //Input processing
         processWindowInput(window);
 
         //TODO: Inject movement into the render loop, including camera "movement"
+
         //Testing:
         struct Model *model = renderer->injector->getModel(context, renderer->injector->getModelID(context, "FirstMesh"));
         model->transformation.localTransformation = glms_rotate(
             model->transformation.localTransformation,
             (float) getDeltaTime(context) * glm_rad(50.0f),
-            (vec3s){ .x = 0.0f, .y = 0.0f, .z = 1.0f }
+            (vec3s){ .x = 1.0f, .y = 1.0f, .z = 1.0f }
             );
 
-
-        //Rendering pipeline
         renderer->render(context);
 
         renderer->swapBuffers(renderer->context);
