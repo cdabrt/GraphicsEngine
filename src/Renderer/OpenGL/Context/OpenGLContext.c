@@ -6,6 +6,7 @@
 #include "OpenGLContext.h"
 #include <string.h>
 #include "UtilFiles/GeneralErrorHandling.h"
+#include "RendererAPI/Transformation.h"
 
 void registerShaderProgram(struct OpenGLContext *openGLContext, const unsigned int shaderProgramID, char *shaderName) {
     const size_t newSize = openGLContext->shaderCount + 1;
@@ -35,13 +36,10 @@ void registerModel(struct OpenGLContext *openGLContext, const unsigned int model
     openGLContext->models = models;
     openGLContext->modelCount = newSize;
 
-    mat4s *localTransformations = malloc(sizeof(mat4s));
-    checkMalloc(localTransformations);
-    mat4s *worldTransformations = malloc(sizeof(mat4s));
-    checkMalloc(worldTransformations);
+    mat4s localTransformations = glms_mat4_identity();
+    mat4s worldTransformations = glms_mat4_identity();
 
-    *localTransformations = glms_mat4_identity();
-    *worldTransformations = glms_mat4_identity();
+    struct Transformation transformations = {localTransformations, worldTransformations};
 
     struct Model model = {
         modelName,
@@ -50,8 +48,7 @@ void registerModel(struct OpenGLContext *openGLContext, const unsigned int model
         model.indicesCount = indicesCount,
         NULL,
         0,
-        localTransformations,
-        worldTransformations
+        transformations,
     };
 
     openGLContext->models[openGLContext->modelCount - 1] = model;

@@ -4,8 +4,8 @@
 
 #ifndef MODEL_H
 #define MODEL_H
-#include <stdio.h>
 #include "cglm/struct/mat4.h"
+#include "RendererAPI/Transformation.h"
 
 /**
  * Model
@@ -30,8 +30,7 @@ struct Model {
     size_t indicesCount;
     struct Texture *textures;
     size_t textureCount;
-    mat4s *localTransformation;
-    mat4s *worldTransformation;
+    struct Transformation transformation;
 };
 
 #endif //MODEL_H

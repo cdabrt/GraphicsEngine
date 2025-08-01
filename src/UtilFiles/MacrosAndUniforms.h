@@ -5,7 +5,7 @@
 #ifndef OPENGLMACROS_H
 #define OPENGLMACROS_H
 #include <stdio.h>
-#include <Renderer/OpenGL/OpenGLContext.h>
+#include <Renderer/OpenGL/Context/OpenGLContext.h>
 
 /**
  * OPENGL_CTX
@@ -88,7 +88,9 @@ inline char *getBaseTextureTypeUniformString(const enum TextureType textureType)
 
 
 enum MeshUniforms {
-    TRANSFORM
+    TRANSFORM,
+    PROJECTION,
+    VIEW
 };
 
 inline char *getBaseMeshUniformString(const enum TextureType textureType)
@@ -97,6 +99,8 @@ inline char *getBaseMeshUniformString(const enum TextureType textureType)
 
     switch(textureType) {
         case TRANSFORM: string="transform"; break;
+        case PROJECTION: string="projection"; break;
+        case VIEW: string="view"; break;
         default:
             perror("Unknown mesh uniform");
     }

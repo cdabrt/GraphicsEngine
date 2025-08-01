@@ -5,6 +5,7 @@
 #ifndef CONTEXT_H
 #define CONTEXT_H
 #include "Renderer/OpenGL/OpenGLHeaders.h"
+#include "RendererAPI/Camera.h"
 
 /**
  * Context
@@ -16,8 +17,9 @@
  */
 struct Context {
     GLFWwindow *window;
-    unsigned int viewportWidth;
-    unsigned int viewportHeight;
+    struct Camera *camera;
+    int viewportWidth;
+    int viewportHeight;
     bool drawWireframe;
     void *backendSpecificContext;
 };

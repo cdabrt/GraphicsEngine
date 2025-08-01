@@ -7,9 +7,15 @@ layout (location = 2) in vec2 aTexCoord;
 out vec2 TexCoord;
 
 uniform mat4 transform;
+uniform mat4 projection;
+uniform mat4 view;
 
 void main()
 {
-    gl_Position = transform * vec4(aPos, 1.0f);
+    /*
+        Right hand coordinate system. So no need to invert the view.
+        For instance, -1.0f on the z-axis will move the scene forward by 1.0f
+    */
+    gl_Position = projection * view * transform * vec4(aPos, 1.0f);
     TexCoord = aTexCoord;
 }

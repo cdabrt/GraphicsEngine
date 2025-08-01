@@ -4,11 +4,11 @@
 
 #include <stdio.h>
 #include "../include/RendererAPI/RawMesh.h"
-#include "Renderer/OpenGL/OpenGLContext.h"
+#include "../Context/OpenGLContext.h"
 #include "../../../UtilFiles/MacrosAndUniforms.h"
 #include <stb_image.h>
 #include <string.h>
-#include "Renderer/OpenGL/OpenGLErrorHandling.h"
+#include "../ErrorHandling/OpenGLErrorHandling.h"
 #include "Renderer/OpenGL/OpenGLHeaders.h"
 #include "Renderer/OpenGL/Injector/OpenGLInjector.h"
 #include "RendererAPI/Context.h"

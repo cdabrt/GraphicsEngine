@@ -3,7 +3,7 @@
 //
 
 #include <stdio.h>
-#include "OpenGLHeaders.h"
+#include "../OpenGLHeaders.h"
 #include "OpenGLErrorHandling.h"
 
 void checkOpenGLErrors(char *file, const int line) {
