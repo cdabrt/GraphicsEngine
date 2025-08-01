@@ -6,9 +6,10 @@
 #define OPENGLRENDERER_H
 
 #include "RendererAPI/Context.h"
+#include "RendererAPI/Renderer.h"
 
 /**
- * openGLInitialize
+ * openGLPrepareRender
  * Initializes OpenGL.
  *
  * @param context @ref OpenGLContext.
@@ -20,25 +21,15 @@
  * @note The viewport can be made smaller than the actual @ref GLFWwindow,
  * so that you can use for example native UI elements around the smaller viewport that renders the OpenGL graphics.
  */
-void openGLInitialize(struct Context *context, int xPos, int yPos, int width, int height);
-
-/**
- * openGLPrepareRender
- * Prepares the OpenGL renderer implementation.
- *
- * @param context @ref OpenGLContext.
- * @param drawWireframe should the meshes be drawn in wireframe mode (TRUE OR FALSE).
- */
-void openGLPrepareRender (struct Context *context, bool drawWireframe);
+void openGLPrepareRender(struct Context *context, int xPos, int yPos, int width, int height);
 
 /**
  * openGLRender
  * The renderer loop of the OpenGL renderer implementation.
  *
  * @param context @ref OpenGLContext.
- * @param drawWireframe should the meshes be drawn in wireframe mode (TRUE OR FALSE).
  */
-void openGLRender (const struct Context *context, bool drawWireframe);
+void openGLRender (const struct Context *context);
 
 /**
  * openGLSwapBuffers
@@ -50,10 +41,10 @@ void openGLSwapBuffers (const struct Context *context);
 
 /**
  * openGLKill
- * Kills all OpenGL processes and frees all @ref OpenGLContext related memory allocations
+ * Kills all OpenGL processes and frees all @ref Renderer and @ref OpenGLContext related memory allocations
  *
- * @param context @ref OpenGLContext.
+ * @param renderer @ref OpenGLContext.
  */
-void openGLKill (struct Context *context);
+void openGLKill (struct Renderer *renderer);
 
 #endif //OPENGLRENDERER_H

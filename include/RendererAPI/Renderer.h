@@ -8,35 +8,6 @@
 #include "RendererAPI/RawMesh.h"
 #include "RendererAPI/Context.h"
 
-typedef void (*InitializeFunction) (struct Context *context, int xPos, int yPos, int width, int height);
-typedef void (*PrepareRendererFunction) (struct Context *context, bool drawWireframe);
-typedef void (*RenderFunction) (const struct Context *context, bool drawWireframe);
-typedef void (*SwapBuffersFunction) (const struct Context *context);
-typedef void (*KillFunction) (struct Context *context);
-
-/**
- * Renderer
- * An abstraction for the different renderer implementations. Specific implementations of the functions
- * that are pointed to within the struct are supplied in @ref createRenderer.
- *
- * @param context the renderer context.
- * @param initialize the initialization function.
- * @param prepareRenderer the prepareRenderer function.
- * @param render the render function.
- * @param swapBuffers the swapBuffers function.
- * @param kill the kill function.
- */
-struct Renderer {
-    struct Context *context;
-    InitializeFunction initialize;
-    PrepareRendererFunction prepareRenderer;
-    RenderFunction render;
-    SwapBuffersFunction swapBuffers;
-    KillFunction kill;
-};
-
-
-
 typedef unsigned int (*CreateShaderProgramFunction) (char *vertexFilePath, char *geometryFilePath, char *fragmentFilePath);
 typedef void (*SetActiveShaderProgramFunction) (const struct Context *context, unsigned long programId);
 typedef unsigned int (*RegisterMeshFunction) (const struct Context *context, const struct RawMesh *mesh, char *modelName, unsigned long shaderProgramID);
@@ -62,10 +33,38 @@ struct RendererInjector {
     getModelIDFunction getModelID;
 };
 
+typedef void (*PrepareRendererFunction) (struct Context *context, int xPos, int yPos, int width, int height);
+typedef void (*RenderFunction) (const struct Context *context);
+typedef void (*SwapBuffersFunction) (const struct Context *context);
+typedef void (*KillFunction) (struct Renderer *renderer);
+
 /**
- * RendererInjector
- * An abstraction for the different renderer injection implementations. Specific implementations of the functions
- * that are pointed to within the struct are supplied in @ref createRendererInjector.
+ * Renderer
+ * An abstraction for the different renderer implementations. Specific implementations of the functions
+ * that are pointed to within the struct are supplied in @ref createRenderer.
+ *
+ * @param context the renderer context.
+ * @param injector the renderer injector.
+ * @param initialize the initialization function.
+ * @param prepareRenderer the prepareRenderer function.
+ * @param render the render function.
+ * @param swapBuffers the swapBuffers function.
+ * @param kill the kill function.
+ */
+struct Renderer {
+    struct Context *context;
+    struct RendererInjector *injector;
+    PrepareRendererFunction prepareRenderer;
+    RenderFunction render;
+    SwapBuffersFunction swapBuffers;
+    KillFunction kill;
+};
+
+
+
+/**
+ * swapRenderer
+ * Swap the renderer with a new instance
  *
  * @param current the current renderer implementation
  * @param new the new renderer implementation

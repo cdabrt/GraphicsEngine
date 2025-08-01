@@ -24,6 +24,21 @@
     and their loop functions are ran. Same goes for the init functions of all the files in the main initialization
 */
 
+struct Renderer *setupProgram(const int width, const int height, const int xPos, const int yPos, bool drawWireframe) {
+    glfwWindowSetup();
+    GLFWwindow* window = createWindow(width, height);
+
+    struct Renderer *renderer = createRenderer(window, OPENGL);
+    struct Context *context = renderer->context;
+
+    renderer->context->drawWireframe = drawWireframe;
+
+    //The base shader should always be set up before any Model, VBO and EBO setup
+    renderer->prepareRenderer(context, xPos, yPos, width, height);
+
+    return renderer;
+}
+
 //TODO: REMOVE, FOR TESTING ONLY
 void testProgram(struct Context *context, struct RendererInjector *rendererInjector) {
     //Vertices are constructed as follows:
@@ -84,7 +99,7 @@ void testProgram(struct Context *context, struct RendererInjector *rendererInjec
 
 }
 
-void loopProgram(const struct Context *context, const struct Renderer *renderer, const bool drawWireframe) {
+void loopProgram(const struct Context *context, const struct Renderer *renderer) {
     GLFWwindow* window = renderer->context->window;
     //Main window render loop.
     while (!glfwWindowShouldClose(window)) {
@@ -92,16 +107,14 @@ void loopProgram(const struct Context *context, const struct Renderer *renderer,
         processWindowInput(window);
 
         //Rendering pipeline
-        renderer->render(context, drawWireframe);
+        renderer->render(context);
 
         renderer->swapBuffers(renderer->context);
     }
 }
 
-void killProgram(struct Renderer *renderer, struct RendererInjector *rendererInjector) {
-    renderer->kill(renderer->context);
-    free(renderer);
-    free(rendererInjector);
+void killProgram(struct Renderer *renderer) {
+    renderer->kill(renderer);
 }
 
 int main() {
@@ -109,27 +122,12 @@ int main() {
     const int height = 600;
     const int xPos = 0;
     const int yPos = 0;
-    const bool drawWireframe = false;
 
-    glfwWindowSetup();
-    GLFWwindow* window = createWindow(width, height);
+    struct Renderer *renderer = setupProgram(width, height, xPos, yPos, true);
 
-    struct Renderer *renderer = createRenderer(window, OPENGL);
-    struct RendererInjector *rendererInjector = createRendererInjector(OPENGL);
+    testProgram(renderer->context, renderer->injector);
 
-    struct Context *context = renderer->context;
-    //The base shader should always be set up before any Model, VBO and EBO setup
-    renderer->initialize(context, xPos, yPos, width, height);
-
-    testProgram(context, rendererInjector);
-
-    /*
-      Shader injection should happen before this call, so that the wireframe shaders
-      are always used when drawWireframe is true.
-    */
-    renderer->prepareRenderer(context, drawWireframe);
-
-    loopProgram(context, renderer, drawWireframe);
+    loopProgram(renderer->context, renderer);
 
     /*
      TODO: Perhaps this should be a Windows and Linux only thing. In Mac if you press the "x",
@@ -137,7 +135,7 @@ int main() {
         Maybe do not terminate the while loop on macOS.
     */
 
-    killProgram(renderer, rendererInjector);
+    killProgram(renderer);
 
     return EXIT_SUCCESS;
 }

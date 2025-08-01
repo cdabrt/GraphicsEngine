@@ -13,6 +13,7 @@
 #include "Window.h"
 #include "cglm/struct.h"
 #include "RendererAPI/Context.h"
+#include "RendererAPI/Renderer.h"
 
 void initializeBaseShaders(struct Context *context, const char* vertexPath, const char* geometryPath,
     const char* fragmentPath, char* shaderName) {
@@ -41,17 +42,7 @@ void initializeBaseShaders(struct Context *context, const char* vertexPath, cons
     openGLSetActiveShaderProgram(context, shaderProgram);
 }
 
-void initializeWireframeShaders(struct Context *context) {
-    initializeBaseShaders(
-        context,
-        "Vertex/vertex_wireframe.vert",
-        "\0",
-        "Fragment/fragment_wireframe.frag",
-        getBaseShaderUniformString(WIREFRAME_SHADER)
-        );
-}
-
-void openGLInitialize(struct Context *context, const int xPos, const int yPos, const int width, const int height) {
+void openGLPrepareRender(struct Context *context, const int xPos, const int yPos, const int width, const int height) {
     //Initialise GLAD
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         perror("Failed to initialize GLAD \n");
@@ -59,22 +50,39 @@ void openGLInitialize(struct Context *context, const int xPos, const int yPos, c
     }
 
     glViewport(xPos, yPos, width, height);
+    CHECK_OPENGL_ERRORS;
+
+    context->viewportWidth = width;
+    context->viewportHeight = height;
+
+    char *vertexPath = "Vertex/vertex_main.vert";
+    char *geometryPath = "\0";
+    char *fragmentPath = "Fragment/fragment_main.frag";
+    BaseShader shader = BASE_SHADER;
 
     initializeBaseShaders(
-        context,
-        "Vertex/vertex_main.vert",
-        "\0",
-        "Fragment/fragment_main.frag",
-        getBaseShaderUniformString(BASE_SHADER)
-        );
-}
+    context,
+    vertexPath,
+    geometryPath,
+    fragmentPath,
+    getBaseShaderUniformString(shader)
+);
 
-
-
-void openGLPrepareRender (struct Context *context, const bool drawWireframe) {
-    if (drawWireframe) {
+    if (context->drawWireframe) {
+        vertexPath = "Vertex/vertex_wireframe.vert";
+        geometryPath = "\0";
+        fragmentPath = "Fragment/fragment_wireframe.frag";
+        shader = WIREFRAME_SHADER;
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        initializeWireframeShaders(context);
+        CHECK_OPENGL_ERRORS;
+
+        initializeBaseShaders(
+            context,
+            vertexPath,
+            geometryPath,
+            fragmentPath,
+            getBaseShaderUniformString(shader)
+        );
     }
 }
 
@@ -89,7 +97,10 @@ void bindTextures(const struct Model *model, const GLuint activeShaderProgram) {
         checkUniformLocation(uniformLocation);
         glUniform1i(uniformLocation, texture->textureUnit);
     }
+    CHECK_OPENGL_ERRORS;
 }
+
+
 
 void cleanUpRenderer(const struct Model *model) {
     //Unbind textures
@@ -99,6 +110,7 @@ void cleanUpRenderer(const struct Model *model) {
         //Texture 0 = "No texture"
         glBindTexture(GL_TEXTURE_2D, 0);
     }
+    CHECK_OPENGL_ERRORS;
 }
 
 //TODO: See TODO of openGLRegisterMesh.
@@ -110,9 +122,10 @@ void cleanUpRenderer(const struct Model *model) {
 //      If the object moves a lot, it is of course more efficient to flag it as not-static.),
 //  texture atlases or arrays,
 //  instancing
-void openGLRender (const struct Context *context, const bool drawWireframe) {
+void openGLRender (const struct Context *context) {
     OPENGL_CTX;
     const int unbindArray = 0;
+    const bool drawWireframe = context->drawWireframe;
 
     //TODO: Temporary background colour
     glClearColor(0.4f, 0.5f, 0.2f, 1.0f);
@@ -120,7 +133,7 @@ void openGLRender (const struct Context *context, const bool drawWireframe) {
 
     GLuint activeShaderProgram = openGLContext->activeShaderProgram;
     if (activeShaderProgram == 0) {
-        activeShaderProgram = openGLGetShaderProgramID(openGLContext, getBaseShaderUniformString(BASE_SHADER));
+        activeShaderProgram = openGLGetShaderProgramID(context, getBaseShaderUniformString(BASE_SHADER));
         openGLSetActiveShaderProgram(context, activeShaderProgram);
     }
 
@@ -130,7 +143,7 @@ void openGLRender (const struct Context *context, const bool drawWireframe) {
             const struct Model *model = &openGLContext->models[i];
             glBindVertexArray(model->id);
 
-            if (model->shaderProgramID != activeShaderProgram) {
+            if (model->shaderProgramID != activeShaderProgram && !context->drawWireframe) {
                 openGLSetActiveShaderProgram(context, model->shaderProgramID);
                 activeShaderProgram = model->shaderProgramID;
             }
@@ -152,6 +165,7 @@ void openGLRender (const struct Context *context, const bool drawWireframe) {
         }
     }
     glBindVertexArray(unbindArray);
+    CHECK_OPENGL_ERRORS;
 }
 
 
@@ -164,7 +178,8 @@ void openGLSwapBuffers (const struct Context *context) {
 
 
 
-void openGLKill (struct Context *context) {
+void openGLKill (struct Renderer *renderer) {
+    struct Context *context = renderer->context;
     OPENGL_CTX;
     glFinish();
     cleanupWindow(context->window);
@@ -191,10 +206,14 @@ void openGLKill (struct Context *context) {
         free(model->worldTransformation);
     }
 
+    CHECK_OPENGL_ERRORS;
+
     openGLContext->shaderCount = 0;
     openGLContext->modelCount = 0;
     free(openGLContext->shaderPrograms);
     free(openGLContext->models);
     free(openGLContext);
     free(context);
+    free(renderer->injector);
+    free(renderer);
 }

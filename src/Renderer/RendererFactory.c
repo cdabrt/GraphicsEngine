@@ -27,12 +27,12 @@ struct Renderer *createRenderer(GLFWwindow* window, const RendererType rendererT
             context->window = window;
             context->backendSpecificContext = openGLContext;
 
-            renderer->initialize = openGLInitialize;
+            renderer->context = context;
+            renderer->injector = createRendererInjector(rendererType);
             renderer->prepareRenderer = openGLPrepareRender;
             renderer->render = openGLRender;
             renderer->swapBuffers = openGLSwapBuffers;
             renderer->kill = openGLKill;
-            renderer->context = context;
             break;
         }
         case VULKAN: {
