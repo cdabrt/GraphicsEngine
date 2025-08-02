@@ -36,15 +36,13 @@ struct Renderer *setupProgram(const int width, const int height, const int xPos,
     struct Context *context = renderer->context;
     struct Camera *camera = context->camera;
 
-    camera->FOV = FOV;
+    camera->fov = FOV;
     camera->frustumNear = frustumNear;
     camera->frustumFar = frustumFar;
     camera->perspective = glms_perspective(glm_rad(FOV), (float)width/(float)height, frustumNear, frustumFar);
-
     //Uncomment for orthographic perspective. Note, you can also change perspective at run-time.
     //camera->perspective = glms_ortho(-(float)width/orthographicFrustumSizeFactor, (float)width/orthographicFrustumSizeFactor, -(float)height/orthographicFrustumSizeFactor, (float)height/orthographicFrustumSizeFactor, frustumNear, frustumFar);
-    printMat4s(camera->perspective);
-    camera->transformation.worldTransformation = glms_translate(glms_mat4_identity(), (vec3s){ .x = 0.0f, .y = 0.0f, .z = -3.0f});
+    camera->transformation.worldTransformation = glms_translate(glms_mat4_identity(), (vec3s){0.0f, 0.0f, -3.0f});
 
     renderer->context->drawWireframe = drawWireframe;
 
@@ -55,7 +53,10 @@ struct Renderer *setupProgram(const int width, const int height, const int xPos,
 }
 
 //TODO: REMOVE, FOR TESTING ONLY
-void testProgram(struct Context *context, const struct RendererInjector *rendererInjector) {
+void testProgram(struct Renderer *renderer) {
+    struct Context *context = renderer->context;
+    struct RendererInjector *rendererInjector = renderer->injector;
+
     //Vertices are constructed as follows:
     //x, y, z; r, g, b
     const float vertices[] = {
@@ -159,22 +160,42 @@ void testProgram(struct Context *context, const struct RendererInjector *rendere
     //model->transformation.localTransformation = glms_scale(model->transformation.localTransformation , (vec3s){ .x = 1.0f, .y = 1.0f, .z = 1.0f});
 }
 
-void loopProgram(struct Context *context, const struct Renderer *renderer) {
+void updateCamera(struct Camera *camera) {
+    const float offset = 1.0f;
+    const vec3s up = (vec3s){0.0f, 1.0f, 0.0f};
+    const vec3s front = (vec3s){0.0f, 0.0f, offset};
+    const vec3s position = (vec3s){
+        camera->transformation.worldTransformation.raw[3][0],
+        camera->transformation.worldTransformation.raw[3][1],
+        camera->transformation.worldTransformation.raw[3][2]
+    };
+    camera->view =
+        glms_lookat(position, glms_vec3_add(position, front), up);
+}
+
+void loopProgram(const struct Renderer *renderer) {
+    struct Context *context = renderer->context;
     GLFWwindow* window = renderer->context->window;
-    //Main window render loop.
+
     while (!glfwWindowShouldClose(window)) {
-        processWindowInput(window);
+        //Needs to be set only once every frame
+        context->deltaTime = glfwGetTime() - context->deltaTime;
+
+        processWindowInput(renderer);
 
         //TODO: Inject movement into the render loop, including camera "movement"
-
+        //----------------
         //Testing:
         struct Model *model = renderer->injector->getModel(context, renderer->injector->getModelID(context, "FirstMesh"));
-        model->transformation.localTransformation = glms_rotate(
-            model->transformation.localTransformation,
-            (float) getDeltaTime(context) * glm_rad(50.0f),
+        model->transformation.worldTransformation = glms_rotate(
+            model->transformation.worldTransformation,
+            (float) context->deltaTime * glm_rad(50.0f),
             (vec3s){ .x = 1.0f, .y = 1.0f, .z = 1.0f }
             );
+        context->deltaTime = glfwGetTime();
+        //----------------
 
+        updateCamera(renderer->context->camera);
         renderer->render(context);
 
         renderer->swapBuffers(renderer->context);
@@ -197,9 +218,9 @@ int main() {
 
     struct Renderer *renderer = setupProgram(width, height, xPos, yPos, drawWireframe, FOV, frustumNear, frustumFar);
 
-    testProgram(renderer->context, renderer->injector);
+    testProgram(renderer);
 
-    loopProgram(renderer->context, renderer);
+    loopProgram(renderer);
 
     /*
      TODO: Perhaps this should be a Windows and Linux only thing, the closing of the window when pressing "x".

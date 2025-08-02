@@ -10,7 +10,8 @@
 struct Camera {
     mat4s perspective;
     struct Transformation transformation;
-    float FOV;
+    mat4s view;
+    float fov;
     float frustumNear;
     float frustumFar;
 };

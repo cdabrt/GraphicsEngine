@@ -41,15 +41,11 @@ void setTransformUniforms(const struct Context *context, const struct Model *mod
         camera->perspective.raw
     );
 
-    const mat4s cameraTransformation = glms_mat4_mul(
-        camera->transformation.localTransformation,
-        camera->transformation.worldTransformation
-        );
     glUniformMatrix4fv(
         (GLint)viewUniform,
         1,
         GL_FALSE,
-        cameraTransformation.raw
+        camera->view.raw
     );
 }
 

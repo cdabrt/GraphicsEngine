@@ -4,14 +4,14 @@
 
 #ifndef INPUTCONTROLLER_H
 #define INPUTCONTROLLER_H
-#include "Window.h"
+#include "RendererAPI/Renderer.h"
 
 /**
  * processWindowInput
  * Processes keybord inputs made within a @ref GLFWwindow instance.
  *
- * @param window the active @ref GLFWwindow.
+ * @param renderer the @ref Renderer.
  */
-void processWindowInput(GLFWwindow *window);
+void processWindowInput(const struct Renderer *renderer);
 
 #endif //INPUTCONTROLLER_H

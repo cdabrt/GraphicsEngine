@@ -10,8 +10,6 @@
 
 void resizeAdjustViewportCallback(GLFWwindow* window, int width, int height);
 
-
-
 void glfwWindowSetup() {
     const int majorVersion = 4;
     const int minorVersionMac = 1;
@@ -48,8 +46,8 @@ GLFWwindow* createWindow(const int width, const int height) {
         exit(EXIT_FAILURE);
     }
 
+    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetFramebufferSizeCallback(window, resizeAdjustViewportCallback);
-
 
     glfwMakeContextCurrent(window);
 
