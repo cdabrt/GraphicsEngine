@@ -10,7 +10,6 @@ void processWindowInput(const struct Renderer *renderer) {
     GLFWwindow* window = renderer->context->window;
     struct Context *context = renderer->context;
     struct Camera *camera = renderer->context->camera;
-    const float cameraSpeed = 2.5f * (float) context->deltaTime;
 
 
     vec3s movement = GLMS_VEC3_ZERO;
@@ -62,7 +61,7 @@ void processWindowInput(const struct Renderer *renderer) {
         movement = glms_vec3_normalize(movement);
         camera->transformation.worldTransformation = glms_translate(
             camera->transformation.worldTransformation,
-            glms_vec3_scale(movement, cameraSpeed)
+            glms_vec3_scale(movement, camera->speed * (float) context->deltaTime)
         );
     }
 }

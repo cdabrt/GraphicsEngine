@@ -16,7 +16,7 @@
 #include "RendererAPI/Model.h"
 #include "UtilFiles/MacrosAndUniforms.h"
 #include "RendererAPI/Context.h"
-#include "UtilFiles/printMat4s.h"
+#include "../include/RendererAPI/Camera.h"
 
 /*
     When the Graphics Engine is turned into a library or framework of some sorts,
@@ -27,7 +27,7 @@
 */
 
 struct Renderer *setupProgram(const int width, const int height, const int xPos, const int yPos, bool drawWireframe,
-    const float FOV, const float frustumNear, const float frustumFar) {
+    const float FOV, const float frustumNear, const float frustumFar, const float cameraSpeed) {
     const float orthographicFrustumSizeFactor = 1000;
     glfwWindowSetup();
     GLFWwindow* window = createWindow(width, height);
@@ -36,16 +36,16 @@ struct Renderer *setupProgram(const int width, const int height, const int xPos,
     struct Context *context = renderer->context;
     struct Camera *camera = context->camera;
 
-    camera->fov = FOV;
-    camera->frustumNear = frustumNear;
-    camera->frustumFar = frustumFar;
     camera->perspective = glms_perspective(glm_rad(FOV), (float)width/(float)height, frustumNear, frustumFar);
     //Uncomment for orthographic perspective. Note, you can also change perspective at run-time.
     //camera->perspective = glms_ortho(-(float)width/orthographicFrustumSizeFactor, (float)width/orthographicFrustumSizeFactor, -(float)height/orthographicFrustumSizeFactor, (float)height/orthographicFrustumSizeFactor, frustumNear, frustumFar);
     camera->transformation.worldTransformation = glms_translate(glms_mat4_identity(), (vec3s){0.0f, 0.0f, -3.0f});
+    camera->fov = FOV;
+    camera->frustumNear = frustumNear;
+    camera->frustumFar = frustumFar;
+    camera->speed = cameraSpeed;
 
     renderer->context->drawWireframe = drawWireframe;
-
     //The base shader should always be set up before any Model, VBO and EBO setup
     renderer->prepareRenderer(context, xPos, yPos, width, height);
 
@@ -160,19 +160,6 @@ void testProgram(struct Renderer *renderer) {
     //model->transformation.localTransformation = glms_scale(model->transformation.localTransformation , (vec3s){ .x = 1.0f, .y = 1.0f, .z = 1.0f});
 }
 
-void updateCamera(struct Camera *camera) {
-    const float offset = 1.0f;
-    const vec3s up = (vec3s){0.0f, 1.0f, 0.0f};
-    const vec3s front = (vec3s){0.0f, 0.0f, offset};
-    const vec3s position = (vec3s){
-        camera->transformation.worldTransformation.raw[3][0],
-        camera->transformation.worldTransformation.raw[3][1],
-        camera->transformation.worldTransformation.raw[3][2]
-    };
-    camera->view =
-        glms_lookat(position, glms_vec3_add(position, front), up);
-}
-
 void loopProgram(const struct Renderer *renderer) {
     struct Context *context = renderer->context;
     GLFWwindow* window = renderer->context->window;
@@ -215,8 +202,9 @@ int main() {
     const float FOV = 70;
     const float frustumNear = 0.1f;
     const float frustumFar = 100.0f;
+    const float cameraSpeed = 2.5f;
 
-    struct Renderer *renderer = setupProgram(width, height, xPos, yPos, drawWireframe, FOV, frustumNear, frustumFar);
+    struct Renderer *renderer = setupProgram(width, height, xPos, yPos, drawWireframe, FOV, frustumNear, frustumFar, cameraSpeed);
 
     testProgram(renderer);
 

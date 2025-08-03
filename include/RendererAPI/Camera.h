@@ -9,11 +9,14 @@
 
 struct Camera {
     mat4s perspective;
-    struct Transformation transformation;
     mat4s view;
+    float speed;
+    struct Transformation transformation;
     float fov;
     float frustumNear;
     float frustumFar;
 };
+
+void updateCamera(struct Camera *camera);
 
 #endif //CAMERA_H
