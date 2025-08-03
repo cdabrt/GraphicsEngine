@@ -71,6 +71,7 @@ void prepareShaderRenderer(struct Context *context) {
 }
 
 void killShaders(struct OpenGLContext *openGLContext) {
+    glUseProgram(0);
     for (size_t i =0; i < openGLContext->shaderCount; i++) {
         const struct ShaderProgram shaderProgram = openGLContext->shaderPrograms[i];
         glDeleteProgram(shaderProgram.id);

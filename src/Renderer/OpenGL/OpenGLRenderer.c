@@ -102,13 +102,14 @@ void openGLKill (struct Renderer *renderer) {
     struct Context *context = renderer->context;
     OPENGL_CTX;
     glFinish();
-    cleanupWindow(context->window);
 
     killShaders(openGLContext);
     killMeshes(openGLContext);
 
     free(openGLContext);
-    free(context);
     free(renderer->injector);
     free(renderer);
+
+    cleanupWindow(context->window);
+    free(context);
 }
