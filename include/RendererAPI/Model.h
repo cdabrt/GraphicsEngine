@@ -10,8 +10,6 @@
 
 typedef enum MeshUniform {
     TRANSFORM,
-    PROJECTION,
-    VIEW
 } MeshUniform;
 
 inline char *getBaseMeshUniformString(const MeshUniform meshUniform)
@@ -20,8 +18,6 @@ inline char *getBaseMeshUniformString(const MeshUniform meshUniform)
 
     switch(meshUniform) {
         case TRANSFORM: string="transform"; break;
-        case PROJECTION: string="projection"; break;
-        case VIEW: string="view"; break;
         default:
             perror("Unknown mesh uniform");
     }

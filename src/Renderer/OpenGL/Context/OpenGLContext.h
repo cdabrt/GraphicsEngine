@@ -9,6 +9,26 @@
 #include "../include/RendererAPI/Model.h"
 
 /**
+ * UBO
+ * Struct representing an OpenGL UBO.
+ *
+ * @param id the id of the UBO.
+ * @param name the name of the UBO.
+ * @param uniformBlockBindingIndex the index of the UBO block binding.
+ * @param bufferSize the buffer size of the UBO.
+ * @param data the struct containing the necessary UBO data.
+ * @note \b IMPORTANT: Make absolutely sure that the struct you created that contains and represents your UBO Data
+ * is ordered in the exact same way and consists of the same datastructures. Your shader will otherwise not work.
+ */
+typedef struct UBO {
+    GLuint id;
+    char *name;
+    unsigned int uniformBlockBindingIndex;
+    unsigned int bufferSize;
+    void *data;
+} UBO;
+
+/**
  * ShaderProgram
  * Struct representing an OpenGL shader program.
  *
@@ -17,6 +37,8 @@
 typedef struct ShaderProgram {
     GLuint id;
     char *name;
+    UBO *ubos;
+    unsigned int uboCount;
 } ShaderProgram;
 
 /*
@@ -51,9 +73,25 @@ typedef struct OpenGLContext {
  *
  * @param context @ref OpenGLContext.
  * @param shaderProgramID the ID of the shader program.
- * @param shaderName name of the shader program.
+ * @param shaderName the name of the shader program.
  */
 void registerShaderProgram(OpenGLContext *context, unsigned int shaderProgramID, char *shaderName);
+
+/**
+ * registerUBO
+ * Registers a UBO to the list of UBOs of @ref ShaderProgram.
+ *
+ * @param shaderProgram the shader program.
+ * @param uboName the name of the UBO.
+ * @param uboID the id of the UBO.
+ * @param uniformBlockBindingIndex the binding point of the UBO.
+ * @param bufferSize the buffer size of the UBO.
+ * @param structData a pointer to the structData that has to be added. The structData contains the necessary UBO data.
+ * @note \b IMPORTANT: Make absolutely sure that the struct you created that contains and represents your UBO Data
+ * is ordered in the exact same way and consists of the same datastructures. Your shader will otherwise not work.
+ */
+void registerUBO(ShaderProgram *shaderProgram, char *uboName, unsigned long uboID,
+    unsigned long uniformBlockBindingIndex, unsigned long bufferSize, void * structData);
 
 /**
  * registerModel
@@ -72,7 +110,6 @@ void registerModel(OpenGLContext *context, unsigned int modelID, size_t indicesC
  * registerTexture
  * Registers a texture to the ModelMesh.
  *
- * @param context @ref OpenGLContext.
  * @param model the Mesh the texture needs to be added to.
  * @param texture the texture that needs to be added to the model.
  */

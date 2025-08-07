@@ -65,10 +65,11 @@ RendererInjector *createRendererInjector(const RendererType rendererType) {
     checkMalloc(rendererInjector);
     switch (rendererType) {
         case OPENGL: {
-            rendererInjector->createShaderProgram = openGLCreateShaderProgram;
+            rendererInjector->registerShaderProgram = openGLRegisterShaderProgram;
             rendererInjector->setActiveShaderProgram = openGLSetActiveShaderProgram;
             rendererInjector->registerMesh = openGLRegisterMesh;
             rendererInjector->getShaderProgramID = openGLGetShaderProgramID;
+            rendererInjector->getShaderProgram = openGLGetShaderProgram;
             rendererInjector->getModel = openGLGetModel;
             rendererInjector->getModelID = openGLGetModelID;
             break;

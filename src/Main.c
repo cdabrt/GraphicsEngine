@@ -158,7 +158,7 @@ void testProgram(Renderer *renderer) {
 
     //Confirms switching models and using different associated shaders works.
     //To create and register a shader program:
-    // unsigned int shaderProgram = rendererInjector->createShaderProgram(
+    // unsigned int shaderProgram = rendererInjector->registerShaderProgram(
     //     "../src/Renderer/OpenGL/Shaders/Vertex/vertex_wireframe.vert",
     //     "\0",
     //     "../src/Renderer/OpenGL/Shaders/Fragment/fragment_wireframe.frag"

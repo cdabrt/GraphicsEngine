@@ -8,14 +8,22 @@
 #include "RendererAPI/Context.h"
 
 /**
- * openGLCreateShaderProgram
+ * openGLRegisterShaderProgram
  * Creates an OpenGL shader program
  *
  * @param vertexFilePath path to vertex shader file.
  * @param geometryFullPath path to geometry shader file. <b>This file is optional</b>.
  * @param fragmentFilePath path to fragment shader file.
  */
-unsigned int openGLCreateShaderProgram(char *vertexFilePath, char *geometryFullPath, char *fragmentFilePath);
+unsigned int openGLRegisterShaderProgram(char *vertexFilePath, char *geometryFullPath, char *fragmentFilePath);
+
+/**
+ * openGLRegisterUBO
+ * Creates a UBO
+ *
+ * @param bufferSize the buffer size of the UBO.
+ */
+unsigned int openGLRegisterUBO(unsigned int blockUniformBindingIndex, unsigned int bufferSize);
 
 /**
  * openGLGetShaderProgramID
@@ -26,6 +34,9 @@ unsigned int openGLCreateShaderProgram(char *vertexFilePath, char *geometryFullP
  */
 unsigned int openGLGetShaderProgramID(const Context *context, const char *shaderName);
 
+
+ShaderProgram *openGLGetShaderProgram(const Context *context, unsigned int shaderProgramID);
+
 /**
  * openGLSetActiveShaderProgram
  * Sets an OpenGL Shader Program as active.
@@ -33,7 +44,7 @@ unsigned int openGLGetShaderProgramID(const Context *context, const char *shader
  * @param context the renderer context.
  * @param programId ID of the shader program.
  */
-void openGLSetActiveShaderProgram(const Context *context, unsigned long programId);
+void openGLSetActiveShaderProgram(const Context *context, unsigned int programId);
 
 /**
  * openGLRegisterMesh
@@ -45,7 +56,7 @@ void openGLSetActiveShaderProgram(const Context *context, unsigned long programI
  * @param shaderProgramID ID of the shader program that is associated with the mesh. If no ID is provided the renderer
  * will use the active shader program instead.
  */
-unsigned int openGLRegisterMesh(const Context *context, const RawMesh *mesh, char *modelName, unsigned long shaderProgramID);
+unsigned int openGLRegisterMesh(const Context *context, const RawMesh *mesh, char *modelName, unsigned int shaderProgramID);
 
 /**
  * openGLGetModel

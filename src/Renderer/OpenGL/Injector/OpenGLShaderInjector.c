@@ -47,7 +47,7 @@ unsigned int linkShaders (const unsigned int vertexShader, const unsigned int ge
  Because we create the shader program in this function,
  this function can be exposed so external developers can add their own shaders
  */
-unsigned int openGLCreateShaderProgram(char *vertexFilePath, char *geometryFullPath, char *fragmentFilePath) {
+unsigned int openGLRegisterShaderProgram(char *vertexFilePath, char *geometryFullPath, char *fragmentFilePath) {
     const unsigned int vertexShader = compileShader(
         vertexFilePath,
         GL_VERTEX_SHADER
@@ -77,6 +77,18 @@ unsigned int openGLCreateShaderProgram(char *vertexFilePath, char *geometryFullP
     return shaderProgram;
 }
 
+unsigned int openGLRegisterUBO(const unsigned int blockUniformBindingIndex, const unsigned int bufferSize) {
+    unsigned int ubo;
+    glGenBuffers(1, &ubo);
+
+    glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+    glBufferData(GL_UNIFORM_BUFFER, bufferSize, NULL, GL_STATIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+    return ubo;
+}
+
+
 unsigned int openGLGetShaderProgramID(const Context *context, const char *shaderName) {
     OPENGL_CTX;
     for (int i = 0; i < openGLContext->shaderCount; i++) {
@@ -90,7 +102,21 @@ unsigned int openGLGetShaderProgramID(const Context *context, const char *shader
     return 0;
 }
 
-void openGLSetActiveShaderProgram(const Context *context, const unsigned long programId) {
+ShaderProgram *openGLGetShaderProgram(const Context *context, const unsigned int shaderProgramID) {
+    OPENGL_CTX;
+    for (int i = 0; i < openGLContext->shaderCount; i++) {
+        ShaderProgram *shaderProgram = &openGLContext->shaderPrograms[i];
+        if (shaderProgram->id == shaderProgramID) {
+            return shaderProgram;
+        }
+    }
+
+    fprintf(stderr, "Failed to find shader program id");
+    return NULL;
+}
+
+
+void openGLSetActiveShaderProgram(const Context *context, const unsigned int programId) {
     OPENGL_CTX;
     glUseProgram(programId);
     openGLContext->activeShaderProgram = programId;

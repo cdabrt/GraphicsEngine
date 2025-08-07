@@ -7,8 +7,11 @@ layout (location = 2) in vec2 aTexCoord;
 out vec2 TexCoord;
 
 uniform mat4 transform;
-uniform mat4 projection;
-uniform mat4 view;
+
+layout(std140) uniform CameraView {
+    mat4 view;
+    mat4 projection;
+};
 
 void main()
 {

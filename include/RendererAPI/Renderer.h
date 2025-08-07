@@ -27,10 +27,11 @@ inline char *getBaseShaderString(const BaseShader shader)
     return string;
 }
 
-typedef unsigned int (*CreateShaderProgramFunction) (char *vertexFilePath, char *geometryFilePath, char *fragmentFilePath);
-typedef void (*SetActiveShaderProgramFunction) (const Context *context, unsigned long programId);
-typedef unsigned int (*RegisterMeshFunction) (const Context *context, const RawMesh *mesh, char *modelName, unsigned long shaderProgramID);
+typedef unsigned int (*RegisterShaderProgramFunction) (char *vertexFilePath, char *geometryFilePath, char *fragmentFilePath);
+typedef void (*SetActiveShaderProgramFunction) (const Context *context, unsigned int programId);
+typedef unsigned int (*RegisterMeshFunction) (const Context *context, const RawMesh *mesh, char *modelName, unsigned int shaderProgramID);
 typedef unsigned int (*getShaderProgramIdFunction) (const Context *context, const char *shaderName);
+typedef ShaderProgram *(*getShaderProgramFunction) (const Context *context, unsigned int shaderProgramID);
 typedef Model *(*getModelFunction) (const Context *context, unsigned int modelID);
 typedef unsigned int (*getModelIDFunction) (const Context *context, const char *meshName);
 
@@ -44,10 +45,11 @@ typedef unsigned int (*getModelIDFunction) (const Context *context, const char *
  * @param registerMesh the registerMesh function. Returns the ID of the created VAO
  */
 typedef struct RendererInjector {
-    CreateShaderProgramFunction createShaderProgram;
+    RegisterShaderProgramFunction registerShaderProgram;
     SetActiveShaderProgramFunction setActiveShaderProgram;
     RegisterMeshFunction registerMesh;
     getShaderProgramIdFunction getShaderProgramID;
+    getShaderProgramFunction getShaderProgram;
     getModelFunction getModel;
     getModelIDFunction getModelID;
 } RendererInjector;

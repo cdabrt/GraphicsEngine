@@ -59,6 +59,8 @@ void openGLRender (const Context *context) {
         openGLSetActiveShaderProgram(context, activeShaderProgram);
     }
 
+    updateBDOs(context, openGLGetShaderProgram(context, activeShaderProgram));
+
     //TODO: Add frustum culling, other types of culling, etc
     if (openGLContext->modelCount > 0) {
         for (int i = 0; i < openGLContext->modelCount; i++) {
@@ -74,7 +76,7 @@ void openGLRender (const Context *context) {
                 bindTextures(model, activeShaderProgram);
             }
 
-            setTransformUniforms(context, model, activeShaderProgram);
+            setTransformUniforms(model, activeShaderProgram);
 
             glDrawElements(GL_TRIANGLES, (GLsizei) model->indicesCount, GL_UNSIGNED_INT, NULL);
 

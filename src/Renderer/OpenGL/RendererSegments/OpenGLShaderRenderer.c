@@ -3,6 +3,7 @@
 //
 
 #include <stdio.h>
+#include <string.h>
 #include "../Context/OpenGLContext.h"
 #include "../../../UtilFiles/Macros.h"
 #include "../Injector/OpenGLInjector.h"
@@ -10,9 +11,56 @@
 #include "../ErrorHandling/OpenGLErrorHandling.h"
 #include "RendererAPI/Context.h"
 #include "RendererAPI/Renderer.h"
+#include "UtilFiles/GeneralErrorHandling.h"
+
+void updateBDOs(const Context *context, const ShaderProgram *activeShaderProgram) {
+    for (int i = 0; i < activeShaderProgram->uboCount; i ++) {
+        UBO *ubo = &activeShaderProgram->ubos[i];
+
+
+        unsigned int blockIndex = glGetUniformBlockIndex(activeShaderProgram->id, ubo->name);
+        checkUniformLocation(blockIndex);
+        glUniformBlockBinding(activeShaderProgram->id, blockIndex, ubo->uniformBlockBindingIndex);
+
+        //TODO: I know for a fact the ubo->data is not updating. That's why this is here for now
+        CameraBlock *cameraBlock = (CameraBlock*)ubo->data;
+
+        memcpy(cameraBlock->perspective, context->camera->perspective.raw, sizeof(float) * 16);
+        memcpy(cameraBlock->view, context->camera->view.raw, sizeof(float) * 16);
+
+        glBindBuffer(GL_UNIFORM_BUFFER, ubo->id);
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(CameraBlock), cameraBlock);
+
+        glBindBufferBase(GL_UNIFORM_BUFFER, ubo->uniformBlockBindingIndex, ubo->id);
+    }
+}
+
+void initializeBaseUBOs(Context *context, unsigned int shaderProgramID) {
+    ShaderProgram *shaderProgram = openGLGetShaderProgram(context, shaderProgramID);
+
+    //Initialize camera UBO data
+    const GLuint uboID = openGLRegisterUBO(getBaseCameraBlockUniformBinding(CAMERA_VIEW), sizeof(CameraBlock));
+
+    Camera *camera = context->camera;
+    CameraBlock *cameraBlock = malloc(sizeof(CameraBlock));
+    checkMalloc(cameraBlock);
+
+    memcpy(cameraBlock->perspective, camera->perspective.raw, sizeof(float) * 16);
+    memcpy(cameraBlock->view, camera->view.raw, sizeof(float) * 16);
+
+    registerUBO(
+        shaderProgram,
+        getBaseCameraBlockUniformString(CAMERA_VIEW),
+        uboID,
+        getBaseCameraBlockUniformBinding(CAMERA_VIEW),
+        sizeof(CameraBlock),
+        cameraBlock
+        );
+}
 
 void initializeBaseShaders(Context *context, const char* vertexPath, const char* geometryPath,
-                           const char* fragmentPath, char* shaderName) {
+    const char* fragmentPath, char* shaderName) {
+
     OPENGL_CTX;
     const char filePathBase[] = "../src/Renderer/OpenGL/Shaders/";
     const unsigned int byteSize = 1024;
@@ -27,15 +75,17 @@ void initializeBaseShaders(Context *context, const char* vertexPath, const char*
         snprintf(geometryFullPath, sizeof(geometryFullPath), "%s%s", filePathBase, geometryPath);
     }
 
-    const GLuint shaderProgram = openGLCreateShaderProgram(vertexFullPath, geometryFullPath, fragmentFullPath);
-    registerShaderProgram(openGLContext, shaderProgram, shaderName);
+    const GLuint shaderProgramID = openGLRegisterShaderProgram(vertexFullPath, geometryFullPath, fragmentFullPath);
+    registerShaderProgram(openGLContext, shaderProgramID, shaderName);
+
+    initializeBaseUBOs(context, shaderProgramID);
 
     /*
       The base shader should always be set up before any Model, VBO and EBO setup.
       For macOS this needs to happen immediately after creating the shader programs. Do not move this line somewhere else.
       It would work on Windows, not on macOS.
     */
-    openGLSetActiveShaderProgram(context, shaderProgram);
+    openGLSetActiveShaderProgram(context, shaderProgramID);
 }
 
 
@@ -75,6 +125,13 @@ void killShaders(OpenGLContext *openGLContext) {
     glUseProgram(0);
     for (size_t i =0; i < openGLContext->shaderCount; i++) {
         const ShaderProgram shaderProgram = openGLContext->shaderPrograms[i];
+
+        for (size_t j =0; j < shaderProgram.uboCount; j++) {
+            const UBO *ubo = &shaderProgram.ubos[j];
+            glDeleteBuffers(1, &ubo->id);
+            free(ubo->data);
+        }
+
         glDeleteProgram(shaderProgram.id);
     }
 

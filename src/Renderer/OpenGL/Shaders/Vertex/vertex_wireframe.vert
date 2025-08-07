@@ -3,8 +3,11 @@
 layout (location = 0) in vec3 aPos;
 
 uniform mat4 transform;
-uniform mat4 projection;
-uniform mat4 view;
+
+layout(std140) uniform CameraView {
+    mat4 view;
+    mat4 projection;
+};
 
 void main()
 {
