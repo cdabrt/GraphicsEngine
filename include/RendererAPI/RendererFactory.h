@@ -4,6 +4,7 @@
 
 #ifndef RENDERERFACTORY_H
 #define RENDERERFACTORY_H
+#include "Renderer.h"
 #include "Renderer/OpenGL/OpenGLHeaders.h"
 
 typedef enum {
@@ -18,7 +19,7 @@ typedef enum {
  * @param window the active @ref GLFWwindow.
  * @param rendererType the type of renderer implementation @ref RendererType.
  */
-struct Renderer *createRenderer(GLFWwindow* window,RendererType rendererType);
+Renderer *createRenderer(GLFWwindow* window,RendererType rendererType);
 
 /**
  * createRendererInjector
@@ -26,6 +27,6 @@ struct Renderer *createRenderer(GLFWwindow* window,RendererType rendererType);
  *
  * @param rendererType the type of renderer implementation @ref RendererType.
  */
-struct RendererInjector *createRendererInjector(RendererType rendererType);
+RendererInjector *createRendererInjector(RendererType rendererType);
 
 #endif //RENDERERFACTORY_H

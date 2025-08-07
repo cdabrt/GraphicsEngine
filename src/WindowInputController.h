@@ -12,6 +12,17 @@
  *
  * @param renderer the @ref Renderer.
  */
-void processWindowInput(const struct Renderer *renderer);
+void processWindowInput(const Renderer *renderer);
+
+/**
+ * moveCamera
+ * Move the camera according to keyboard inputs.
+ *
+ * @param renderer the @ref Renderer.
+ * @param window the window.
+ */
+void moveCamera(const Renderer *renderer, GLFWwindow *window);
+
+void mouse_callback(GLFWwindow* window, double xPos, double yPos);
 
 #endif //INPUTCONTROLLER_H

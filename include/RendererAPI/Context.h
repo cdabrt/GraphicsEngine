@@ -15,14 +15,14 @@
  * @param drawWireframe whether to draw the object in wireframe mode or not.
  * @param backendSpecificContext the backend specific implementation of the renderer context.
  */
-struct Context {
+typedef struct Context {
     GLFWwindow *window;
-    struct Camera *camera;
+    Camera *camera;
     double deltaTime;
     int viewportWidth;
     int viewportHeight;
     bool drawWireframe;
     void *backendSpecificContext;
-};
+} Context;
 
 #endif //CONTEXT_H

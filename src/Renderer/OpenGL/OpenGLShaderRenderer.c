@@ -4,14 +4,15 @@
 
 #include <stdio.h>
 #include "Context/OpenGLContext.h"
-#include "../../UtilFiles/MacrosAndUniforms.h"
+#include "../../UtilFiles/Macros.h"
 #include "Injector/OpenGLInjector.h"
 #include "OpenGLHeaders.h"
 #include "ErrorHandling/OpenGLErrorHandling.h"
 #include "RendererAPI/Context.h"
+#include "RendererAPI/Renderer.h"
 
-void initializeBaseShaders(struct Context *context, const char* vertexPath, const char* geometryPath,
-    const char* fragmentPath, char* shaderName) {
+void initializeBaseShaders(Context *context, const char* vertexPath, const char* geometryPath,
+                           const char* fragmentPath, char* shaderName) {
     OPENGL_CTX;
     const char filePathBase[] = "../src/Renderer/OpenGL/Shaders/";
     const unsigned int byteSize = 1024;
@@ -38,7 +39,7 @@ void initializeBaseShaders(struct Context *context, const char* vertexPath, cons
 }
 
 
-void prepareShaderRenderer(struct Context *context) {
+void prepareShaderRenderer(Context *context) {
     char *vertexPath = "Vertex/vertex_main.vert";
     char *geometryPath = "\0";
     char *fragmentPath = "Fragment/fragment_main.frag";
@@ -70,10 +71,10 @@ void prepareShaderRenderer(struct Context *context) {
     }
 }
 
-void killShaders(struct OpenGLContext *openGLContext) {
+void killShaders(OpenGLContext *openGLContext) {
     glUseProgram(0);
     for (size_t i =0; i < openGLContext->shaderCount; i++) {
-        const struct ShaderProgram shaderProgram = openGLContext->shaderPrograms[i];
+        const ShaderProgram shaderProgram = openGLContext->shaderPrograms[i];
         glDeleteProgram(shaderProgram.id);
     }
 

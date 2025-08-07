@@ -6,15 +6,27 @@
 #include "cglm/struct/cam.h"
 
 
-void updateCamera(struct Camera *camera) {
-    const float offset = 1.0f;
-    const vec3s up = (vec3s){0.0f, 1.0f, 0.0f};
-    const vec3s front = (vec3s){0.0f, 0.0f, offset};
-    const vec3s position = (vec3s){
-        camera->transformation.worldTransformation.raw[3][0],
-        camera->transformation.worldTransformation.raw[3][1],
-        camera->transformation.worldTransformation.raw[3][2]
+void updateCamera(Camera *camera) {
+    vec4 *worldTransformationRaw = camera->transformation.worldTransformation.raw;
+
+    const vec3s up = (vec3s){
+        worldTransformationRaw[1][0],
+        worldTransformationRaw[1][1],
+        worldTransformationRaw[1][2]
     };
+
+    const vec3s front = (vec3s){
+        -worldTransformationRaw[2][0],
+        -worldTransformationRaw[2][1],
+        -worldTransformationRaw[2][2]
+    };
+
+    const vec3s position = (vec3s){
+        worldTransformationRaw[3][0],
+        worldTransformationRaw[3][1],
+        worldTransformationRaw[3][2]
+    };
+
     camera->view =
         glms_lookat(position, glms_vec3_add(position, front), up);
 }

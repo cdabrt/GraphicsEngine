@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "../include/RendererAPI/RawMesh.h"
 #include "../Context/OpenGLContext.h"
-#include "../../../UtilFiles/MacrosAndUniforms.h"
+#include "../../../UtilFiles/Macros.h"
 #include <stb_image.h>
 #include <string.h>
 #include "../ErrorHandling/OpenGLErrorHandling.h"
@@ -13,7 +13,7 @@
 #include "Renderer/OpenGL/Injector/OpenGLInjector.h"
 #include "RendererAPI/Context.h"
 
-void registerVBO(const struct RawMesh *mesh) {
+void registerVBO(const RawMesh *mesh) {
     unsigned int VBO;
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -22,7 +22,7 @@ void registerVBO(const struct RawMesh *mesh) {
     CHECK_OPENGL_ERRORS;
 }
 
-void registerEBO(const struct RawMesh *mesh) {
+void registerEBO(const RawMesh *mesh) {
     unsigned int EBO;
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -62,7 +62,7 @@ void layOutVertexAttributes() {
 //TODO: Register static mesh, put it into one big VBO and use glMultiDrawIndirect for frustum culling of the big static VBO.
 //  The dynamic meshes still need to be frustum culled
 //  Also look into instancing (trees, bullets, etc)
-unsigned int openGLRegisterMesh(const struct Context *context, const struct RawMesh *mesh, char *modelName, const unsigned long shaderProgramID) {
+unsigned int openGLRegisterMesh(const Context *context, const RawMesh *mesh, char *modelName, const unsigned long shaderProgramID) {
     OPENGL_CTX;
 
     unsigned int VAO;
@@ -81,10 +81,10 @@ unsigned int openGLRegisterMesh(const struct Context *context, const struct RawM
     return VAO;
 }
 
-struct Model *openGLGetModel(const struct Context *context, const unsigned int modelID) {
+Model *openGLGetModel(const Context *context, const unsigned int modelID) {
     OPENGL_CTX;
     for (int i = 0; i < openGLContext->modelCount; i++) {
-        struct Model *model = &openGLContext->models[i];
+        Model *model = &openGLContext->models[i];
         if (model->id == modelID) {
             return model;
         }
@@ -94,10 +94,10 @@ struct Model *openGLGetModel(const struct Context *context, const unsigned int m
     return NULL;
 }
 
-unsigned int openGLGetModelID(const struct Context *context, const char *modelName) {
+unsigned int openGLGetModelID(const Context *context, const char *modelName) {
     OPENGL_CTX;
     for (int i = 0; i < openGLContext->modelCount; i++) {
-        const struct Model *model = &openGLContext->models[i];
+        const Model *model = &openGLContext->models[i];
         if (strcmp(modelName, model->name) == 0) {
             return model->id;
         }

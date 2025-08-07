@@ -17,9 +17,9 @@
  We allocate new memory for a renderer, that *current points to.
  We copy the contents of *new into the newly allocated renderer (pointed to by *current).
 */
-void swapRenderer(struct Renderer **current, const struct Renderer *new) {
+void swapRenderer(Renderer **current, const Renderer *new) {
     free(*current);
-    *current = malloc(sizeof(struct Renderer));
+    *current = malloc(sizeof(Renderer));
     checkMalloc(*current);
     **current = *new;
 }

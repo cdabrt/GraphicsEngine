@@ -8,12 +8,31 @@
 #include "RendererAPI/RawMesh.h"
 #include "RendererAPI/Context.h"
 
+typedef enum {
+    BASE_SHADER,
+    WIREFRAME_SHADER,
+} BaseShader;
+
+inline char *getBaseShaderUniformString(const BaseShader shader)
+{
+    char *string = "\0";
+
+    switch(shader) {
+        case BASE_SHADER: string="baseShader"; break;
+        case WIREFRAME_SHADER: string="wireframeShader"; break;
+        default:
+            perror("Unknown shader type");
+    }
+
+    return string;
+}
+
 typedef unsigned int (*CreateShaderProgramFunction) (char *vertexFilePath, char *geometryFilePath, char *fragmentFilePath);
-typedef void (*SetActiveShaderProgramFunction) (const struct Context *context, unsigned long programId);
-typedef unsigned int (*RegisterMeshFunction) (const struct Context *context, const struct RawMesh *mesh, char *modelName, unsigned long shaderProgramID);
-typedef unsigned int (*getShaderProgramIdFunction) (const struct Context *context, const char *shaderName);
-typedef struct Model *(*getModelFunction) (const struct Context *context, unsigned int modelID);
-typedef unsigned int (*getModelIDFunction) (const struct Context *context, const char *meshName);
+typedef void (*SetActiveShaderProgramFunction) (const Context *context, unsigned long programId);
+typedef unsigned int (*RegisterMeshFunction) (const Context *context, const RawMesh *mesh, char *modelName, unsigned long shaderProgramID);
+typedef unsigned int (*getShaderProgramIdFunction) (const Context *context, const char *shaderName);
+typedef Model *(*getModelFunction) (const Context *context, unsigned int modelID);
+typedef unsigned int (*getModelIDFunction) (const Context *context, const char *meshName);
 
 /**
  * RendererInjector
@@ -24,19 +43,20 @@ typedef unsigned int (*getModelIDFunction) (const struct Context *context, const
  * @param setActiveShaderProgram the setActiveShaderProgram function
  * @param registerMesh the registerMesh function. Returns the ID of the created VAO
  */
-struct RendererInjector {
+typedef struct RendererInjector {
     CreateShaderProgramFunction createShaderProgram;
     SetActiveShaderProgramFunction setActiveShaderProgram;
     RegisterMeshFunction registerMesh;
     getShaderProgramIdFunction getShaderProgramID;
     getModelFunction getModel;
     getModelIDFunction getModelID;
-};
+} RendererInjector;
 
-typedef void (*PrepareRendererFunction) (struct Context *context, int xPos, int yPos, int width, int height);
-typedef void (*RenderFunction) (const struct Context *context);
-typedef void (*SwapBuffersFunction) (const struct Context *context);
-typedef void (*KillFunction) (struct Renderer *renderer);
+typedef struct Renderer Renderer;
+typedef void (*PrepareRendererFunction) (Context *context, int xPos, int yPos, int width, int height);
+typedef void (*RenderFunction) (const Context *context);
+typedef void (*SwapBuffersFunction) (const Context *context);
+typedef void (*KillFunction) (Renderer *renderer);
 
 /**
  * Renderer
@@ -52,8 +72,8 @@ typedef void (*KillFunction) (struct Renderer *renderer);
  * @param kill the kill function.
  */
 struct Renderer {
-    struct Context *context;
-    struct RendererInjector *injector;
+    Context *context;
+    RendererInjector *injector;
     PrepareRendererFunction prepareRenderer;
     RenderFunction render;
     SwapBuffersFunction swapBuffers;
@@ -74,6 +94,6 @@ struct Renderer {
  *      swapRenderer(&currentRenderer, &newRenderer);
  * @endcode
  */
-void swapRenderer(struct Renderer **current, const struct Renderer *new);
+void swapRenderer(Renderer **current, const Renderer *new);
 
 #endif //RENDERINGSTRATEGY_H

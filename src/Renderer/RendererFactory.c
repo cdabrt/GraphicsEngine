@@ -13,27 +13,27 @@
 #include "RendererAPI/Context.h"
 #include "RendererAPI/Camera.h"
 
-struct Renderer *createRenderer(GLFWwindow* window, const RendererType rendererType) {
-    struct Renderer *renderer = malloc(sizeof(struct Renderer));
+Renderer *createRenderer(GLFWwindow* window, const RendererType rendererType) {
+    Renderer *renderer = malloc(sizeof(Renderer));
     checkMalloc(renderer);
     switch (rendererType) {
         case OPENGL: {
             const int defaultInitValue = 0;
 
-            struct Context *context = malloc(sizeof(struct Context));
+            Context *context = malloc(sizeof(Context));
             checkMalloc(context);
 
-            struct Camera *camera = malloc(sizeof(struct Camera));
+            Camera *camera = malloc(sizeof(Camera));
             checkMalloc(camera);
-            memset(camera, defaultInitValue, sizeof(struct Camera));
-            camera->transformation = (struct Transformation) {
+            memset(camera, defaultInitValue, sizeof(Camera));
+            camera->transformation = (Transformation) {
                 glms_mat4_identity(),
                 glms_mat4_identity()
             };
 
-            struct OpenGLContext* openGLContext = malloc(sizeof(*openGLContext));
+            OpenGLContext* openGLContext = malloc(sizeof(*openGLContext));
             checkMalloc(openGLContext);
-            memset(openGLContext, defaultInitValue, sizeof(struct OpenGLContext));
+            memset(openGLContext, defaultInitValue, sizeof(OpenGLContext));
 
             context->window = window;
             context->backendSpecificContext = openGLContext;
@@ -60,8 +60,8 @@ struct Renderer *createRenderer(GLFWwindow* window, const RendererType rendererT
     return renderer;
 }
 
-struct RendererInjector *createRendererInjector(const RendererType rendererType) {
-    struct RendererInjector *rendererInjector = malloc(sizeof(struct RendererInjector));
+RendererInjector *createRendererInjector(const RendererType rendererType) {
+    RendererInjector *rendererInjector = malloc(sizeof(RendererInjector));
     checkMalloc(rendererInjector);
     switch (rendererType) {
         case OPENGL: {

@@ -2,15 +2,15 @@
 // Created by Carlo Baretta on 14/07/2025.
 //
 
+#include "Renderer/OpenGL/OpenGLHeaders.h"
 #include <stdio.h>
 #include "../include/RendererAPI/RawMesh.h"
 #include "../ErrorHandling/OpenGLErrorHandling.h"
 #include "UtilFiles/ReadFile.h"
 #include "../Context/OpenGLContext.h"
-#include "../../../UtilFiles/MacrosAndUniforms.h"
+#include "../../../UtilFiles/Macros.h"
 #include <stb_image.h>
 #include <string.h>
-#include "Renderer/OpenGL/OpenGLHeaders.h"
 #include "Renderer/OpenGL/Injector/OpenGLInjector.h"
 #include "RendererAPI/Context.h"
 
@@ -77,10 +77,10 @@ unsigned int openGLCreateShaderProgram(char *vertexFilePath, char *geometryFullP
     return shaderProgram;
 }
 
-unsigned int openGLGetShaderProgramID(const struct Context *context, const char *shaderName) {
+unsigned int openGLGetShaderProgramID(const Context *context, const char *shaderName) {
     OPENGL_CTX;
     for (int i = 0; i < openGLContext->shaderCount; i++) {
-        const struct ShaderProgram *shaderProgram = &openGLContext->shaderPrograms[i];
+        const ShaderProgram *shaderProgram = &openGLContext->shaderPrograms[i];
         if (strcmp(shaderName, shaderProgram->name) == 0) {
             return shaderProgram->id;
         }
@@ -90,7 +90,7 @@ unsigned int openGLGetShaderProgramID(const struct Context *context, const char 
     return 0;
 }
 
-void openGLSetActiveShaderProgram(const struct Context *context, const unsigned long programId) {
+void openGLSetActiveShaderProgram(const Context *context, const unsigned long programId) {
     OPENGL_CTX;
     glUseProgram(programId);
     openGLContext->activeShaderProgram = programId;

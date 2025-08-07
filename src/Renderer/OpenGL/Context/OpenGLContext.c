@@ -7,29 +7,30 @@
 #include <string.h>
 #include "UtilFiles/GeneralErrorHandling.h"
 #include "RendererAPI/Transformation.h"
+#include "RendererAPI/Texture.h"
 
-void registerShaderProgram(struct OpenGLContext *openGLContext, const unsigned int shaderProgramID, char *shaderName) {
+void registerShaderProgram(OpenGLContext *openGLContext, const unsigned int shaderProgramID, char *shaderName) {
     const size_t newSize = openGLContext->shaderCount + 1;
 
-    struct ShaderProgram *shaderPrograms = realloc(
-        openGLContext->shaderPrograms, newSize * sizeof(struct ShaderProgram)
+    ShaderProgram *shaderPrograms = realloc(
+        openGLContext->shaderPrograms, newSize * sizeof(ShaderProgram)
     );
     checkMalloc(shaderPrograms);
 
     openGLContext->shaderPrograms = shaderPrograms;
     openGLContext->shaderCount = newSize;
-    struct ShaderProgram *shaderProgram = &openGLContext->shaderPrograms[openGLContext->shaderCount - 1];
+    ShaderProgram *shaderProgram = &openGLContext->shaderPrograms[openGLContext->shaderCount - 1];
     shaderProgram->id = shaderProgramID;
     shaderProgram->name = shaderName;
 }
 
-void registerModel(struct OpenGLContext *openGLContext, const unsigned int modelID, const size_t indicesCount,
+void registerModel(OpenGLContext *openGLContext, const unsigned int modelID, const size_t indicesCount,
     char* modelName, const unsigned long shaderProgramID) {
 
     const size_t newSize = openGLContext->modelCount + 1;
 
-    struct Model *models = realloc(
-        openGLContext->models, newSize * sizeof(struct Model)
+    Model *models = realloc(
+        openGLContext->models, newSize * sizeof(Model)
     );
     checkMalloc(models);
 
@@ -39,9 +40,9 @@ void registerModel(struct OpenGLContext *openGLContext, const unsigned int model
     mat4s localTransformations = glms_mat4_identity();
     mat4s worldTransformations = glms_mat4_identity();
 
-    struct Transformation transformations = {localTransformations, worldTransformations};
+    Transformation transformations = {localTransformations, worldTransformations};
 
-    struct Model model = {
+    Model model = {
         modelName,
         model.id = modelID,
         shaderProgramID,
@@ -54,11 +55,11 @@ void registerModel(struct OpenGLContext *openGLContext, const unsigned int model
     openGLContext->models[openGLContext->modelCount - 1] = model;
 }
 
-void registerTexture(struct Model *model, const struct Texture texture) {
+void registerTexture(Model *model, const Texture texture) {
     const size_t newSize = model->textureCount + 1;
 
-    struct Texture *textures = realloc(
-        model->textures, newSize * sizeof(struct Texture)
+    Texture *textures = realloc(
+        model->textures, newSize * sizeof(Texture)
     );
     checkMalloc(textures);
 

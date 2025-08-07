@@ -9,7 +9,8 @@
 #include "../ErrorHandling/OpenGLErrorHandling.h"
 #include "Renderer/OpenGL/OpenGLHeaders.h"
 #include "Renderer/OpenGL/Injector/OpenGLInjector.h"
-#include "UtilFiles/MacrosAndUniforms.h"
+#include "UtilFiles/Macros.h"
+#include "RendererAPI/Texture.h"
 
 void setTextureParameters() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -20,8 +21,9 @@ void setTextureParameters() {
     CHECK_OPENGL_ERRORS;
 }
 
-void generateTexture(struct Texture *texture, const GLuint textureID, const int textureUnit, const int nrChannels,
+void generateTexture(Texture *texture, const GLuint textureID, const int textureUnit, const int nrChannels,
     const int width, const int height, const unsigned char *data) {
+
     const int border = 0;
     const int level = 0;
 
@@ -39,7 +41,7 @@ void generateTexture(struct Texture *texture, const GLuint textureID, const int 
     CHECK_OPENGL_ERRORS;
 }
 
-void registerFileNotFoundImage(struct Model *model) {
+void registerFileNotFoundImage(Model *model) {
     const char *fileNotFoundPath = strdup("../src/Renderer/OpenGL/Textures/FileNotFound.png");
     const int numberOfRegistersAtTime = 1;
     int width, height, nrChannels;
@@ -53,7 +55,7 @@ void registerFileNotFoundImage(struct Model *model) {
     unsigned char *data = stbi_load(fileNotFoundPath, &width, &height, &nrChannels, desiredChannels);
     free(fileNotFoundPath);
 
-    struct Texture texture = {
+    Texture texture = {
         (char *) fileNotFoundPath,
         DIFFUSE,
         getBaseTextureTypeUniformString(DIFFUSE),
@@ -66,8 +68,9 @@ void registerFileNotFoundImage(struct Model *model) {
     stbi_image_free(data);
 }
 
-void openGLRegisterTextures(const struct Texture *textures, const size_t textureCount,
-    struct Model *model) {
+void openGLRegisterTextures(const Texture *textures, const size_t textureCount,
+    Model *model) {
+
     const int numberOfRegistersAtTime = 1;
     int width, height, nrChannels;
     const int desiredChannels = 0;
@@ -76,7 +79,7 @@ void openGLRegisterTextures(const struct Texture *textures, const size_t texture
         registerFileNotFoundImage(model);
     } else {
         for (int i = 0; i < textureCount; i++) {
-            struct Texture texture = textures[i];
+            Texture texture = textures[i];
 
             GLuint textureID;
             glGenTextures(numberOfRegistersAtTime, &textureID);

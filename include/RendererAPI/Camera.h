@@ -7,16 +7,15 @@
 #include "cglm/struct/mat4.h"
 #include "RendererAPI/Transformation.h"
 
-struct Camera {
+typedef struct {
     mat4s perspective;
     mat4s view;
-    float speed;
-    struct Transformation transformation;
+    Transformation transformation;
     float fov;
     float frustumNear;
     float frustumFar;
-};
+} Camera;
 
-void updateCamera(struct Camera *camera);
+void updateCamera(Camera *camera);
 
 #endif //CAMERA_H

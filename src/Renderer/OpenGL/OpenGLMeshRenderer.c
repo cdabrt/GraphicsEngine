@@ -5,15 +5,15 @@
 #include "OpenGLRenderer.h"
 #include "Context/OpenGLContext.h"
 #include "ErrorHandling/OpenGLErrorHandling.h"
-#include "../../UtilFiles/MacrosAndUniforms.h"
+#include "../../UtilFiles/Macros.h"
 #include "OpenGLHeaders.h"
 #include "OpenGLTextureRenderer.h"
 #include "cglm/struct.h"
 #include "RendererAPI/Context.h"
 
-void setTransformUniforms(const struct Context *context, const struct Model *model, const unsigned int activeShaderProgram) {
-    const struct Transformation transformation = model->transformation;
-    const struct Camera *camera = context->camera;
+void setTransformUniforms(const Context *context, const Model *model, const unsigned int activeShaderProgram) {
+    const Transformation transformation = model->transformation;
+    const Camera *camera = context->camera;
 
     const unsigned int transformUniform = glGetUniformLocation(activeShaderProgram, getBaseMeshUniformString(TRANSFORM));
     checkUniformLocation(transformUniform);
@@ -49,10 +49,10 @@ void setTransformUniforms(const struct Context *context, const struct Model *mod
     );
 }
 
-void killMeshes(struct OpenGLContext *openGLContext) {
+void killMeshes(OpenGLContext *openGLContext) {
     const int numberOfmodels = 1;
     for (size_t i = 0; i < openGLContext->modelCount; i++) {
-        struct Model *model = &openGLContext->models[i];
+        Model *model = &openGLContext->models[i];
         killTextures(model);
         glDeleteVertexArrays(numberOfmodels, &model->id);
     }

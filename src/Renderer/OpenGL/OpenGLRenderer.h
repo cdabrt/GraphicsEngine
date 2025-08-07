@@ -21,7 +21,7 @@
  * @note The viewport can be made smaller than the actual @ref GLFWwindow,
  * so that you can use for example native UI elements around the smaller viewport that renders the OpenGL graphics.
  */
-void openGLPrepareRender(struct Context *context, int xPos, int yPos, int width, int height);
+void openGLPrepareRender(Context *context, int xPos, int yPos, int width, int height);
 
 /**
  * openGLRender
@@ -29,7 +29,7 @@ void openGLPrepareRender(struct Context *context, int xPos, int yPos, int width,
  *
  * @param context @ref OpenGLContext.
  */
-void openGLRender (const struct Context *context);
+void openGLRender (const Context *context);
 
 /**
  * openGLSwapBuffers
@@ -37,7 +37,7 @@ void openGLRender (const struct Context *context);
  *
  * @param context @ref OpenGLContext.
  */
-void openGLSwapBuffers (const struct Context *context);
+void openGLSwapBuffers (const Context *context);
 
 /**
  * openGLKill
@@ -45,6 +45,6 @@ void openGLSwapBuffers (const struct Context *context);
  *
  * @param renderer @ref OpenGLContext.
  */
-void openGLKill (struct Renderer *renderer);
+void openGLKill (Renderer *renderer);
 
 #endif //OPENGLRENDERER_H

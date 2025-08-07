@@ -7,11 +7,11 @@
 
 #include "RendererAPI/Context.h"
 
-void initializeBaseShaders(struct Context *context, const char* vertexPath, const char* geometryPath,
-    const char* fragmentPath, char* shaderName);
+void initializeBaseShaders(Context *context, const char* vertexPath, const char* geometryPath,
+                           const char* fragmentPath, char* shaderName);
 
-void prepareShaderRenderer(struct Context *context);
+void prepareShaderRenderer(Context *context);
 
-void killShaders(struct OpenGLContext *openGLContext);
+void killShaders(OpenGLContext *openGLContext);
 
 #endif //OPENGLSHADERRENDERER_H

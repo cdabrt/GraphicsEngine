@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "WindowInputController.h"
 #include "Renderer/OpenGL/OpenGLHeaders.h"
 
 
@@ -48,6 +49,7 @@ GLFWwindow* createWindow(const int width, const int height) {
 
     //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetFramebufferSizeCallback(window, resizeAdjustViewportCallback);
+    glfwSetCursorPosCallback(window, mouse_callback);
 
     glfwMakeContextCurrent(window);
 

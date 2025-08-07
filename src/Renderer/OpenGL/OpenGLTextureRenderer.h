@@ -8,10 +8,10 @@
 #ifndef TEXTURERENDERER_H
 #define TEXTURERENDERER_H
 
-void bindTextures(const struct Model *model, GLuint activeShaderProgram);
+void bindTextures(const Model *model, GLuint activeShaderProgram);
 
-void cleanUpRenderer(const struct Model *model);
+void cleanUpRenderer(const Model *model);
 
-void killTextures(struct Model *model);
+void killTextures(Model *model);
 
 #endif //TEXTURERENDERER_H

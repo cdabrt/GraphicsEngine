@@ -14,10 +14,10 @@
  *
  * @param id the id of the shader program.
  */
-struct ShaderProgram {
+typedef struct ShaderProgram {
     GLuint id;
     char *name;
-};
+} ShaderProgram;
 
 /*
   Function pointers have not been used for creating these patterns. They have been used in the renderer factory,
@@ -37,13 +37,13 @@ struct ShaderProgram {
  * @param modelCount the number of models.
  * @param activeShaderProgram the active shader program, this is the shader that is currently used by the renderer.
  */
-struct OpenGLContext {
-    struct ShaderProgram *shaderPrograms;
-    struct Model *models;
+typedef struct OpenGLContext {
+    ShaderProgram *shaderPrograms;
+    Model *models;
     size_t shaderCount;
     size_t modelCount;
     GLuint activeShaderProgram;
-};
+} OpenGLContext;
 
 /**
  * registerShaderProgram
@@ -53,7 +53,7 @@ struct OpenGLContext {
  * @param shaderProgramID the ID of the shader program.
  * @param shaderName name of the shader program.
  */
-void registerShaderProgram(struct OpenGLContext *context, unsigned int shaderProgramID, char *shaderName);
+void registerShaderProgram(OpenGLContext *context, unsigned int shaderProgramID, char *shaderName);
 
 /**
  * registerModel
@@ -65,7 +65,7 @@ void registerShaderProgram(struct OpenGLContext *context, unsigned int shaderPro
  * @param modelName the name of the model.
  * @param shaderProgramID ID of the shader program that is associated with the model.
  */
-void registerModel(struct OpenGLContext *context, unsigned int modelID, size_t indicesCount,
+void registerModel(OpenGLContext *context, unsigned int modelID, size_t indicesCount,
     char* modelName, unsigned long shaderProgramID);
 
 /**
@@ -76,6 +76,6 @@ void registerModel(struct OpenGLContext *context, unsigned int modelID, size_t i
  * @param model the Mesh the texture needs to be added to.
  * @param texture the texture that needs to be added to the model.
  */
-void registerTexture(struct Model *model, struct Texture texture);
+void registerTexture(Model *model, Texture texture);
 
 #endif //OPENGLCONTEXT_H

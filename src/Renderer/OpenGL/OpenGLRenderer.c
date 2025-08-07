@@ -6,7 +6,7 @@
 #include "OpenGLRenderer.h"
 #include "Context/OpenGLContext.h"
 #include "ErrorHandling/OpenGLErrorHandling.h"
-#include "../../UtilFiles/MacrosAndUniforms.h"
+#include "../../UtilFiles/Macros.h"
 #include "Injector/OpenGLInjector.h"
 #include "OpenGLHeaders.h"
 #include "Window.h"
@@ -17,8 +17,7 @@
 #include "OpenGLShaderRenderer.h"
 #include "OpenGLMeshRenderer.h"
 
-void openGLPrepareRender(struct Context *context, const int xPos, const int yPos,
-    const int width, const int height) {
+void openGLPrepareRender(Context *context, const int xPos, const int yPos, const int width, const int height) {
     //Initialise GLAD
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         perror("Failed to initialize GLAD \n");
@@ -43,7 +42,7 @@ void openGLPrepareRender(struct Context *context, const int xPos, const int yPos
 //      If the object moves a lot, it is of course more efficient to flag it as not-static.),
 //  texture atlases or arrays,
 //  instancing
-void openGLRender (const struct Context *context) {
+void openGLRender (const Context *context) {
     OPENGL_CTX;
     const int unbindArray = 0;
     const bool drawWireframe = context->drawWireframe;
@@ -63,7 +62,7 @@ void openGLRender (const struct Context *context) {
     //TODO: Add frustum culling, other types of culling, etc
     if (openGLContext->modelCount > 0) {
         for (int i = 0; i < openGLContext->modelCount; i++) {
-            const struct Model *model = &openGLContext->models[i];
+            const Model *model = &openGLContext->models[i];
             glBindVertexArray(model->id);
 
             if (model->shaderProgramID != activeShaderProgram && !context->drawWireframe) {
@@ -91,15 +90,15 @@ void openGLRender (const struct Context *context) {
 
 
 //Poll events and swap front buffer with back buffers
-void openGLSwapBuffers (const struct Context *context) {
+void openGLSwapBuffers (const Context *context) {
     glfwPollEvents();
     glfwSwapBuffers(context->window);
 }
 
 
 
-void openGLKill (struct Renderer *renderer) {
-    struct Context *context = renderer->context;
+void openGLKill (Renderer *renderer) {
+    Context *context = renderer->context;
     OPENGL_CTX;
     glFinish();
 

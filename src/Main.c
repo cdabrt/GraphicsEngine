@@ -14,9 +14,10 @@
 #include "cglm/struct/cam.h"
 #include "Renderer/OpenGL/OpenGLHeaders.h"
 #include "RendererAPI/Model.h"
-#include "UtilFiles/MacrosAndUniforms.h"
+#include "UtilFiles/Macros.h"
 #include "RendererAPI/Context.h"
 #include "../include/RendererAPI/Camera.h"
+#include "RendererAPI/Texture.h"
 
 /*
     When the Graphics Engine is turned into a library or framework of some sorts,
@@ -26,24 +27,23 @@
     and their loop functions are ran. Same goes for the init functions of all the files in the main initialization
 */
 
-struct Renderer *setupProgram(const int width, const int height, const int xPos, const int yPos, bool drawWireframe,
-    const float FOV, const float frustumNear, const float frustumFar, const float cameraSpeed) {
+Renderer *setupProgram(const int width, const int height, const int xPos, const int yPos, bool drawWireframe,
+    const float FOV, const float frustumNear, const float frustumFar) {
     const float orthographicFrustumSizeFactor = 1000;
     glfwWindowSetup();
     GLFWwindow* window = createWindow(width, height);
 
-    struct Renderer *renderer = createRenderer(window, OPENGL);
-    struct Context *context = renderer->context;
-    struct Camera *camera = context->camera;
+    Renderer *renderer = createRenderer(window, OPENGL);
+    Context *context = renderer->context;
+    Camera *camera = context->camera;
 
     camera->perspective = glms_perspective(glm_rad(FOV), (float)width/(float)height, frustumNear, frustumFar);
     //Uncomment for orthographic perspective. Note, you can also change perspective at run-time.
     //camera->perspective = glms_ortho(-(float)width/orthographicFrustumSizeFactor, (float)width/orthographicFrustumSizeFactor, -(float)height/orthographicFrustumSizeFactor, (float)height/orthographicFrustumSizeFactor, frustumNear, frustumFar);
-    camera->transformation.worldTransformation = glms_translate(glms_mat4_identity(), (vec3s){0.0f, 0.0f, -3.0f});
+    camera->transformation.worldTransformation = glms_translate(glms_mat4_identity(), (vec3s){0.0f, 0.0f, 3.0f});
     camera->fov = FOV;
     camera->frustumNear = frustumNear;
     camera->frustumFar = frustumFar;
-    camera->speed = cameraSpeed;
 
     renderer->context->drawWireframe = drawWireframe;
     //The base shader should always be set up before any Model, VBO and EBO setup
@@ -53,9 +53,9 @@ struct Renderer *setupProgram(const int width, const int height, const int xPos,
 }
 
 //TODO: REMOVE, FOR TESTING ONLY
-void testProgram(struct Renderer *renderer) {
-    struct Context *context = renderer->context;
-    struct RendererInjector *rendererInjector = renderer->injector;
+void testProgram(Renderer *renderer) {
+    Context *context = renderer->context;
+    RendererInjector *rendererInjector = renderer->injector;
 
     //Vertices are constructed as follows:
     //x, y, z; r, g, b
@@ -120,7 +120,7 @@ void testProgram(struct Renderer *renderer) {
     };
 
 
-    struct Texture textures[] = {
+    Texture textures[] = {
         {
             strdup("../src/Renderer/OpenGL/Textures/House.png"),
             DIFFUSE,
@@ -131,7 +131,7 @@ void testProgram(struct Renderer *renderer) {
         }
     };
 
-    struct RawMesh mesh = {
+    RawMesh mesh = {
         vertices,
         indices,
         sizeof(vertices),
@@ -155,13 +155,14 @@ void testProgram(struct Renderer *renderer) {
     rendererInjector->registerMesh(context, &mesh, "FirstMesh", id);
 
     //Apply some transformations
-    //struct Model *model = rendererInjector->getModel(context, rendererInjector->getModelID(context, "FirstMesh"));
+    Model *model = rendererInjector->getModel(context, rendererInjector->getModelID(context, "FirstMesh"));
     //model->transformation.localTransformation = glms_rotate(model->transformation.localTransformation, glm_rad(-55.0f), (vec3s){ .x = 1.0f, .y = 0.0f, .z = 0.0f });
     //model->transformation.localTransformation = glms_scale(model->transformation.localTransformation , (vec3s){ .x = 1.0f, .y = 1.0f, .z = 1.0f});
+    model->transformation.worldTransformation = glms_translate(model->transformation.worldTransformation, (vec3s){0.0f, 0.0f, 1.0f});
 }
 
-void loopProgram(const struct Renderer *renderer) {
-    struct Context *context = renderer->context;
+void loopProgram(const Renderer *renderer) {
+    Context *context = renderer->context;
     GLFWwindow* window = renderer->context->window;
 
     while (!glfwWindowShouldClose(window)) {
@@ -173,7 +174,7 @@ void loopProgram(const struct Renderer *renderer) {
         //TODO: Inject movement into the render loop, including camera "movement"
         //----------------
         //Testing:
-        struct Model *model = renderer->injector->getModel(context, renderer->injector->getModelID(context, "FirstMesh"));
+        Model *model = renderer->injector->getModel(context, renderer->injector->getModelID(context, "FirstMesh"));
         model->transformation.worldTransformation = glms_rotate(
             model->transformation.worldTransformation,
             (float) context->deltaTime * glm_rad(50.0f),
@@ -189,7 +190,7 @@ void loopProgram(const struct Renderer *renderer) {
     }
 }
 
-void killProgram(struct Renderer *renderer) {
+void killProgram(Renderer *renderer) {
     renderer->kill(renderer);
 }
 
@@ -202,9 +203,8 @@ int main() {
     const float FOV = 70;
     const float frustumNear = 0.1f;
     const float frustumFar = 100.0f;
-    const float cameraSpeed = 2.5f;
 
-    struct Renderer *renderer = setupProgram(width, height, xPos, yPos, drawWireframe, FOV, frustumNear, frustumFar, cameraSpeed);
+    Renderer *renderer = setupProgram(width, height, xPos, yPos, drawWireframe, FOV, frustumNear, frustumFar);
 
     testProgram(renderer);
 

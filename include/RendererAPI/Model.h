@@ -4,8 +4,30 @@
 
 #ifndef MODEL_H
 #define MODEL_H
-#include "cglm/struct/mat4.h"
+#include "Texture.h"
 #include "RendererAPI/Transformation.h"
+
+
+typedef enum MeshUniform {
+    TRANSFORM,
+    PROJECTION,
+    VIEW
+} MeshUniform;
+
+inline char *getBaseMeshUniformString(const MeshUniform meshUniform)
+{
+    char *string = "\0";
+
+    switch(meshUniform) {
+        case TRANSFORM: string="transform"; break;
+        case PROJECTION: string="projection"; break;
+        case VIEW: string="view"; break;
+        default:
+            perror("Unknown mesh uniform");
+    }
+
+    return string;
+}
 
 /**
  * Model
@@ -23,14 +45,14 @@
  * the "GameObject". Your GameObject in this case will most likely also contain transformation data.
  * This information can be passed to the model struct for it to be rendered.
  */
-struct Model {
+typedef struct Model {
     char *name;
     unsigned int id;
     unsigned int shaderProgramID;
     size_t indicesCount;
-    struct Texture *textures;
+    Texture *textures;
     size_t textureCount;
-    struct Transformation transformation;
-};
+    Transformation transformation;
+} Model;
 
 #endif //MODEL_H
