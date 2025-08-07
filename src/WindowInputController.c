@@ -3,6 +3,8 @@
 //
 
 #include <string.h>
+
+#include "MouseInputState.h"
 #include "cglm/struct/affine-pre.h"
 #include "cglm/struct/affine.h"
 #include "cglm/struct/quat.h"
@@ -44,23 +46,25 @@ void moveCamera(const Renderer *renderer, GLFWwindow *window) {
         transformation->raw[1][2]
     };
 
+    const vec3s inverse = (vec3s){-1, -1, -1};
+
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
         movement = glms_vec3_add(movement, forward);
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        movement = glms_vec3_add(movement, glms_vec3_mul(forward, (vec3s){-1, -1, -1}));
-    }
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        movement = glms_vec3_add(movement, glms_vec3_mul(right, (vec3s){-1, -1, -1}));
+        movement = glms_vec3_add(movement, glms_vec3_mul(forward, inverse));
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
         movement = glms_vec3_add(movement, right);
+    }
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+        movement = glms_vec3_add(movement, glms_vec3_mul(right, inverse));
     }
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
         movement = glms_vec3_add(movement, up);
     }
     if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-        movement = glms_vec3_add(movement, glms_vec3_mul(up, (vec3s){-1, -1, -1}));
+        movement = glms_vec3_add(movement, glms_vec3_mul(up, inverse));
     }
 
     if (!glms_vec3_eqv(movement, GLMS_VEC3_ZERO)) {
@@ -81,51 +85,64 @@ typedef struct PlayerControlledCamera {
     double lastX, lastY;
 } PlayerControlledCamera;
 
-// PlayerControlledCamera *player = {
-//     memset(0),
-//     -90.0f,
-//     0.0f,
-//     true,
-//     0,
-//     0
-// };
-// const float sensitivity = 0.1f;
+void mouse_callback(GLFWwindow* window, const double xPos, const double yPos) {
+    MouseInputState *state = glfwGetWindowUserPointer(window);
+    if (!state) return;
 
-void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
-    // if (player->firstFrame) {
-    //     player->lastX = xPos;
-    //     player->lastY = yPos;
-    //     player->firstFrame = false;
-    //     return;
-    // }
-    //
-    // float xOffset = (float)(xPos - player->lastX);
-    // float yOffset = (float)(player->lastY - yPos); // reversed because y-coord goes from top to bottom
-    // player->lastX = xPos;
-    // player->lastY = yPos;
-    //
-    // xOffset *= sensitivity;
-    // yOffset *= sensitivity;
-    //
-    // player->yaw += xOffset;
-    // player->pitch += yOffset;
-    //
-    // // Clamp pitch
-    // if (player->pitch > 89.0f)  player->pitch = 89.0f;
-    // if (player->pitch < -89.0f) player->pitch = -89.0f;
+    if (state->firstFrame) {
+        state->lastX = xPos;
+        state->lastY = yPos;
+        state->firstFrame = false;
+        return;
+    }
+
+    float xOffset = (float)(xPos - state->lastX);
+    //y goes from top to bottom, so reversed
+    float yOffset = (float)(state->lastY - yPos);
+    state->lastX = xPos;
+    state->lastY = yPos;
+
+    if (xOffset == 0.0f && yOffset == 0.0f) {
+        state->rotationChanged = false;
+        return;
+    }
+    state->rotationChanged = true;
+
+    state->yaw += xOffset;
+    state->pitch += yOffset;
+
+    // Clamp pitch
+    if (state->pitch > 89.0f)  state->pitch = 89.0f;
+    if (state->pitch < -89.0f) state->pitch = -89.0f;
 }
 
 
 void rotateCamera(const Renderer *renderer) {
-    const Camera *camera = renderer->context->camera;
+    Context *context = renderer->context;
+    Camera *camera = context->camera;
+    MouseInputState *state = glfwGetWindowUserPointer(renderer->context->window);
+    if (!state) return;
+    if (!state->rotationChanged) return;
 
-    // Convert yaw/pitch to quaternion
-    //glms_quat axisX = glms_quat_axis(glms_rad(pitch), (vec3s){1.0f, 0.0f, 0.0f});
-    //quat axisY = glms_quat_axis(glms_rad(yaw),   (vec3s){0.0f, 1.0f, 0.0f});
+    const float yaw = state->yaw * state->sensitivity * (float)renderer->context->deltaTime;
+    const float pitch = state->pitch * state->sensitivity * (float)renderer->context->deltaTime;
 
-    //glms_quat combined = glms_quat_mul(axisY, axisX);
+    const versors pitchQuaternion = glms_quatv(glm_rad(pitch), (vec3s){1.0f, 0.0f, 0.0f});
+    const versors yawQuaternion = glms_quatv(glm_rad(yaw),   (vec3s){0.0f, 1.0f, 0.0f});
+    const versors rotationQuaternion = glms_quat_mul(pitchQuaternion, yawQuaternion);
+    const mat4s rotationMatrix = glms_quat_mat4(rotationQuaternion);
 
-    // Convert to mat4 and update camera's rotation matrix
-    //mat4s rotMat = glms_quat_mat4(combined);
-    //renderer->context->camera->transformation.worldTransformation = glms_mat4_mul(rotMat, camera->transformation.worldTransformation);
+    state->yaw = 0.0f;
+    state->pitch = 0.0f;
+
+    const vec3s position = {
+        camera->transformation.worldTransformation.raw[3][0],
+        camera->transformation.worldTransformation.raw[3][1],
+        camera->transformation.worldTransformation.raw[3][2]
+    };
+
+    camera->transformation.worldTransformation =
+        camera->transformation.worldTransformation = glms_translate(rotationMatrix, position);
+
+    state->rotationChanged = false;
 }

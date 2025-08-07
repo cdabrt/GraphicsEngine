@@ -18,6 +18,7 @@
 #include "RendererAPI/Context.h"
 #include "../include/RendererAPI/Camera.h"
 #include "RendererAPI/Texture.h"
+#include "MouseInputState.h"
 
 /*
     When the Graphics Engine is turned into a library or framework of some sorts,
@@ -32,6 +33,19 @@ Renderer *setupProgram(const int width, const int height, const int xPos, const 
     const float orthographicFrustumSizeFactor = 1000;
     glfwWindowSetup();
     GLFWwindow* window = createWindow(width, height);
+
+    //Ignore warning, mouseState is freed.
+    MouseInputState *mouseState = malloc(sizeof(MouseInputState));
+    *mouseState = (MouseInputState) {
+        .lastX = 400.0f,  // center of your window maybe
+        .lastY = 300.0f,
+        .yaw = -90.0f,
+        .pitch = 0.0f,
+        .firstFrame = true,
+        .sensitivity = 1.0f,
+        .rotationChanged = false
+    };
+    glfwSetWindowUserPointer(window, mouseState);
 
     Renderer *renderer = createRenderer(window, OPENGL);
     Context *context = renderer->context;
@@ -192,6 +206,7 @@ void loopProgram(const Renderer *renderer) {
 
 void killProgram(Renderer *renderer) {
     renderer->kill(renderer);
+    free(glfwGetWindowUserPointer(renderer->context->window));
 }
 
 int main() {
