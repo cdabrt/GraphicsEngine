@@ -49,7 +49,9 @@ GLFWwindow* createWindow(const int width, const int height) {
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetFramebufferSizeCallback(window, resizeAdjustViewportCallback);
-    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetCursorPosCallback(window, mouseCallback);
+    glfwSetKeyCallback(window, keyCallback);
+    glfwSetMouseButtonCallback(window, mousePressCallback);
 
     glfwMakeContextCurrent(window);
 

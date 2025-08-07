@@ -23,6 +23,10 @@ void processWindowInput(const Renderer *renderer);
  */
 void moveCamera(const Renderer *renderer, GLFWwindow *window);
 
-void mouse_callback(GLFWwindow* window, double xPos, double yPos);
+void mouseCallback(GLFWwindow* window, double xPos, double yPos);
+
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+void mousePressCallback(GLFWwindow* window, int key, int action, int mods);
 
 #endif //INPUTCONTROLLER_H

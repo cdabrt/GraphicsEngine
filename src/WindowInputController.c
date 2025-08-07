@@ -12,12 +12,12 @@
 #include "RendererAPI/Renderer.h"
 
 void moveCamera(const Renderer *renderer, GLFWwindow *window);
-void rotateCamera(const Renderer *renderer);
+void rotateCamera(const Renderer *renderer, GLFWwindow *window);
 
 void processWindowInput(const Renderer *renderer) {
     GLFWwindow *window = renderer->context->window;
     moveCamera(renderer, window);
-    rotateCamera(renderer);
+    rotateCamera(renderer, window);
 }
 
 void moveCamera(const Renderer *renderer, GLFWwindow *window) {
@@ -85,9 +85,10 @@ typedef struct PlayerControlledCamera {
     double lastX, lastY;
 } PlayerControlledCamera;
 
-void mouse_callback(GLFWwindow* window, const double xPos, const double yPos) {
+void mouseCallback(GLFWwindow* window, const double xPos, const double yPos) {
     MouseInputState *state = glfwGetWindowUserPointer(window);
     if (!state) return;
+    if (state->lookDisabled) return;
 
     if (state->firstFrame) {
         state->lastX = xPos;
@@ -97,8 +98,7 @@ void mouse_callback(GLFWwindow* window, const double xPos, const double yPos) {
     }
 
     float xOffset = (float)(xPos - state->lastX);
-    //y goes from top to bottom, so reversed
-    float yOffset = (float)(state->lastY - yPos);
+    float yOffset = (float)(yPos - state->lastY);
     state->lastX = xPos;
     state->lastY = yPos;
 
@@ -117,10 +117,10 @@ void mouse_callback(GLFWwindow* window, const double xPos, const double yPos) {
 }
 
 
-void rotateCamera(const Renderer *renderer) {
+void rotateCamera(const Renderer *renderer, GLFWwindow *window) {
     Context *context = renderer->context;
     Camera *camera = context->camera;
-    MouseInputState *state = glfwGetWindowUserPointer(renderer->context->window);
+    MouseInputState *state = glfwGetWindowUserPointer(window);
     if (!state) return;
     if (!state->rotationChanged) return;
 
@@ -145,4 +145,37 @@ void rotateCamera(const Renderer *renderer) {
         camera->transformation.worldTransformation = glms_translate(rotationMatrix, position);
 
     state->rotationChanged = false;
+}
+
+void exitLook(GLFWwindow* window, int key, int action) {
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        MouseInputState *state = glfwGetWindowUserPointer(window);
+        state->firstFrame = true;
+        state->lookDisabled = !state->lookDisabled;
+
+        if (state->lookDisabled) {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        } else {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+    }
+}
+
+void enterLook(GLFWwindow* window, int key, int action) {
+    if (key == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+        MouseInputState *state = glfwGetWindowUserPointer(window);
+        state->firstFrame = true;
+        state->lookDisabled = false;
+
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+}
+
+//For actions that should take place only once, when a key is pressed.
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    exitLook(window, key, action);
+}
+
+void mousePressCallback(GLFWwindow* window, int key, int action, int mods) {
+    enterLook(window, key, action);
 }

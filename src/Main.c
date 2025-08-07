@@ -42,8 +42,9 @@ Renderer *setupProgram(const int width, const int height, const int xPos, const 
         .yaw = -90.0f,
         .pitch = 0.0f,
         .firstFrame = true,
-        .sensitivity = 1.0f,
-        .rotationChanged = false
+        .sensitivity = 3.0f,
+        .rotationChanged = false,
+        .lookDisabled = false,
     };
     glfwSetWindowUserPointer(window, mouseState);
 

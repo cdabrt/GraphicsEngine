@@ -13,6 +13,7 @@ typedef struct MouseInputState {
     bool firstFrame;
     float sensitivity;
     bool rotationChanged;
+    bool lookDisabled;
 } MouseInputState;
 
 #endif //MOUSEINPUT_H
