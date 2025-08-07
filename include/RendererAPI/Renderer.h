@@ -13,7 +13,7 @@ typedef enum {
     WIREFRAME_SHADER,
 } BaseShader;
 
-inline char *getBaseShaderUniformString(const BaseShader shader)
+inline char *getBaseShaderString(const BaseShader shader)
 {
     char *string = "\0";
 

@@ -50,7 +50,7 @@ void prepareShaderRenderer(Context *context) {
         vertexPath,
         geometryPath,
         fragmentPath,
-        getBaseShaderUniformString(shader)
+        getBaseShaderString(shader)
     );
 
     if (context->drawWireframe) {
@@ -66,7 +66,7 @@ void prepareShaderRenderer(Context *context) {
             vertexPath,
             geometryPath,
             fragmentPath,
-            getBaseShaderUniformString(shader)
+            getBaseShaderString(shader)
         );
     }
 }

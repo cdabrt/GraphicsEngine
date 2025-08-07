@@ -165,7 +165,7 @@ void testProgram(Renderer *renderer) {
     //     );
     // registerShaderProgram(openGLContext, shaderProgram, WIREFRAME_SHADER);
     //Set to WIREFRAME_SHADER for testing
-    const unsigned int id = rendererInjector->getShaderProgramID(context, getBaseShaderUniformString(BASE_SHADER));
+    const unsigned int id = rendererInjector->getShaderProgramID(context, getBaseShaderString(BASE_SHADER));
     rendererInjector->registerMesh(context, &mesh, "FirstMesh", id);
 
     //Apply some transformations

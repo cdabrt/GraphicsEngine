@@ -55,7 +55,7 @@ void openGLRender (const Context *context) {
 
     GLuint activeShaderProgram = openGLContext->activeShaderProgram;
     if (activeShaderProgram == 0) {
-        activeShaderProgram = openGLGetShaderProgramID(context, getBaseShaderUniformString(BASE_SHADER));
+        activeShaderProgram = openGLGetShaderProgramID(context, getBaseShaderString(BASE_SHADER));
         openGLSetActiveShaderProgram(context, activeShaderProgram);
     }
 
