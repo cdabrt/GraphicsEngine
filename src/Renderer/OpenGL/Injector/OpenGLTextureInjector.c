@@ -42,7 +42,7 @@ void generateTexture(Texture *texture, const GLuint textureID, const int texture
 }
 
 void registerFileNotFoundImage(Model *model) {
-    const char *fileNotFoundPath = strdup("../src/Renderer/OpenGL/Textures/FileNotFound.png");
+    const char *fileNotFoundPath = strdup("../src/Textures/FileNotFound.png");
     const int numberOfRegistersAtTime = 1;
     int width, height, nrChannels;
     const int desiredChannels = 0;

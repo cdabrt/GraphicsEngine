@@ -2,10 +2,10 @@
 // Created by Carlo Baretta on 01/08/2025.
 //
 
-#include "OpenGLRenderer.h"
-#include "Context/OpenGLContext.h"
-#include "ErrorHandling/OpenGLErrorHandling.h"
-#include "OpenGLHeaders.h"
+#include "../OpenGLRenderer.h"
+#include "../Context/OpenGLContext.h"
+#include "../ErrorHandling/OpenGLErrorHandling.h"
+#include "../OpenGLHeaders.h"
 #include "RendererAPI/Texture.h"
 
 void bindTextures(const Model *model, const GLuint activeShaderProgram) {

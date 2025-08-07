@@ -21,11 +21,10 @@
 #include "MouseInputState.h"
 
 /*
-    When the Graphics Engine is turned into a library or framework of some sorts,
-    subsequent projects would need a main function like this.
-    I am planning on making a game engine. The main loop should be injectable.
-    Every script should have an init and loop function. In the loop in the main all scripts are loaded
-    and their loop functions are ran. Same goes for the init functions of all the files in the main initialization
+    TODO: When the Graphics Engine is turned into a library or framework of some sorts, subsequent projects
+          would need a main function like this. Anything within the src folder that does not reside within
+          the "Renderer" or "UtilFiles" folders, need to be moved to a different project
+          (a separate editor or perhaps game engine will be made with this project).
 */
 
 Renderer *setupProgram(const int width, const int height, const int xPos, const int yPos, bool drawWireframe,
@@ -137,7 +136,7 @@ void testProgram(Renderer *renderer) {
 
     Texture textures[] = {
         {
-            strdup("../src/Renderer/OpenGL/Textures/House.png"),
+            strdup("../src/Textures/House.png"),
             DIFFUSE,
             getBaseTextureTypeUniformString(DIFFUSE),
             //The id and textureUnit are handled under the hood.

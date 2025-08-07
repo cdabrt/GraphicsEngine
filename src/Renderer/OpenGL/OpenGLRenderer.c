@@ -13,9 +13,9 @@
 #include "cglm/struct.h"
 #include "RendererAPI/Context.h"
 #include "RendererAPI/Renderer.h"
-#include "OpenGLTextureRenderer.h"
-#include "OpenGLShaderRenderer.h"
-#include "OpenGLMeshRenderer.h"
+#include "RendererSegments/OpenGLTextureRenderer.h"
+#include "RendererSegments/OpenGLShaderRenderer.h"
+#include "RendererSegments/OpenGLMeshRenderer.h"
 
 void openGLPrepareRender(Context *context, const int xPos, const int yPos, const int width, const int height) {
     //Initialise GLAD

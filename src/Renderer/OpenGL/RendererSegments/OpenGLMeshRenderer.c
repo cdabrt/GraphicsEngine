@@ -2,11 +2,11 @@
 // Created by Carlo Baretta on 01/08/2025.
 //
 
-#include "OpenGLRenderer.h"
-#include "Context/OpenGLContext.h"
-#include "ErrorHandling/OpenGLErrorHandling.h"
-#include "../../UtilFiles/Macros.h"
-#include "OpenGLHeaders.h"
+#include "../OpenGLRenderer.h"
+#include "../Context/OpenGLContext.h"
+#include "../ErrorHandling/OpenGLErrorHandling.h"
+#include "../../../UtilFiles/Macros.h"
+#include "../OpenGLHeaders.h"
 #include "OpenGLTextureRenderer.h"
 #include "cglm/struct.h"
 #include "RendererAPI/Context.h"

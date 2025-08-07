@@ -3,11 +3,11 @@
 //
 
 #include <stdio.h>
-#include "Context/OpenGLContext.h"
-#include "../../UtilFiles/Macros.h"
-#include "Injector/OpenGLInjector.h"
-#include "OpenGLHeaders.h"
-#include "ErrorHandling/OpenGLErrorHandling.h"
+#include "../Context/OpenGLContext.h"
+#include "../../../UtilFiles/Macros.h"
+#include "../Injector/OpenGLInjector.h"
+#include "../OpenGLHeaders.h"
+#include "../ErrorHandling/OpenGLErrorHandling.h"
 #include "RendererAPI/Context.h"
 #include "RendererAPI/Renderer.h"
 
