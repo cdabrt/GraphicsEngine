@@ -10,18 +10,20 @@
 #include "Renderer/OpenGL/OpenGLHeaders.h"
 #include "RendererAPI/Renderer.h"
 
-void moveCamera(const Renderer *renderer, GLFWwindow *window);
-void rotateCamera(const Renderer *renderer, GLFWwindow *window);
+void moveCamera(const Renderer *renderer);
+void rotateCamera(const Renderer *renderer);
+void enableWireframe(const Renderer *renderer);
 
 void processWindowInput(const Renderer *renderer) {
-    GLFWwindow *window = renderer->context->window;
-    moveCamera(renderer, window);
-    rotateCamera(renderer, window);
+    moveCamera(renderer);
+    rotateCamera(renderer);
+    enableWireframe(renderer);
 }
 
-void moveCamera(const Renderer *renderer, GLFWwindow *window) {
+void moveCamera(const Renderer *renderer) {
     Context *context = renderer->context;
-    Camera *camera = renderer->context->camera;
+    GLFWwindow *window = context->window;
+    Camera *camera = context->camera;
     const float cameraSpeed = 2.5f;
 
     vec3s movement = GLMS_VEC3_ZERO;
@@ -106,10 +108,12 @@ void mouseCallback(GLFWwindow* window, const double xPos, const double yPos) {
 }
 
 
-void rotateCamera(const Renderer *renderer, GLFWwindow *window) {
-    Context *context = renderer->context;
+void rotateCamera(const Renderer *renderer) {
+    const Context *context = renderer->context;
+    GLFWwindow *window = context->window;
     Camera *camera = context->camera;
     MouseInputState *state = glfwGetWindowUserPointer(window);
+
     if (!state) return;
     if (!state->rotationChanged) return;
 
@@ -136,6 +140,38 @@ void rotateCamera(const Renderer *renderer, GLFWwindow *window) {
     state->rotationChanged = false;
 }
 
+void enableWireframe(const Renderer *renderer) {
+    static bool wasPressed = false;
+
+    Context *context = renderer->context;
+    GLFWwindow *window = context->window;
+
+    const bool fPressed = glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS ? true : false;
+    const bool shiftPressed = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS ? true : false;
+    const bool altPressed = glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS ? true : false;
+    const bool allPressed = (fPressed && shiftPressed && altPressed);
+
+    if (allPressed && !wasPressed) {
+        context->drawWireframe = !context->drawWireframe;;
+    }
+
+    wasPressed = allPressed;
+}
+
+
+
+//For actions that should take place only once, when a key is pressed.
+void exitLook(GLFWwindow* window, int key, int action);
+void enterLook(GLFWwindow* window, int key, int action);
+
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    exitLook(window, key, action);
+}
+
+void mousePressCallback(GLFWwindow* window, int key, int action, int mods) {
+    enterLook(window, key, action);
+}
+
 void exitLook(GLFWwindow* window, int key, int action) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         MouseInputState *state = glfwGetWindowUserPointer(window);
@@ -158,13 +194,4 @@ void enterLook(GLFWwindow* window, int key, int action) {
 
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
-}
-
-//For actions that should take place only once, when a key is pressed.
-void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    exitLook(window, key, action);
-}
-
-void mousePressCallback(GLFWwindow* window, int key, int action, int mods) {
-    enterLook(window, key, action);
 }

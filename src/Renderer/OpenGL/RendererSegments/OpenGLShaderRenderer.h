@@ -7,6 +7,10 @@
 
 #include "RendererAPI/Context.h"
 
+void updateUBOs(const Context *context, const ShaderProgram *activeShaderProgram);
+
+void updateActiveShaderProgram(const Model *model, const Context *context, unsigned int *activeShaderProgram, bool drawWireframe);
+
 void initializeBaseShaders(Context *context, const char* vertexPath, const char* geometryPath,
                            const char* fragmentPath, char* shaderName);
 

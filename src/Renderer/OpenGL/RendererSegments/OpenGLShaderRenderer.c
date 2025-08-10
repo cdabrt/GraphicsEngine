@@ -35,6 +35,30 @@ void updateUBOs(const Context *context, const ShaderProgram *activeShaderProgram
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
+void updateActiveShaderProgram(const Model *model, const Context *context, unsigned int *activeShaderProgram, const bool drawWireframe) {
+    const unsigned int wireFrameID = openGLGetShaderProgramID(context, getBaseShaderString(WIREFRAME_SHADER));
+
+    if (model->shaderProgramID != *activeShaderProgram && !drawWireframe) {
+        openGLSetActiveShaderProgram(context, model->shaderProgramID);
+        *activeShaderProgram = model->shaderProgramID;
+
+        glEnable(GL_CULL_FACE);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glClear(GL_DEPTH_BUFFER_BIT);
+
+        updateUBOs(context, openGLGetShaderProgram(context, *activeShaderProgram));
+    } else if (drawWireframe && *activeShaderProgram != wireFrameID) {
+        openGLSetActiveShaderProgram(context,wireFrameID);
+        *activeShaderProgram = wireFrameID;
+        updateUBOs(context, openGLGetShaderProgram(context, *activeShaderProgram));
+
+        glDisable(GL_CULL_FACE);
+        glDisable(GL_DEPTH_TEST);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glClear(GL_DEPTH_BUFFER_BIT);
+    }
+}
+
 void initializeBaseUBOs(Context *context, unsigned int shaderProgramID) {
     ShaderProgram *shaderProgram = openGLGetShaderProgram(context, shaderProgramID);
 
@@ -88,10 +112,10 @@ void initializeBaseShaders(Context *context, const char* vertexPath, const char*
 
 
 void prepareShaderRenderer(Context *context) {
-    char *vertexPath = "Vertex/vertex_main.vert";
+    char *vertexPath = "Vertex/vertex_wireframe.vert";
     char *geometryPath = "\0";
-    char *fragmentPath = "Fragment/fragment_main.frag";
-    BaseShader shader = BASE_SHADER;
+    char *fragmentPath = "Fragment/fragment_wireframe.frag";
+    BaseShader shader = WIREFRAME_SHADER;
 
     initializeBaseShaders(
         context,
@@ -101,22 +125,18 @@ void prepareShaderRenderer(Context *context) {
         getBaseShaderString(shader)
     );
 
-    if (context->drawWireframe) {
-        vertexPath = "Vertex/vertex_wireframe.vert";
-        geometryPath = "\0";
-        fragmentPath = "Fragment/fragment_wireframe.frag";
-        shader = WIREFRAME_SHADER;
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        CHECK_OPENGL_ERRORS;
+    vertexPath = "Vertex/vertex_main.vert";
+    geometryPath = "\0";
+    fragmentPath = "Fragment/fragment_main.frag";
+    shader = BASE_SHADER;
 
-        initializeBaseShaders(
-            context,
-            vertexPath,
-            geometryPath,
-            fragmentPath,
-            getBaseShaderString(shader)
-        );
-    }
+    initializeBaseShaders(
+        context,
+        vertexPath,
+        geometryPath,
+        fragmentPath,
+        getBaseShaderString(shader)
+    );
 }
 
 void killShaders(OpenGLContext *openGLContext) {

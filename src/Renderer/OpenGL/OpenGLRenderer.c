@@ -47,7 +47,6 @@ void openGLRender (const Context *context) {
     const int unbindArray = 0;
     const bool drawWireframe = context->drawWireframe;
 
-    glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
     //TODO: Temporary background colour
     glClearColor(0.4f, 0.5f, 0.2f, 1.0f);
@@ -58,7 +57,6 @@ void openGLRender (const Context *context) {
         activeShaderProgram = openGLGetShaderProgramID(context, getBaseShaderString(BASE_SHADER));
         openGLSetActiveShaderProgram(context, activeShaderProgram);
     }
-
     updateUBOs(context, openGLGetShaderProgram(context, activeShaderProgram));
 
     //TODO: Add frustum culling, other types of culling, etc
@@ -67,22 +65,14 @@ void openGLRender (const Context *context) {
             const Model *model = &openGLContext->models[i];
             glBindVertexArray(model->id);
 
-            if (model->shaderProgramID != activeShaderProgram && !context->drawWireframe) {
-                openGLSetActiveShaderProgram(context, model->shaderProgramID);
-                activeShaderProgram = model->shaderProgramID;
-            }
+            updateActiveShaderProgram(model, context, &activeShaderProgram, drawWireframe);
 
-            if (!drawWireframe) {
-                bindTextures(model, activeShaderProgram);
-            }
-
+            bindTextures(model, activeShaderProgram, drawWireframe);
             setTransformUniforms(model, activeShaderProgram);
 
             glDrawElements(GL_TRIANGLES, (GLsizei) model->indicesCount, GL_UNSIGNED_INT, NULL);
 
-            if (!drawWireframe) {
-                cleanUpRenderer(model);
-            }
+            cleanUpRenderer(model, drawWireframe);
         }
     }
     glBindVertexArray(unbindArray);

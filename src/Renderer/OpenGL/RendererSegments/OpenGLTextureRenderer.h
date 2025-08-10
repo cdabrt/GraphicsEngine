@@ -8,9 +8,9 @@
 #ifndef TEXTURERENDERER_H
 #define TEXTURERENDERER_H
 
-void bindTextures(const Model *model, GLuint activeShaderProgram);
+void bindTextures(const Model *model, GLuint activeShaderProgram, bool drawWireframe);
 
-void cleanUpRenderer(const Model *model);
+void cleanUpRenderer(const Model *model, bool drawWireframe);
 
 void killTextures(Model *model);
 
