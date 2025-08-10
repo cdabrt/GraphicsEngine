@@ -20,13 +20,16 @@ void updateBDOs(const Context *context, const ShaderProgram *activeShaderProgram
 
         //TODO: I know for a fact the ubo->data is not updating. That's why this is here for now
         // CameraBlock *cameraBlock = (CameraBlock*)ubo->data;
-        //
-        // memcpy(cameraBlock->perspective, context->camera->perspective.raw, sizeof(float) * 16);
-        // memcpy(cameraBlock->view, context->camera->view.raw, sizeof(float) * 16);
+        CameraBlock *cameraBlock = (CameraBlock *)ubo->data;
+        memcpy(cameraBlock->perspective, context->camera->perspective.raw, sizeof(float) * 16);
+        memcpy(cameraBlock->view, context->camera->view.raw, sizeof(float) * 16);
 
         glBindBuffer(GL_UNIFORM_BUFFER, ubo->id);
-        glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(ubo->data), ubo->data);
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, ubo->bufferSize, ubo->data);
+        glBindBufferBase(GL_UNIFORM_BUFFER, ubo->uniformBlockBindingIndex, ubo->id);
     }
+
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void initializeBaseUBOs(Context *context, unsigned int shaderProgramID) {
