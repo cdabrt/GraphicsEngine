@@ -21,9 +21,10 @@ unsigned int openGLRegisterShaderProgram(char *vertexFilePath, char *geometryFul
  * openGLRegisterUBO
  * Creates a UBO
  *
+ * @param shaderProgramID ID of the shader program the UBO has to be registered to.
  * @param bufferSize the buffer size of the UBO.
  */
-unsigned int openGLRegisterUBO(unsigned int blockUniformBindingIndex, unsigned int bufferSize);
+unsigned int openGLRegisterUBO(unsigned int shaderProgramID, unsigned int bufferSize);
 
 /**
  * openGLGetShaderProgramID

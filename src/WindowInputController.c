@@ -3,7 +3,6 @@
 //
 
 #include <string.h>
-
 #include "MouseInputState.h"
 #include "cglm/struct/affine-pre.h"
 #include "cglm/struct/affine.h"
@@ -75,16 +74,6 @@ void moveCamera(const Renderer *renderer, GLFWwindow *window) {
     }
 }
 
-
-//TODO: MOVE AWAY FROM HERE
-typedef struct PlayerControlledCamera {
-    Transformation transform;
-    float yaw;
-    float pitch;
-    bool firstFrame;
-    double lastX, lastY;
-} PlayerControlledCamera;
-
 void mouseCallback(GLFWwindow* window, const double xPos, const double yPos) {
     MouseInputState *state = glfwGetWindowUserPointer(window);
     if (!state) return;
@@ -97,8 +86,8 @@ void mouseCallback(GLFWwindow* window, const double xPos, const double yPos) {
         return;
     }
 
-    float xOffset = (float)(xPos - state->lastX);
-    float yOffset = (float)(yPos - state->lastY);
+    const float xOffset = (float)(xPos - state->lastX);
+    const float yOffset = (float)(yPos - state->lastY);
     state->lastX = xPos;
     state->lastY = yPos;
 

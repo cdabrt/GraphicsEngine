@@ -13,6 +13,7 @@
 #include <string.h>
 #include "Renderer/OpenGL/Injector/OpenGLInjector.h"
 #include "RendererAPI/Context.h"
+#include "RendererAPI/BaseUniforms.h"
 
 unsigned int compileShader (char filePath[], const unsigned int shaderType) {
     const unsigned int shader = glCreateShader(shaderType);
@@ -77,13 +78,20 @@ unsigned int openGLRegisterShaderProgram(char *vertexFilePath, char *geometryFul
     return shaderProgram;
 }
 
-unsigned int openGLRegisterUBO(const unsigned int blockUniformBindingIndex, const unsigned int bufferSize) {
+unsigned int openGLRegisterUBO(const unsigned int shaderProgramID, const unsigned int bufferSize) {
     unsigned int ubo;
     glGenBuffers(1, &ubo);
 
     glBindBuffer(GL_UNIFORM_BUFFER, ubo);
     glBufferData(GL_UNIFORM_BUFFER, bufferSize, NULL, GL_STATIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+    const unsigned int blockIndex = glGetUniformBlockIndex(shaderProgramID, getBaseBlockUniformString(CAMERA_VIEW));
+    checkUniformLocation(blockIndex);
+    const unsigned int uniformBlockBindingIndex = getBaseBlockUniformBinding(CAMERA_VIEW);
+
+    glUniformBlockBinding(shaderProgramID, blockIndex, uniformBlockBindingIndex);
+    glBindBufferBase(GL_UNIFORM_BUFFER, uniformBlockBindingIndex, ubo);
 
     return ubo;
 }

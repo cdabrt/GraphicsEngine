@@ -9,6 +9,7 @@
 #include "../Injector/OpenGLInjector.h"
 #include "../OpenGLHeaders.h"
 #include "../ErrorHandling/OpenGLErrorHandling.h"
+#include "RendererAPI/BaseUniforms.h"
 #include "RendererAPI/Context.h"
 #include "RendererAPI/Renderer.h"
 #include "UtilFiles/GeneralErrorHandling.h"
@@ -17,21 +18,14 @@ void updateBDOs(const Context *context, const ShaderProgram *activeShaderProgram
     for (int i = 0; i < activeShaderProgram->uboCount; i ++) {
         UBO *ubo = &activeShaderProgram->ubos[i];
 
-
-        unsigned int blockIndex = glGetUniformBlockIndex(activeShaderProgram->id, ubo->name);
-        checkUniformLocation(blockIndex);
-        glUniformBlockBinding(activeShaderProgram->id, blockIndex, ubo->uniformBlockBindingIndex);
-
         //TODO: I know for a fact the ubo->data is not updating. That's why this is here for now
-        CameraBlock *cameraBlock = (CameraBlock*)ubo->data;
-
-        memcpy(cameraBlock->perspective, context->camera->perspective.raw, sizeof(float) * 16);
-        memcpy(cameraBlock->view, context->camera->view.raw, sizeof(float) * 16);
+        // CameraBlock *cameraBlock = (CameraBlock*)ubo->data;
+        //
+        // memcpy(cameraBlock->perspective, context->camera->perspective.raw, sizeof(float) * 16);
+        // memcpy(cameraBlock->view, context->camera->view.raw, sizeof(float) * 16);
 
         glBindBuffer(GL_UNIFORM_BUFFER, ubo->id);
-        glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(CameraBlock), cameraBlock);
-
-        glBindBufferBase(GL_UNIFORM_BUFFER, ubo->uniformBlockBindingIndex, ubo->id);
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(ubo->data), ubo->data);
     }
 }
 
@@ -39,21 +33,22 @@ void initializeBaseUBOs(Context *context, unsigned int shaderProgramID) {
     ShaderProgram *shaderProgram = openGLGetShaderProgram(context, shaderProgramID);
 
     //Initialize camera UBO data
-    const GLuint uboID = openGLRegisterUBO(getBaseCameraBlockUniformBinding(CAMERA_VIEW), sizeof(CameraBlock));
+    const unsigned int cameraBlockSize = sizeof(CameraBlock);
+    const unsigned int matrixSize = sizeof(float[16]);
+    const GLuint uboID = openGLRegisterUBO(shaderProgram->id, cameraBlockSize);
 
-    Camera *camera = context->camera;
-    CameraBlock *cameraBlock = malloc(sizeof(CameraBlock));
+    const Camera *camera = context->camera;
+    CameraBlock *cameraBlock = malloc(cameraBlockSize);
     checkMalloc(cameraBlock);
-
-    memcpy(cameraBlock->perspective, camera->perspective.raw, sizeof(float) * 16);
-    memcpy(cameraBlock->view, camera->view.raw, sizeof(float) * 16);
+    memcpy(cameraBlock->perspective, camera->perspective.raw, matrixSize);
+    memcpy(cameraBlock->view, camera->view.raw, matrixSize);
 
     registerUBO(
         shaderProgram,
-        getBaseCameraBlockUniformString(CAMERA_VIEW),
+        getBaseBlockUniformString(CAMERA_VIEW),
         uboID,
-        getBaseCameraBlockUniformBinding(CAMERA_VIEW),
-        sizeof(CameraBlock),
+        getBaseBlockUniformBinding(CAMERA_VIEW),
+        cameraBlockSize,
         cameraBlock
         );
 }
