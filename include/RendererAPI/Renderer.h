@@ -72,6 +72,9 @@ typedef void (*KillFunction) (Renderer *renderer);
  * @param render the render function.
  * @param swapBuffers the swapBuffers function.
  * @param kill the kill function.
+ *
+ * @note \b Be \b careful! Every time you switch the context of the renderer, make sure to run prepareRenderer.
+ * This way, the base shaders and UBOs can be prepared in the new context.
  */
 struct Renderer {
     Context *context;

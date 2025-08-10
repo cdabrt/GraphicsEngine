@@ -5,7 +5,7 @@
 #ifndef OPENGLMESHRENDERER_H
 #define OPENGLMESHRENDERER_H
 
-void updateBDOs(const Context *context, const ShaderProgram *activeShaderProgram);
+void updateUBOs(const Context *context, const ShaderProgram *activeShaderProgram);
 
 void setTransformUniforms(const Model *model, unsigned int activeShaderProgram);
 

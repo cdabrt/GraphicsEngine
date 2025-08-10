@@ -14,15 +14,18 @@
 #include "RendererAPI/Renderer.h"
 #include "UtilFiles/GeneralErrorHandling.h"
 
-void updateBDOs(const Context *context, const ShaderProgram *activeShaderProgram) {
+void updateUBOs(const Context *context, const ShaderProgram *activeShaderProgram) {
     for (int i = 0; i < activeShaderProgram->uboCount; i ++) {
         UBO *ubo = &activeShaderProgram->ubos[i];
 
-        //TODO: I know for a fact the ubo->data is not updating. That's why this is here for now
-        // CameraBlock *cameraBlock = (CameraBlock*)ubo->data;
-        CameraBlock *cameraBlock = (CameraBlock *)ubo->data;
-        memcpy(cameraBlock->perspective, context->camera->perspective.raw, sizeof(float) * 16);
-        memcpy(cameraBlock->view, context->camera->view.raw, sizeof(float) * 16);
+        //If this is the camera data UBO. For every context that has a camera, a shader program can access the camera data.
+        if (ubo->uniformBlockBindingIndex == getBaseBlockUniformBinding(CAMERA_VIEW)) {
+            const unsigned int matrixSize = sizeof(float[16]);
+            Camera *camera = context->camera;
+            CameraBlock *cameraBlock = (CameraBlock *)ubo->data;
+            memcpy(cameraBlock->perspective, camera->perspective.raw, matrixSize);
+            memcpy(cameraBlock->view, camera->view.raw, matrixSize);
+        }
 
         glBindBuffer(GL_UNIFORM_BUFFER, ubo->id);
         glBufferSubData(GL_UNIFORM_BUFFER, 0, ubo->bufferSize, ubo->data);
@@ -37,14 +40,11 @@ void initializeBaseUBOs(Context *context, unsigned int shaderProgramID) {
 
     //Initialize camera UBO data
     const unsigned int cameraBlockSize = sizeof(CameraBlock);
-    const unsigned int matrixSize = sizeof(float[16]);
     const GLuint uboID = openGLRegisterUBO(shaderProgram->id, cameraBlockSize);
 
-    const Camera *camera = context->camera;
     CameraBlock *cameraBlock = malloc(cameraBlockSize);
     checkMalloc(cameraBlock);
-    memcpy(cameraBlock->perspective, camera->perspective.raw, matrixSize);
-    memcpy(cameraBlock->view, camera->view.raw, matrixSize);
+    memset(cameraBlock, 0, sizeof(CameraBlock));
 
     registerUBO(
         shaderProgram,

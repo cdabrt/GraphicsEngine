@@ -6,31 +6,31 @@
 #define BASEUNIFORMS_H
 #include <stdio.h>
 
-typedef enum CameraBlockUniform {
+typedef enum BaseUniform {
     CAMERA_VIEW
-} CameraUniform;
+} BaseUniform;
 
-inline char *getBaseBlockUniformString(const CameraUniform cameraUniforms)
+inline char *getBaseBlockUniformString(const BaseUniform cameraUniforms)
 {
     char *string = "\0";
 
     switch(cameraUniforms) {
         case CAMERA_VIEW: string = "CameraView"; break;
         default:
-            perror("Unknown camera uniform");
+            perror("Unknown uniform");
     }
 
     return string;
 }
 
-inline unsigned int getBaseBlockUniformBinding(const CameraUniform cameraUniforms)
+inline unsigned int getBaseBlockUniformBinding(const BaseUniform cameraUniforms)
 {
     unsigned int uniformBinding = -1;
 
     switch(cameraUniforms) {
         case CAMERA_VIEW: uniformBinding = 1; break;
         default:
-            perror("Unknown camera uniform");
+            perror("Unknown uniform");
     }
 
     return uniformBinding;

@@ -59,7 +59,7 @@ void openGLRender (const Context *context) {
         openGLSetActiveShaderProgram(context, activeShaderProgram);
     }
 
-    updateBDOs(context, openGLGetShaderProgram(context, activeShaderProgram));
+    updateUBOs(context, openGLGetShaderProgram(context, activeShaderProgram));
 
     //TODO: Add frustum culling, other types of culling, etc
     if (openGLContext->modelCount > 0) {
@@ -111,6 +111,7 @@ void openGLKill (Renderer *renderer) {
     free(renderer->injector);
 
     cleanupWindow(context->window);
+    free(renderer->context->camera);
     free(context);
     free(renderer);
 }

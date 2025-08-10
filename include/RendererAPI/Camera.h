@@ -6,6 +6,7 @@
 #define CAMERA_H
 #include "cglm/struct/mat4.h"
 #include "RendererAPI/Transformation.h"
+
 typedef struct Camera {
     mat4s perspective;
     mat4s view;
