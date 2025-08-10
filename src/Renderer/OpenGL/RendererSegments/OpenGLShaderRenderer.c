@@ -122,16 +122,16 @@ void prepareShaderRenderer(Context *context) {
 void killShaders(OpenGLContext *openGLContext) {
     glUseProgram(0);
     for (size_t i =0; i < openGLContext->shaderCount; i++) {
-        const ShaderProgram shaderProgram = openGLContext->shaderPrograms[i];
+        const ShaderProgram *shaderProgram = &openGLContext->shaderPrograms[i];
 
-        for (size_t j =0; j < shaderProgram.uboCount; j++) {
-            const UBO *ubo = &shaderProgram.ubos[j];
+        for (size_t j =0; j < shaderProgram->uboCount; j++) {
+            const UBO *ubo = &shaderProgram->ubos[j];
             glDeleteBuffers(1, &ubo->id);
             free(ubo->data);
         }
-        free(shaderProgram.ubos);
+        free(shaderProgram->ubos);
 
-        glDeleteProgram(shaderProgram.id);
+        glDeleteProgram(shaderProgram->id);
     }
 
     openGLContext->shaderCount = 0;

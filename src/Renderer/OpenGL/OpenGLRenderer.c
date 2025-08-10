@@ -109,8 +109,8 @@ void openGLKill (Renderer *renderer) {
 
     free(openGLContext);
     free(renderer->injector);
-    free(renderer);
 
     cleanupWindow(context->window);
     free(context);
+    free(renderer);
 }
