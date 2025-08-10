@@ -18,7 +18,7 @@ void setTransformUniforms(const Model *model, const unsigned int activeShaderPro
     checkUniformLocation(transformUniform);
 
     //TODO: Allow ShaderProgram to have a list of uniforms as well, exact same as UBO.
-    //TODO: Check if this multiplication is the correct way
+    //TODO: Check if this multiplication is the correct way of doing things
     const mat4s modelTransformation = glms_mat4_mul(
         transformation.localTransformation,
         transformation.worldTransformation

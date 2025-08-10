@@ -43,7 +43,7 @@ Renderer *setupProgram(const int width, const int height, const int xPos, const 
         .firstFrame = true,
         .sensitivity = 3.0f,
         .rotationChanged = false,
-        .lookDisabled = false,
+        .lookDisabled = true,
     };
     glfwSetWindowUserPointer(window, mouseState);
 
@@ -185,7 +185,7 @@ void loopProgram(const Renderer *renderer) {
 
         processWindowInput(renderer);
 
-        //TODO: Inject movement into the render loop, including camera "movement"
+        //TODO: Inject movement into the render loop
         //----------------
         //Testing:
         Model *model = renderer->injector->getModel(context, renderer->injector->getModelID(context, "FirstMesh"));
@@ -225,11 +225,6 @@ int main() {
 
     loopProgram(renderer);
 
-    /*
-     TODO: Perhaps this should be a Windows and Linux only thing, the closing of the window when pressing "x".
-        In macOS if you press the "x", it does not fully quit a program, just hides it in the background.
-        Maybe do not terminate the while loop on macOS.
-    */
     killProgram(renderer);
 
     return EXIT_SUCCESS;

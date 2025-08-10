@@ -33,7 +33,6 @@ void openGLPrepareRender(Context *context, const int xPos, const int yPos, const
     prepareShaderRenderer(context);
 }
 
-//TODO: See TODO of openGLRegisterMesh.
 //TODO: Optimizations such as:
 //  material sorting (sort objects that use the same shader and textures to reduce binding calls)
 //  batching (add static boolean to mesh. Sort all static meshes together, add them to a single big mesh).
@@ -59,7 +58,7 @@ void openGLRender (const Context *context) {
     }
     updateUBOs(context, openGLGetShaderProgram(context, activeShaderProgram));
 
-    //TODO: Add frustum culling, other types of culling, etc
+    //TODO: Add other types of culling, etc
     if (openGLContext->modelCount > 0) {
         for (int i = 0; i < openGLContext->modelCount; i++) {
             const Model *model = &openGLContext->models[i];
