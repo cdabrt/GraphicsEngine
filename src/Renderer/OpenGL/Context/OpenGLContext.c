@@ -43,7 +43,10 @@ void registerShaderProgram(OpenGLContext *context, const unsigned int shaderProg
     ShaderProgram *shaderProgram = &context->shaderPrograms[context->shaderCount - 1];
     shaderProgram->id = shaderProgramID;
     shaderProgram->name = shaderName;
-    shaderProgram->ubos = memset(shaderProgram->ubos, 0, 0);
+
+    const unsigned int sizeOfUBO = sizeof(UBO);
+    shaderProgram->ubos = malloc(sizeOfUBO);
+    memset(shaderProgram->ubos, 0, sizeOfUBO);
     shaderProgram->uboCount = 0;
 }
 

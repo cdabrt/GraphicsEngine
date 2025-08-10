@@ -129,6 +129,7 @@ void killShaders(OpenGLContext *openGLContext) {
             glDeleteBuffers(1, &ubo->id);
             free(ubo->data);
         }
+        free(shaderProgram.ubos);
 
         glDeleteProgram(shaderProgram.id);
     }
